@@ -1,33 +1,78 @@
 'use client'
 
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import { STATS } from '@/lib/services'
 
 export function StatsSection() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const isInView = useInView(ref, { once: true, margin: '-80px' })
+
+  // Parallax background
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  })
+  const bgY = useTransform(scrollYProgress, [0, 1], ['-5%', '5%'])
 
   return (
-    <section ref={ref} className="py-20 bg-navy">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={ref} className="relative py-24 overflow-hidden">
+      {/* Parallax navy background */}
+      <motion.div
+        style={{ y: bgY }}
+        className="absolute inset-[-10%] bg-navy"
+      />
+
+      {/* Decorative gold accent lines */}
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute top-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent origin-center"
+      />
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
+        transition={{ duration: 1.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute bottom-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent origin-center"
+      />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {STATS.map((stat, index) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
+              initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
+              animate={
+                isInView
+                  ? { opacity: 1, y: 0, filter: 'blur(0px)' }
+                  : {}
+              }
+              transition={{
+                duration: 0.9,
+                delay: index * 0.2,
+                ease: [0.16, 1, 0.3, 1],
+              }}
               className="text-center relative"
             >
               {/* Gold Divider */}
               {index > 0 && (
-                <div className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-px h-12 bg-gold/30" />
+                <motion.div
+                  initial={{ scaleY: 0 }}
+                  animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
+                  transition={{
+                    duration: 0.8,
+                    delay: 0.4 + index * 0.15,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-px h-16 bg-gradient-to-b from-transparent via-gold/40 to-transparent origin-center"
+                />
               )}
-              <p className="font-display text-4xl md:text-5xl font-bold text-gold">
+
+              <p className="font-display text-5xl md:text-6xl font-bold bg-gradient-to-b from-gold to-gold-light bg-clip-text text-transparent">
                 {stat.value}
               </p>
-              <p className="mt-2 font-sans text-sm text-white/70">
+              <p className="mt-3 font-sans text-sm text-white/50 uppercase tracking-[0.15em]">
                 {stat.label}
               </p>
             </motion.div>

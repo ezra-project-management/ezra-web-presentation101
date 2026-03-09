@@ -1,143 +1,356 @@
 'use client'
 
+import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { QrCode, ArrowLeft } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
+import Image from 'next/image'
+import { useParams } from 'next/navigation'
+import { motion } from 'framer-motion'
+import {
+  ArrowLeft,
+  Check,
+  Clock,
+  MapPin,
+  Users,
+  CalendarDays,
+  CreditCard,
+  FileText,
+  Download,
+  RefreshCw,
+  X,
+  ChevronDown,
+} from 'lucide-react'
+import { QRCodeSVG } from 'qrcode.react'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { cn } from '@/lib/utils'
+import { formatCurrency } from '@/lib/utils'
+import { UPCOMING_BOOKINGS, PAST_BOOKINGS } from '@/lib/dashboard-data'
 
-const steps = ['Booked', 'Confirmed', 'In Progress', 'Completed']
-const currentStep = 1
-
-const bookingDetails = [
-  { label: 'Service', value: 'Salon & Spa' },
-  { label: 'Date', value: 'March 15, 2026' },
-  { label: 'Time', value: '10:00 AM' },
-  { label: 'Duration', value: '60 min' },
-  { label: 'Guests', value: '1' },
-  { label: 'Total', value: 'KES 1,500' },
-  { label: 'Payment', value: 'M-Pesa' },
-  { label: 'Reference', value: 'EZR-A1B2C3' },
+const allBookings = [
+  ...UPCOMING_BOOKINGS.map(b => ({
+    ...b,
+    rating: null as number | null,
+    review: null as string | null,
+  })),
+  ...PAST_BOOKINGS.map(b => ({
+    ...b,
+    endTime: '',
+    resource: '',
+    staff: '',
+    guests: 1,
+    notes: null as string | null,
+    canReschedule: false,
+    canCancel: false,
+    cancellationDeadline: null as string | null,
+    mpesaRef: null as string | null,
+    serviceCategory: '',
+  })),
 ]
 
+const timelineSteps = ['Booked', 'Confirmed', 'Checked In', 'Completed']
+
+function getStepIndex(status: string) {
+  switch (status) {
+    case 'CONFIRMED': return 1
+    case 'PENDING_PAYMENT': return 0
+    case 'COMPLETED': return 3
+    case 'CANCELLED': return -1
+    default: return 0
+  }
+}
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString('en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+}
+
+function generateICS(booking: typeof allBookings[0]) {
+  const start = new Date(`${booking.date}T${convertTo24(booking.time)}`).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+  const ics = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+DTSTART:${start}
+SUMMARY:${booking.service} at Ezra Annex
+DESCRIPTION:Booking ref ${booking.reference}
+LOCATION:Ezra Annex
+END:VEVENT
+END:VCALENDAR`
+  const blob = new Blob([ics], { type: 'text/calendar' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${booking.reference}.ics`
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+function convertTo24(time12: string) {
+  const [time, modifier] = time12.split(' ')
+  const [h, m] = time.split(':')
+  let hours = parseInt(h, 10)
+  if (modifier === 'PM' && hours < 12) hours += 12
+  if (modifier === 'AM' && hours === 12) hours = 0
+  return `${hours.toString().padStart(2, '0')}:${m}:00`
+}
+
 export default function BookingDetailPage() {
+  const params = useParams()
+  const [qrExpanded, setQrExpanded] = useState(false)
+  const booking = useMemo(() => allBookings.find(b => b.id === params.id), [params.id])
+
+  if (!booking) {
+    return (
+      <div className="text-center py-20">
+        <p className="font-display text-2xl text-navy font-semibold">Booking not found</p>
+        <Link href="/dashboard/bookings" className="font-sans text-sm text-gold mt-4 inline-block">
+          Back to bookings
+        </Link>
+      </div>
+    )
+  }
+
+  const currentStep = getStepIndex(booking.status)
+
+  const statusLabel: Record<string, string> = {
+    CONFIRMED: 'Confirmed',
+    PENDING_PAYMENT: 'Pending Payment',
+    COMPLETED: 'Completed',
+    CANCELLED: 'Cancelled',
+  }
+
+  const statusBadge: Record<string, string> = {
+    CONFIRMED: 'bg-emerald-50 text-emerald-700',
+    PENDING_PAYMENT: 'bg-amber-50 text-amber-700',
+    COMPLETED: 'bg-navy/5 text-navy',
+    CANCELLED: 'bg-red-50 text-red-600',
+  }
+
   return (
-    <div>
-      {/* Back */}
+    <div className="space-y-6">
+      {/* Back link */}
       <Link
         href="/dashboard/bookings"
-        className="inline-flex items-center gap-2 font-sans text-sm text-charcoal/60 hover:text-navy transition-colors mb-6"
+        className="inline-flex items-center gap-2 font-sans text-sm text-gray-400 hover:text-navy transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        Back to bookings
+        Back to My Bookings
       </Link>
 
-      {/* Reference Badge */}
+      {/* Hero image */}
       <AnimatedSection>
-        <div className="text-center mb-8">
-          <Badge variant="gold" className="text-lg px-6 py-2">
-            EZR-A1B2C3
-          </Badge>
-          <p className="mt-2 font-sans text-sm text-charcoal/50">
-            Booking Reference
-          </p>
+        <div className="relative h-[200px] rounded-2xl overflow-hidden">
+          <Image src={booking.image} alt={booking.service} fill className="object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/30 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
+            <div>
+              <p className="font-display text-2xl lg:text-3xl font-semibold text-white">
+                {booking.service}
+                {booking.resource && <span className="font-light text-white/60 ml-2">{booking.resource}</span>}
+              </p>
+              <p className="font-mono text-sm text-white/60 mt-1">{booking.reference}</p>
+            </div>
+            <span className={cn(
+              'rounded-full px-4 py-1.5 text-sm font-medium',
+              statusBadge[booking.status]
+            )}>
+              {statusLabel[booking.status]}
+            </span>
+          </div>
         </div>
       </AnimatedSection>
 
-      {/* Status Timeline */}
-      <AnimatedSection delay={0.1}>
-        <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
-          <div className="flex items-center justify-between">
-            {steps.map((step, index) => (
-              <div key={step} className="flex items-center flex-1">
-                <div className="flex flex-col items-center">
-                  <div
-                    className={cn(
-                      'w-10 h-10 rounded-full flex items-center justify-center font-sans text-sm font-medium',
-                      index <= currentStep
-                        ? 'bg-gold text-white'
-                        : 'bg-charcoal/10 text-charcoal/40'
-                    )}
-                  >
-                    {index + 1}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left column — Details */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Status Timeline */}
+          <AnimatedSection delay={0.08}>
+            <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6">
+              <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-6">Status</h3>
+              <div className="flex flex-col gap-0">
+                {timelineSteps.map((step, i) => (
+                  <div key={step} className="flex items-start gap-4">
+                    {/* Step indicator */}
+                    <div className="flex flex-col items-center">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.4, delay: 0.2 + i * 0.15 }}
+                        className={cn(
+                          'w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all',
+                          i <= currentStep
+                            ? 'bg-gold text-white'
+                            : i === currentStep + 1
+                            ? 'border-2 border-gold bg-white'
+                            : 'border-2 border-gray-200 bg-white'
+                        )}
+                      >
+                        {i <= currentStep ? (
+                          <Check className="w-4 h-4" />
+                        ) : (
+                          <span className="font-sans text-xs text-gray-300">{i + 1}</span>
+                        )}
+                      </motion.div>
+                      {i < timelineSteps.length - 1 && (
+                        <div className={cn(
+                          'w-0.5 h-8',
+                          i < currentStep ? 'bg-gold' : 'bg-gray-200'
+                        )} />
+                      )}
+                    </div>
+                    <div className="pb-6">
+                      <p className={cn(
+                        'font-sans text-sm font-medium',
+                        i <= currentStep ? 'text-navy' : 'text-gray-400'
+                      )}>
+                        {step}
+                      </p>
+                    </div>
                   </div>
-                  <p
-                    className={cn(
-                      'mt-2 font-sans text-xs',
-                      index <= currentStep
-                        ? 'text-navy font-medium'
-                        : 'text-charcoal/40'
-                    )}
-                  >
-                    {step}
+                ))}
+              </div>
+            </div>
+          </AnimatedSection>
+
+          {/* Booking Details */}
+          <AnimatedSection delay={0.16}>
+            <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6">
+              <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-6">Booking Details</h3>
+              <div className="grid grid-cols-2 gap-6">
+                {[
+                  { icon: CalendarDays, label: 'Date', value: formatDate(booking.date) },
+                  { icon: Clock, label: 'Time', value: `${booking.time}${booking.endTime ? ` - ${booking.endTime}` : ''}` },
+                  { icon: Clock, label: 'Duration', value: booking.duration },
+                  { icon: MapPin, label: 'Location', value: booking.resource || 'Ezra Annex' },
+                  { icon: Users, label: 'Staff', value: booking.staff || '-' },
+                  { icon: Users, label: 'Guests', value: String(booking.guests) },
+                ].map((item) => (
+                  <div key={item.label} className="flex items-start gap-3">
+                    <item.icon className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
+                    <div>
+                      <p className="font-sans text-xs text-gray-400 uppercase tracking-wider">{item.label}</p>
+                      <p className="font-sans text-sm text-navy font-medium mt-0.5">{item.value}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {booking.notes && (
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <p className="font-sans text-xs text-gray-400 uppercase tracking-wider mb-1">Notes</p>
+                  <p className="font-sans text-sm text-charcoal/70">{booking.notes}</p>
+                </div>
+              )}
+            </div>
+          </AnimatedSection>
+
+          {/* Payment */}
+          <AnimatedSection delay={0.24}>
+            <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6">
+              <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-6">Payment</h3>
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <p className="font-sans text-xs text-gray-400">Amount</p>
+                  <p className="font-display text-2xl font-bold text-navy mt-0.5">
+                    {formatCurrency(booking.amount)}
                   </p>
                 </div>
-                {index < steps.length - 1 && (
-                  <div
-                    className={cn(
-                      'flex-1 h-0.5 mx-2',
-                      index < currentStep ? 'bg-gold' : 'bg-charcoal/10'
-                    )}
-                  />
+                <div>
+                  <p className="font-sans text-xs text-gray-400">Method</p>
+                  <p className="font-sans text-sm text-navy font-medium mt-0.5">
+                    {booking.paymentMethod || 'Not paid'}
+                  </p>
+                </div>
+                {booking.mpesaRef && (
+                  <div>
+                    <p className="font-sans text-xs text-gray-400">M-Pesa Reference</p>
+                    <p className="font-mono text-sm text-navy mt-0.5">{booking.mpesaRef}</p>
+                  </div>
                 )}
               </div>
-            ))}
-          </div>
+            </div>
+          </AnimatedSection>
         </div>
-      </AnimatedSection>
 
-      {/* Details & QR */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <AnimatedSection delay={0.2} className="md:col-span-2">
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <h2 className="font-display text-xl text-navy font-semibold mb-6">
-              Booking Details
-            </h2>
-            <div className="grid grid-cols-2 gap-4">
-              {bookingDetails.map((detail) => (
-                <div key={detail.label}>
-                  <p className="font-sans text-xs text-charcoal/50 uppercase tracking-wider">
-                    {detail.label}
-                  </p>
-                  <p className="font-sans text-sm text-navy font-medium mt-1">
-                    {detail.value}
-                  </p>
-                </div>
-              ))}
+        {/* Right column — Actions */}
+        <div className="space-y-6">
+          {/* QR Code */}
+          <AnimatedSection delay={0.12}>
+            <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6 text-center">
+              <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-4">QR Check-in</h3>
+              <div
+                className="inline-block p-4 bg-white rounded-xl border border-gray-100 cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => setQrExpanded(!qrExpanded)}
+              >
+                <QRCodeSVG
+                  value={booking.reference}
+                  size={qrExpanded ? 200 : 140}
+                  level="M"
+                  bgColor="transparent"
+                  fgColor="#0F2C4A"
+                />
+              </div>
+              <p className="mt-3 font-mono text-sm font-bold text-navy">{booking.reference}</p>
+              <p className="mt-1 font-sans text-xs text-gray-400">Show at reception for check-in</p>
+              <button
+                onClick={() => setQrExpanded(!qrExpanded)}
+                className="mt-3 font-sans text-xs text-gold hover:text-gold-dark flex items-center gap-1 mx-auto"
+              >
+                {qrExpanded ? 'Collapse' : 'Expand'} <ChevronDown className={cn('w-3 h-3 transition-transform', qrExpanded && 'rotate-180')} />
+              </button>
             </div>
-          </div>
-        </AnimatedSection>
+          </AnimatedSection>
 
-        <AnimatedSection delay={0.3}>
-          <div className="bg-white rounded-xl p-6 shadow-sm text-center">
-            <h3 className="font-display text-lg text-navy font-semibold mb-4">
-              QR Code
-            </h3>
-            <div className="w-32 h-32 mx-auto border-2 border-charcoal/10 rounded-lg flex flex-col items-center justify-center">
-              <QrCode className="w-12 h-12 text-charcoal/30" />
-              <p className="font-sans text-xs text-charcoal/40 mt-2">
-                EZR-A1B2C3
-              </p>
+          {/* Action buttons */}
+          <AnimatedSection delay={0.2}>
+            <div className="space-y-3">
+              <button
+                onClick={() => generateICS(booking)}
+                className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-white to-cream/40 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 text-left"
+              >
+                <CalendarDays className="w-5 h-5 text-navy" />
+                <span className="font-sans text-sm font-medium text-navy">Add to Calendar</span>
+              </button>
+
+              <button className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-white to-cream/40 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 text-left">
+                <Download className="w-5 h-5 text-navy" />
+                <span className="font-sans text-sm font-medium text-navy">Download Receipt</span>
+              </button>
+
+              {booking.canReschedule && (
+                <button className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-white to-cream/40 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 text-left">
+                  <RefreshCw className="w-5 h-5 text-teal" />
+                  <span className="font-sans text-sm font-medium text-teal">Reschedule</span>
+                </button>
+              )}
+
+              {booking.canCancel && (
+                <button className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-white to-cream/40 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 text-left">
+                  <X className="w-5 h-5 text-red-500" />
+                  <span className="font-sans text-sm font-medium text-red-500">Cancel Booking</span>
+                </button>
+              )}
             </div>
-            <p className="mt-3 font-sans text-xs text-charcoal/50">
-              Show this at check-in
-            </p>
-          </div>
-        </AnimatedSection>
+          </AnimatedSection>
+
+          {/* Cancellation policy */}
+          {booking.cancellationDeadline && (
+            <AnimatedSection delay={0.28}>
+              <div className="bg-amber-50/50 border border-amber-200/50 rounded-xl p-4">
+                <p className="font-sans text-xs uppercase tracking-widest text-amber-700 mb-2">
+                  Cancellation Policy
+                </p>
+                <p className="font-sans text-xs text-amber-700/70">
+                  Free cancellation before {new Date(booking.cancellationDeadline).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}.
+                  50% fee applies after that date.
+                </p>
+              </div>
+            </AnimatedSection>
+          )}
+        </div>
       </div>
-
-      {/* Actions */}
-      <AnimatedSection delay={0.4} className="mt-8 flex flex-wrap gap-4">
-        <button className="px-6 py-3 border-2 border-charcoal/20 text-navy font-sans font-medium rounded-lg hover:border-gold transition-colors">
-          Reschedule
-        </button>
-        <button className="px-6 py-3 border-2 border-red-200 text-red-500 font-sans font-medium rounded-lg hover:bg-red-50 transition-colors">
-          Cancel Booking
-        </button>
-        <button className="px-6 py-3 bg-navy text-white font-sans font-medium rounded-lg hover:bg-navy-light transition-colors">
-          Download Receipt
-        </button>
-      </AnimatedSection>
     </div>
   )
 }

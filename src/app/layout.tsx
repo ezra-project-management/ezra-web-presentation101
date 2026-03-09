@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import { Cormorant_Garamond, DM_Sans } from 'next/font/google'
 import './globals.css'
 import { Navbar } from '@/components/layout/Navbar'
-import { Footer } from '@/components/layout/Footer'
+import { ConditionalFooter } from '@/components/layout/ConditionalFooter'
 import { AIChatBubble } from '@/components/ai/AIChatBubble'
+import { ScrollProgress } from '@/components/ui/ScrollProgress'
 import { Toaster } from 'sonner'
 
 const cormorant = Cormorant_Garamond({
@@ -37,11 +38,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`}>
-      <body className="font-sans antialiased bg-white text-charcoal">
+    <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`} suppressHydrationWarning>
+      <body className="font-sans antialiased bg-white text-charcoal" suppressHydrationWarning>
+        <ScrollProgress />
         <Navbar />
         <main>{children}</main>
-        <Footer />
+        <ConditionalFooter />
         <AIChatBubble />
         <Toaster
           position="top-right"
