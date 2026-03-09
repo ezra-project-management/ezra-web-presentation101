@@ -69,7 +69,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="fixed top-4 left-1/2 -translate-x-1/2 z-50 hidden lg:block"
           >
-            <div className="flex items-center gap-1 px-2 py-1.5 bg-navy/50 backdrop-blur-2xl rounded-full border border-white/[0.08] shadow-[0_4px_30px_rgba(15,44,74,0.3),inset_0_1px_0_rgba(255,255,255,0.05)]">
+            <div className="flex items-center gap-1 px-2 py-1.5 bg-navy/85 backdrop-blur-2xl rounded-full border border-white/[0.12] shadow-[0_4px_30px_rgba(15,44,74,0.4),inset_0_1px_0_rgba(255,255,255,0.08)]">
               {/* Avatar + Name */}
               <Link href="/dashboard/profile" className="flex items-center gap-2 pl-1.5 pr-2">
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 border border-gold/40 text-white flex items-center justify-center font-display text-xs font-bold">
@@ -93,7 +93,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     'relative flex items-center gap-1.5 px-3 py-2 rounded-full transition-all duration-300 group',
                     isActive(link.href)
                       ? 'text-navy-dark'
-                      : 'text-white/50 hover:text-white hover:bg-white/10'
+                      : 'text-white/80 hover:text-white hover:bg-white/10'
                   )}
                   title={link.name}
                 >
@@ -124,7 +124,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               {/* Back to website */}
               <Link
                 href="/"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-all duration-300 group"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 group"
                 title="Back to website"
               >
                 <Globe className="w-4 h-4" />
@@ -152,7 +152,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <motion.div
               animate={{ width: sidebarHover ? 200 : 56 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-navy/40 backdrop-blur-2xl rounded-[30px] border border-white/[0.08] shadow-[0_8px_40px_rgba(15,44,74,0.25),inset_0_1px_0_rgba(255,255,255,0.06)] py-3 px-2 overflow-hidden"
+              className="bg-navy/85 backdrop-blur-2xl rounded-[30px] border border-white/[0.12] shadow-[0_8px_40px_rgba(15,44,74,0.4),inset_0_1px_0_rgba(255,255,255,0.08)] py-3 px-2 overflow-hidden"
             >
               {/* Avatar */}
               <Link href="/dashboard/profile" className="flex items-center gap-3 px-1.5 py-2 mb-1 rounded-full hover:bg-white/5 transition-colors">
@@ -188,7 +188,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       'relative flex items-center gap-3 px-1.5 py-2 rounded-full font-sans text-sm transition-all duration-300',
                       isActive(link.href)
                         ? 'bg-gold/20 text-gold'
-                        : 'text-white/50 hover:text-white hover:bg-white/5'
+                        : 'text-white/80 hover:text-white hover:bg-white/5'
                     )}
                   >
                     <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0">
@@ -230,7 +230,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               {/* Bottom */}
               <Link
                 href="/"
-                className="flex items-center gap-3 px-1.5 py-2 rounded-full font-sans text-sm text-white/40 hover:text-white hover:bg-white/5 transition-all duration-300"
+                className="flex items-center gap-3 px-1.5 py-2 rounded-full font-sans text-sm text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300"
               >
                 <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0">
                   <Globe className="w-4 h-4" />
@@ -249,7 +249,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </AnimatePresence>
               </Link>
 
-              <button className="w-full flex items-center gap-3 px-1.5 py-2 rounded-full font-sans text-sm text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300">
+              <button className="w-full flex items-center gap-3 px-1.5 py-2 rounded-full font-sans text-sm text-white/70 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300">
                 <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0">
                   <LogOut className="w-4 h-4" />
                 </div>
@@ -274,7 +274,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* ═══════ MOBILE: BOTTOM DOCK BAR ═══════ */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50">
         <div className="mx-3 mb-3">
-          <div className="flex items-center justify-around py-2 px-1 bg-navy/50 backdrop-blur-2xl rounded-full border border-white/[0.08] shadow-[0_-4px_30px_rgba(15,44,74,0.3),inset_0_1px_0_rgba(255,255,255,0.05)]">
+          <div className="flex items-center justify-around py-2 px-1 bg-navy/85 backdrop-blur-2xl rounded-full border border-white/[0.12] shadow-[0_-4px_30px_rgba(15,44,74,0.4),inset_0_1px_0_rgba(255,255,255,0.08)]">
             {navLinks.slice(0, 5).map((link) => (
               <Link
                 key={link.name}
@@ -283,7 +283,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   'relative flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-all duration-300',
                   isActive(link.href)
                     ? 'text-gold'
-                    : 'text-white/40 active:scale-95'
+                    : 'text-white/75 active:scale-95'
                 )}
               >
                 {isActive(link.href) && (
@@ -332,7 +332,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="lg:hidden fixed bottom-0 left-0 right-0 z-50 max-h-[80vh]"
             >
-              <div className="mx-2 mb-2 bg-navy/70 backdrop-blur-2xl rounded-3xl border border-white/[0.08] shadow-[0_-8px_40px_rgba(15,44,74,0.4)] overflow-hidden">
+              <div className="mx-2 mb-2 bg-navy/90 backdrop-blur-2xl rounded-3xl border border-white/[0.12] shadow-[0_-8px_40px_rgba(15,44,74,0.4)] overflow-hidden">
                 {/* Drag handle */}
                 <div className="flex justify-center pt-3 pb-2">
                   <div className="w-10 h-1 rounded-full bg-white/20" />
@@ -379,7 +379,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                           'flex items-center gap-3 px-4 py-3 rounded-2xl font-sans text-sm font-medium transition-all',
                           isActive(link.href)
                             ? 'bg-gold/15 text-gold'
-                            : 'text-white/60 active:bg-white/5'
+                            : 'text-white/75 active:bg-white/5'
                         )}
                       >
                         <link.icon className="w-5 h-5" />
@@ -404,7 +404,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <Globe className="w-5 h-5" />
                     Back to Website
                   </Link>
-                  <button className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-sans text-sm text-white/50 active:text-red-400 active:bg-red-500/10 transition-all">
+                  <button className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-sans text-sm text-white/75 active:text-red-400 active:bg-red-500/10 transition-all">
                     <LogOut className="w-5 h-5" />
                     Sign Out
                   </button>
