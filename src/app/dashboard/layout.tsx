@@ -69,24 +69,28 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="fixed top-4 left-1/2 -translate-x-1/2 z-50 hidden lg:block"
           >
-            <div className="flex items-center gap-0.5 px-1.5 py-1 bg-navy/50 backdrop-blur-2xl rounded-full border border-white/[0.08] shadow-[0_4px_30px_rgba(15,44,74,0.3),inset_0_1px_0_rgba(255,255,255,0.05)]">
-              {/* Avatar only */}
-              <Link href="/dashboard/profile" className="p-1 mx-0.5">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 border border-gold/40 text-white flex items-center justify-center font-display text-[10px] font-bold">
+            <div className="flex items-center gap-1 px-2 py-1.5 bg-navy/50 backdrop-blur-2xl rounded-full border border-white/[0.08] shadow-[0_4px_30px_rgba(15,44,74,0.3),inset_0_1px_0_rgba(255,255,255,0.05)]">
+              {/* Avatar + Name */}
+              <Link href="/dashboard/profile" className="flex items-center gap-2 pl-1.5 pr-2">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 border border-gold/40 text-white flex items-center justify-center font-display text-xs font-bold">
                   {CURRENT_USER.initials}
+                </div>
+                <div className="hidden xl:block">
+                  <p className="font-sans text-xs font-semibold text-white leading-tight">{CURRENT_USER.firstName}</p>
+                  <p className="font-sans text-[9px] text-gold/80 font-medium">Gold Member</p>
                 </div>
               </Link>
 
-              {/* Thin divider */}
-              <div className="w-px h-4 bg-white/10 mx-0.5" />
+              {/* Divider */}
+              <div className="w-px h-6 bg-white/10" />
 
-              {/* Icon-only nav links */}
+              {/* Nav links — icons + labels on xl */}
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   href={link.href}
                   className={cn(
-                    'relative w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 group',
+                    'relative flex items-center gap-1.5 px-3 py-2 rounded-full transition-all duration-300 group',
                     isActive(link.href)
                       ? 'text-navy-dark'
                       : 'text-white/50 hover:text-white hover:bg-white/10'
@@ -100,30 +104,31 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
                   )}
-                  <link.icon className="w-3.5 h-3.5 relative z-10" />
+                  <link.icon className="w-4 h-4 relative z-10" />
+                  <span className="relative z-10 hidden xl:inline font-sans text-xs font-medium">{link.name}</span>
                   {link.badge > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 z-20 w-3.5 h-3.5 bg-red-500 text-white text-[7px] font-bold rounded-full flex items-center justify-center ring-2 ring-navy/50">
+                    <span className="absolute -top-0.5 -right-0.5 z-20 w-4 h-4 bg-red-500 text-white text-[8px] font-bold rounded-full flex items-center justify-center ring-2 ring-navy/50">
                       {link.badge}
                     </span>
                   )}
-                  {/* Tooltip */}
-                  <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-navy/90 text-white text-[10px] font-sans rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  {/* Tooltip — only when labels hidden */}
+                  <span className="xl:hidden absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-navy/90 text-white text-[11px] font-sans rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
                     {link.name}
                   </span>
                 </Link>
               ))}
 
-              {/* Thin divider */}
-              <div className="w-px h-4 bg-white/10 mx-0.5" />
+              {/* Divider */}
+              <div className="w-px h-6 bg-white/10" />
 
               {/* Back to website */}
               <Link
                 href="/"
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all duration-300 group"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-all duration-300 group"
                 title="Back to website"
               >
-                <Globe className="w-3.5 h-3.5" />
-                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-navy/90 text-white text-[10px] font-sans rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <Globe className="w-4 h-4" />
+                <span className="xl:hidden absolute -bottom-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-navy/90 text-white text-[11px] font-sans rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
                   Website
                 </span>
               </Link>
@@ -145,13 +150,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             onMouseLeave={() => setSidebarHover(false)}
           >
             <motion.div
-              animate={{ width: sidebarHover ? 180 : 48 }}
+              animate={{ width: sidebarHover ? 200 : 56 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-navy/40 backdrop-blur-2xl rounded-[28px] border border-white/[0.08] shadow-[0_8px_40px_rgba(15,44,74,0.25),inset_0_1px_0_rgba(255,255,255,0.06)] py-2 px-1.5 overflow-hidden"
+              className="bg-navy/40 backdrop-blur-2xl rounded-[30px] border border-white/[0.08] shadow-[0_8px_40px_rgba(15,44,74,0.25),inset_0_1px_0_rgba(255,255,255,0.06)] py-3 px-2 overflow-hidden"
             >
               {/* Avatar */}
-              <Link href="/dashboard/profile" className="flex items-center gap-2.5 px-1.5 py-1.5 mb-1 rounded-full hover:bg-white/5 transition-colors">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 border border-gold/40 text-white flex items-center justify-center font-display text-[10px] font-bold shrink-0">
+              <Link href="/dashboard/profile" className="flex items-center gap-3 px-1.5 py-2 mb-1 rounded-full hover:bg-white/5 transition-colors">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold/30 to-gold/10 border border-gold/40 text-white flex items-center justify-center font-display text-xs font-bold shrink-0">
                   {CURRENT_USER.initials}
                 </div>
                 <AnimatePresence>
@@ -162,16 +167,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       exit={{ opacity: 0, width: 0 }}
                       className="overflow-hidden whitespace-nowrap"
                     >
-                      <p className="font-sans text-xs font-semibold text-white leading-tight">
+                      <p className="font-sans text-sm font-semibold text-white leading-tight">
                         {CURRENT_USER.firstName}
                       </p>
-                      <p className="font-sans text-[9px] text-gold font-medium">Gold</p>
+                      <p className="font-sans text-[10px] text-gold font-medium">Gold Member</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </Link>
 
-              <div className="w-6 h-px bg-white/10 mx-auto my-1" />
+              <div className="w-8 h-px bg-white/10 mx-auto my-1.5" />
 
               {/* Nav */}
               <div className="space-y-0.5">
@@ -180,14 +185,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     key={link.name}
                     href={link.href}
                     className={cn(
-                      'relative flex items-center gap-2.5 px-1.5 py-1.5 rounded-full font-sans text-xs transition-all duration-300',
+                      'relative flex items-center gap-3 px-1.5 py-2 rounded-full font-sans text-sm transition-all duration-300',
                       isActive(link.href)
                         ? 'bg-gold/20 text-gold'
                         : 'text-white/50 hover:text-white hover:bg-white/5'
                     )}
                   >
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0">
-                      <link.icon className="w-3.5 h-3.5" />
+                    <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0">
+                      <link.icon className="w-4 h-4" />
                     </div>
                     <AnimatePresence>
                       {sidebarHover && (
@@ -203,8 +208,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </AnimatePresence>
                     {link.badge > 0 && (
                       <span className={cn(
-                        'bg-red-500 text-white text-[7px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center ring-2 ring-navy/40',
-                        sidebarHover ? 'ml-auto' : 'absolute top-0 right-0'
+                        'bg-red-500 text-white text-[8px] font-bold rounded-full w-4 h-4 flex items-center justify-center ring-2 ring-navy/40',
+                        sidebarHover ? 'ml-auto' : 'absolute top-0.5 right-0.5'
                       )}>
                         {link.badge}
                       </span>
@@ -212,7 +217,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     {isActive(link.href) && (
                       <motion.div
                         layoutId="dashSide"
-                        className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-4 bg-gold rounded-full"
+                        className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-gold rounded-full"
                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                       />
                     )}
@@ -220,15 +225,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 ))}
               </div>
 
-              <div className="w-6 h-px bg-white/10 mx-auto my-1" />
+              <div className="w-8 h-px bg-white/10 mx-auto my-1.5" />
 
               {/* Bottom */}
               <Link
                 href="/"
-                className="flex items-center gap-2.5 px-1.5 py-1.5 rounded-full font-sans text-xs text-white/40 hover:text-white hover:bg-white/5 transition-all duration-300"
+                className="flex items-center gap-3 px-1.5 py-2 rounded-full font-sans text-sm text-white/40 hover:text-white hover:bg-white/5 transition-all duration-300"
               >
-                <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0">
-                  <Globe className="w-3.5 h-3.5" />
+                <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0">
+                  <Globe className="w-4 h-4" />
                 </div>
                 <AnimatePresence>
                   {sidebarHover && (
@@ -244,9 +249,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </AnimatePresence>
               </Link>
 
-              <button className="w-full flex items-center gap-2.5 px-1.5 py-1.5 rounded-full font-sans text-xs text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300">
-                <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0">
-                  <LogOut className="w-3.5 h-3.5" />
+              <button className="w-full flex items-center gap-3 px-1.5 py-2 rounded-full font-sans text-sm text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300">
+                <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0">
+                  <LogOut className="w-4 h-4" />
                 </div>
                 <AnimatePresence>
                   {sidebarHover && (
