@@ -24,11 +24,10 @@ import { formatCurrency } from '@/lib/utils'
 import { SERVICES } from '@/lib/services'
 import {
   CURRENT_USER,
-  UPCOMING_BOOKINGS,
-  PAST_BOOKINGS,
   SPENDING_CHART_DATA,
   SERVICE_HISTORY_CHART,
 } from '@/lib/dashboard-data'
+import { useBooking } from '@/lib/booking-context'
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -69,8 +68,17 @@ const statusLabel: Record<string, string> = {
 
 export default function DashboardPage() {
   const greeting = useMemo(() => getGreeting(), [])
-  const nextBooking = UPCOMING_BOOKINGS[0]
-  const otherUpcoming = UPCOMING_BOOKINGS.slice(1)
+  const { bookings } = useBooking()
+  const upcomingBookings = useMemo(() =>
+    bookings.filter(b => b.status === 'CONFIRMED' || b.status === 'PENDING_PAYMENT'),
+    [bookings]
+  )
+  const pastBookings = useMemo(() =>
+    bookings.filter(b => b.status === 'COMPLETED' || b.status === 'CANCELLED'),
+    [bookings]
+  )
+  const nextBooking = upcomingBookings[0] ?? null
+  const otherUpcoming = upcomingBookings.slice(1)
   const [qrOpen, setQrOpen] = useState(false)
 
   return (
@@ -105,7 +113,7 @@ export default function DashboardPage() {
             {/* Stats inside hero */}
             <div className="mt-8 grid grid-cols-3 gap-4">
               {[
-                { label: 'Upcoming', value: UPCOMING_BOOKINGS.length, icon: CalendarDays },
+                { label: 'Upcoming', value: upcomingBookings.length, icon: CalendarDays },
                 { label: 'Points', value: CURRENT_USER.loyaltyPoints, icon: Star },
                 { label: 'Visits', value: CURRENT_USER.totalVisits, icon: TrendingUp },
               ].map((stat, i) => (
@@ -422,7 +430,7 @@ export default function DashboardPage() {
           <div className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-gold via-gold/40 to-transparent" />
 
           <div className="space-y-6">
-            {PAST_BOOKINGS.slice(0, 3).map((booking, i) => (
+            {pastBookings.slice(0, 3).map((booking, i) => (
               <AnimatedSection key={booking.id} delay={0.5 + i * 0.08}>
                 <div className="relative flex items-start gap-4">
                   {/* Dot */}

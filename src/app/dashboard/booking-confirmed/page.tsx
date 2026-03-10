@@ -1,15 +1,23 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useMemo } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { QRCodeSVG } from 'qrcode.react'
 import confetti from 'canvas-confetti'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Bell } from 'lucide-react'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
+import { useBooking } from '@/lib/booking-context'
 
 export default function BookingConfirmedPage() {
   const confettiFired = useRef(false)
+  const { bookings } = useBooking()
+
+  // Get the most recent booking (first in array since we prepend)
+  const latestBooking = useMemo(() => {
+    const confirmed = bookings.filter(b => b.status === 'CONFIRMED')
+    return confirmed.length > 0 ? confirmed[0] : null
+  }, [bookings])
 
   useEffect(() => {
     if (confettiFired.current) return
@@ -27,6 +35,17 @@ export default function BookingConfirmedPage() {
     const timer = setTimeout(fire, 300)
     return () => clearTimeout(timer)
   }, [])
+
+  const reference = latestBooking?.reference ?? 'EZR-A1B2C3'
+  const serviceName = latestBooking?.service ?? 'Salon & Spa'
+  const resource = latestBooking?.resource || ''
+  const dateStr = latestBooking
+    ? new Date(latestBooking.date).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+    : 'Saturday 15 March 2026'
+  const time = latestBooking?.time ?? '10:00 AM'
+  const smsReminder = latestBooking?.smsReminder ?? true
+  const bookedFor = latestBooking?.bookedFor ?? null
+  const services = latestBooking?.services ?? []
 
   return (
     <div className="flex items-center justify-center min-h-[70vh]">
@@ -60,20 +79,34 @@ export default function BookingConfirmedPage() {
         </AnimatedSection>
 
         <AnimatedSection delay={0.2}>
-          <p className="mt-4 font-mono text-2xl font-bold text-navy">EZR-A1B2C3</p>
+          <p className="mt-4 font-mono text-2xl font-bold text-navy">{reference}</p>
           <p className="mt-2 font-sans text-charcoal/60">
-            Salon & Spa &middot; Suite 1
+            {serviceName}{resource ? ` · ${resource}` : ''}
           </p>
           <p className="font-sans text-charcoal/60">
-            Saturday 15 March 2026 &middot; 10:00 AM
+            {dateStr} &middot; {time}
           </p>
+          {services.length > 1 && (
+            <div className="mt-2 flex flex-wrap justify-center gap-1.5">
+              {services.map(svc => (
+                <span key={svc} className="px-2.5 py-0.5 bg-gold/10 text-gold-dark rounded-full font-sans text-xs font-medium">
+                  {svc}
+                </span>
+              ))}
+            </div>
+          )}
+          {bookedFor && (
+            <p className="mt-2 font-sans text-sm text-gold">
+              Booked for: {bookedFor.name} ({bookedFor.phone})
+            </p>
+          )}
         </AnimatedSection>
 
         {/* QR Code */}
         <AnimatedSection delay={0.3}>
           <div className="mt-8 inline-block p-6 bg-white rounded-2xl shadow-card border border-gray-100">
             <QRCodeSVG
-              value="EZR-A1B2C3"
+              value={reference}
               size={180}
               level="M"
               bgColor="transparent"
@@ -92,6 +125,16 @@ export default function BookingConfirmedPage() {
             Confirmation SMS sent to +254712***678
           </div>
         </AnimatedSection>
+
+        {/* SMS Reminder */}
+        {smsReminder && (
+          <AnimatedSection delay={0.43}>
+            <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-700 font-sans text-sm">
+              <Bell className="w-3.5 h-3.5" />
+              SMS reminder will be sent 24 hours before
+            </div>
+          </AnimatedSection>
+        )}
 
         {/* Points earned */}
         <AnimatedSection delay={0.45}>

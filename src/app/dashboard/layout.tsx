@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CURRENT_USER, UPCOMING_BOOKINGS, NOTIFICATIONS_DATA } from '@/lib/dashboard-data'
+import { BookingProvider } from '@/lib/booking-context'
 
 const navLinks = [
   { name: 'Overview', href: '/dashboard', icon: LayoutDashboard, badge: 0 },
@@ -57,6 +58,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [pathname])
 
   return (
+    <BookingProvider>
     <div className="h-screen overflow-hidden bg-cream/30 relative">
 
       {/* ═══════ DESKTOP: COMPACT FLOATING PILL (not scrolled) ═══════ */}
@@ -454,5 +456,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </main>
     </div>
+    </BookingProvider>
   )
 }

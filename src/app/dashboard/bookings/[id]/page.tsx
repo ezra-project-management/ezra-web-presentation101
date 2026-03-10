@@ -3,8 +3,8 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useParams } from 'next/navigation'
-import { motion } from 'framer-motion'
+import { useParams, useRouter } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowLeft,
   Check,
@@ -12,41 +12,27 @@ import {
   MapPin,
   Users,
   CalendarDays,
-  CreditCard,
-  FileText,
   Download,
   RefreshCw,
   X,
   ChevronDown,
+  AlertTriangle,
+  UserPlus,
+  Bell,
 } from 'lucide-react'
 import { QRCodeSVG } from 'qrcode.react'
+import { toast } from 'sonner'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { cn } from '@/lib/utils'
 import { formatCurrency } from '@/lib/utils'
-import { UPCOMING_BOOKINGS, PAST_BOOKINGS } from '@/lib/dashboard-data'
-
-const allBookings = [
-  ...UPCOMING_BOOKINGS.map(b => ({
-    ...b,
-    rating: null as number | null,
-    review: null as string | null,
-  })),
-  ...PAST_BOOKINGS.map(b => ({
-    ...b,
-    endTime: '',
-    resource: '',
-    staff: '',
-    guests: 1,
-    notes: null as string | null,
-    canReschedule: false,
-    canCancel: false,
-    cancellationDeadline: null as string | null,
-    mpesaRef: null as string | null,
-    serviceCategory: '',
-  })),
-]
+import { useBooking } from '@/lib/booking-context'
 
 const timelineSteps = ['Booked', 'Confirmed', 'Checked In', 'Completed']
+
+const TIME_SLOTS = [
+  '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
+  '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM',
+]
 
 function getStepIndex(status: string) {
   switch (status) {
@@ -67,7 +53,7 @@ function formatDate(dateStr: string) {
   })
 }
 
-function generateICS(booking: typeof allBookings[0]) {
+function generateICS(booking: { date: string; time: string; service: string; reference: string }) {
   const start = new Date(`${booking.date}T${convertTo24(booking.time)}`).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
   const ics = `BEGIN:VCALENDAR
 VERSION:2.0
@@ -98,8 +84,17 @@ function convertTo24(time12: string) {
 
 export default function BookingDetailPage() {
   const params = useParams()
+  const router = useRouter()
+  const { bookings, cancelBooking, rescheduleBooking } = useBooking()
   const [qrExpanded, setQrExpanded] = useState(false)
-  const booking = useMemo(() => allBookings.find(b => b.id === params.id), [params.id])
+
+  // Modal state
+  const [showCancelModal, setShowCancelModal] = useState(false)
+  const [showRescheduleModal, setShowRescheduleModal] = useState(false)
+  const [newDate, setNewDate] = useState('')
+  const [newTime, setNewTime] = useState('')
+
+  const booking = useMemo(() => bookings.find(b => b.id === params.id), [bookings, params.id])
 
   if (!booking) {
     return (
@@ -113,6 +108,7 @@ export default function BookingDetailPage() {
   }
 
   const currentStep = getStepIndex(booking.status)
+  const today = new Date().toISOString().split('T')[0]
 
   const statusLabel: Record<string, string> = {
     CONFIRMED: 'Confirmed',
@@ -126,6 +122,24 @@ export default function BookingDetailPage() {
     PENDING_PAYMENT: 'bg-amber-50 text-amber-700',
     COMPLETED: 'bg-navy/5 text-navy',
     CANCELLED: 'bg-red-50 text-red-600',
+  }
+
+  const handleCancel = () => {
+    cancelBooking(booking.id)
+    toast.success(`Booking ${booking.reference} cancelled. The time slot is now available.`)
+    setShowCancelModal(false)
+  }
+
+  const handleReschedule = () => {
+    if (!newDate || !newTime) {
+      toast.error('Please select a new date and time')
+      return
+    }
+    rescheduleBooking(booking.id, newDate, newTime)
+    toast.success(`Booking rescheduled to ${formatDate(newDate)} at ${newTime}`)
+    setShowRescheduleModal(false)
+    setNewDate('')
+    setNewTime('')
   }
 
   return (
@@ -142,7 +156,11 @@ export default function BookingDetailPage() {
       {/* Hero image */}
       <AnimatedSection>
         <div className="relative h-[200px] rounded-2xl overflow-hidden">
-          <Image src={booking.image} alt={booking.service} fill className="object-cover" />
+          {booking.image ? (
+            <Image src={booking.image} alt={booking.service} fill className="object-cover" />
+          ) : (
+            <div className="w-full h-full bg-navy/10" />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/30 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
             <div>
@@ -165,54 +183,70 @@ export default function BookingDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left column — Details */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Status Timeline */}
-          <AnimatedSection delay={0.08}>
-            <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6">
-              <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-6">Status</h3>
-              <div className="flex flex-col gap-0">
-                {timelineSteps.map((step, i) => (
-                  <div key={step} className="flex items-start gap-4">
-                    {/* Step indicator */}
-                    <div className="flex flex-col items-center">
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ duration: 0.4, delay: 0.2 + i * 0.15 }}
-                        className={cn(
-                          'w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all',
-                          i <= currentStep
-                            ? 'bg-gold text-white'
-                            : i === currentStep + 1
-                            ? 'border-2 border-gold bg-white'
-                            : 'border-2 border-gray-200 bg-white'
-                        )}
-                      >
-                        {i <= currentStep ? (
-                          <Check className="w-4 h-4" />
-                        ) : (
-                          <span className="font-sans text-xs text-gray-300">{i + 1}</span>
-                        )}
-                      </motion.div>
-                      {i < timelineSteps.length - 1 && (
-                        <div className={cn(
-                          'w-0.5 h-8',
-                          i < currentStep ? 'bg-gold' : 'bg-gray-200'
-                        )} />
-                      )}
-                    </div>
-                    <div className="pb-6">
-                      <p className={cn(
-                        'font-sans text-sm font-medium',
-                        i <= currentStep ? 'text-navy' : 'text-gray-400'
-                      )}>
-                        {step}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+          {/* Cancelled banner */}
+          {booking.status === 'CANCELLED' && (
+            <AnimatedSection delay={0.06}>
+              <div className="p-4 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3">
+                <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
+                <div>
+                  <p className="font-sans text-sm font-medium text-red-700">This booking has been cancelled</p>
+                  <p className="font-sans text-xs text-red-500 mt-0.5">
+                    The time slot is now available for other customers.
+                  </p>
+                </div>
               </div>
-            </div>
-          </AnimatedSection>
+            </AnimatedSection>
+          )}
+
+          {/* Status Timeline */}
+          {booking.status !== 'CANCELLED' && (
+            <AnimatedSection delay={0.08}>
+              <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6">
+                <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-6">Status</h3>
+                <div className="flex flex-col gap-0">
+                  {timelineSteps.map((step, i) => (
+                    <div key={step} className="flex items-start gap-4">
+                      <div className="flex flex-col items-center">
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ duration: 0.4, delay: 0.2 + i * 0.15 }}
+                          className={cn(
+                            'w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all',
+                            i <= currentStep
+                              ? 'bg-gold text-white'
+                              : i === currentStep + 1
+                              ? 'border-2 border-gold bg-white'
+                              : 'border-2 border-gray-200 bg-white'
+                          )}
+                        >
+                          {i <= currentStep ? (
+                            <Check className="w-4 h-4" />
+                          ) : (
+                            <span className="font-sans text-xs text-gray-300">{i + 1}</span>
+                          )}
+                        </motion.div>
+                        {i < timelineSteps.length - 1 && (
+                          <div className={cn(
+                            'w-0.5 h-8',
+                            i < currentStep ? 'bg-gold' : 'bg-gray-200'
+                          )} />
+                        )}
+                      </div>
+                      <div className="pb-6">
+                        <p className={cn(
+                          'font-sans text-sm font-medium',
+                          i <= currentStep ? 'text-navy' : 'text-gray-400'
+                        )}>
+                          {step}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </AnimatedSection>
+          )}
 
           {/* Booking Details */}
           <AnimatedSection delay={0.16}>
@@ -235,6 +269,47 @@ export default function BookingDetailPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+
+              {/* Multi-service info */}
+              {booking.services.length > 1 && (
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <p className="font-sans text-xs text-gray-400 uppercase tracking-wider mb-2">Services Included</p>
+                  <div className="flex flex-wrap gap-2">
+                    {booking.services.map(svc => (
+                      <span key={svc} className="px-3 py-1 bg-gold/10 text-gold-dark rounded-full font-sans text-xs font-medium">
+                        {svc}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Booked for someone else */}
+              {booking.bookedFor && (
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <div className="flex items-start gap-3">
+                    <UserPlus className="w-4 h-4 text-gold mt-0.5 shrink-0" />
+                    <div>
+                      <p className="font-sans text-xs text-gray-400 uppercase tracking-wider">Booked For</p>
+                      <p className="font-sans text-sm text-navy font-medium mt-0.5">{booking.bookedFor.name}</p>
+                      <p className="font-sans text-xs text-charcoal/50">{booking.bookedFor.phone}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* SMS Reminder */}
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <div className="flex items-center gap-3">
+                  <Bell className="w-4 h-4 text-gray-400 shrink-0" />
+                  <div>
+                    <p className="font-sans text-xs text-gray-400 uppercase tracking-wider">SMS Reminder</p>
+                    <p className="font-sans text-sm text-navy font-medium mt-0.5">
+                      {booking.smsReminder ? 'Enabled — 24 hours before' : 'Disabled'}
+                    </p>
+                  </div>
+                </div>
               </div>
 
               {booking.notes && (
@@ -277,42 +352,46 @@ export default function BookingDetailPage() {
         {/* Right column — Actions */}
         <div className="space-y-6">
           {/* QR Code */}
-          <AnimatedSection delay={0.12}>
-            <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6 text-center">
-              <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-4">QR Check-in</h3>
-              <div
-                className="inline-block p-4 bg-white rounded-xl border border-gray-100 cursor-pointer hover:shadow-md transition-shadow"
-                onClick={() => setQrExpanded(!qrExpanded)}
-              >
-                <QRCodeSVG
-                  value={booking.reference}
-                  size={qrExpanded ? 200 : 140}
-                  level="M"
-                  bgColor="transparent"
-                  fgColor="#0F2C4A"
-                />
+          {booking.status !== 'CANCELLED' && (
+            <AnimatedSection delay={0.12}>
+              <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6 text-center">
+                <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-4">QR Check-in</h3>
+                <div
+                  className="inline-block p-4 bg-white rounded-xl border border-gray-100 cursor-pointer hover:shadow-md transition-shadow"
+                  onClick={() => setQrExpanded(!qrExpanded)}
+                >
+                  <QRCodeSVG
+                    value={booking.reference}
+                    size={qrExpanded ? 200 : 140}
+                    level="M"
+                    bgColor="transparent"
+                    fgColor="#0F2C4A"
+                  />
+                </div>
+                <p className="mt-3 font-mono text-sm font-bold text-navy">{booking.reference}</p>
+                <p className="mt-1 font-sans text-xs text-gray-400">Show at reception for check-in</p>
+                <button
+                  onClick={() => setQrExpanded(!qrExpanded)}
+                  className="mt-3 font-sans text-xs text-gold hover:text-gold-dark flex items-center gap-1 mx-auto"
+                >
+                  {qrExpanded ? 'Collapse' : 'Expand'} <ChevronDown className={cn('w-3 h-3 transition-transform', qrExpanded && 'rotate-180')} />
+                </button>
               </div>
-              <p className="mt-3 font-mono text-sm font-bold text-navy">{booking.reference}</p>
-              <p className="mt-1 font-sans text-xs text-gray-400">Show at reception for check-in</p>
-              <button
-                onClick={() => setQrExpanded(!qrExpanded)}
-                className="mt-3 font-sans text-xs text-gold hover:text-gold-dark flex items-center gap-1 mx-auto"
-              >
-                {qrExpanded ? 'Collapse' : 'Expand'} <ChevronDown className={cn('w-3 h-3 transition-transform', qrExpanded && 'rotate-180')} />
-              </button>
-            </div>
-          </AnimatedSection>
+            </AnimatedSection>
+          )}
 
           {/* Action buttons */}
           <AnimatedSection delay={0.2}>
             <div className="space-y-3">
-              <button
-                onClick={() => generateICS(booking)}
-                className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-white to-cream/40 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 text-left"
-              >
-                <CalendarDays className="w-5 h-5 text-navy" />
-                <span className="font-sans text-sm font-medium text-navy">Add to Calendar</span>
-              </button>
+              {booking.status !== 'CANCELLED' && (
+                <button
+                  onClick={() => generateICS(booking)}
+                  className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-white to-cream/40 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 text-left"
+                >
+                  <CalendarDays className="w-5 h-5 text-navy" />
+                  <span className="font-sans text-sm font-medium text-navy">Add to Calendar</span>
+                </button>
+              )}
 
               <button className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-white to-cream/40 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 text-left">
                 <Download className="w-5 h-5 text-navy" />
@@ -320,23 +399,43 @@ export default function BookingDetailPage() {
               </button>
 
               {booking.canReschedule && (
-                <button className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-white to-cream/40 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 text-left">
+                <button
+                  onClick={() => {
+                    setNewDate(booking.date)
+                    setNewTime(booking.time)
+                    setShowRescheduleModal(true)
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-white to-cream/40 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 text-left"
+                >
                   <RefreshCw className="w-5 h-5 text-teal" />
                   <span className="font-sans text-sm font-medium text-teal">Reschedule</span>
                 </button>
               )}
 
               {booking.canCancel && (
-                <button className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-white to-cream/40 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 text-left">
+                <button
+                  onClick={() => setShowCancelModal(true)}
+                  className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-br from-white to-cream/40 rounded-xl shadow-card hover:shadow-card-hover transition-all duration-300 text-left"
+                >
                   <X className="w-5 h-5 text-red-500" />
                   <span className="font-sans text-sm font-medium text-red-500">Cancel Booking</span>
                 </button>
+              )}
+
+              {booking.status === 'CANCELLED' && (
+                <Link
+                  href={`/services/${booking.serviceSlug}`}
+                  className="w-full flex items-center gap-3 px-4 py-3 bg-gold text-navy rounded-xl shadow-md hover:bg-gold-light transition-all duration-300 text-left"
+                >
+                  <CalendarDays className="w-5 h-5" />
+                  <span className="font-sans text-sm font-semibold">Book Again</span>
+                </Link>
               )}
             </div>
           </AnimatedSection>
 
           {/* Cancellation policy */}
-          {booking.cancellationDeadline && (
+          {booking.cancellationDeadline && booking.status !== 'CANCELLED' && (
             <AnimatedSection delay={0.28}>
               <div className="bg-amber-50/50 border border-amber-200/50 rounded-xl p-4">
                 <p className="font-sans text-xs uppercase tracking-widest text-amber-700 mb-2">
@@ -351,6 +450,165 @@ export default function BookingDetailPage() {
           )}
         </div>
       </div>
+
+      {/* ── Cancel Modal ─────────────────────────────────────── */}
+      <AnimatePresence>
+        {showCancelModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowCancelModal(false)}
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            >
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
+                    <AlertTriangle className="w-5 h-5 text-red-500" />
+                  </div>
+                  <h3 className="font-display text-lg font-semibold text-navy">Cancel Booking</h3>
+                </div>
+
+                <p className="font-sans text-sm text-charcoal/70">
+                  Are you sure you want to cancel your <strong>{booking.service}</strong> booking
+                  on <strong>{formatDate(booking.date)}</strong> at <strong>{booking.time}</strong>?
+                </p>
+
+                <p className="mt-3 font-sans text-xs text-charcoal/50">Ref: {booking.reference}</p>
+
+                {booking.cancellationDeadline && (
+                  <div className="mt-4 p-3 bg-amber-50 rounded-lg">
+                    <p className="font-sans text-xs text-amber-700">
+                      {new Date(booking.cancellationDeadline) > new Date()
+                        ? 'Free cancellation — no fees apply.'
+                        : '50% cancellation fee applies as the deadline has passed.'}
+                    </p>
+                  </div>
+                )}
+
+                <p className="mt-3 font-sans text-xs text-emerald-600">
+                  The freed time slot will automatically become available for other customers.
+                </p>
+
+                <div className="mt-6 flex gap-3">
+                  <button
+                    onClick={() => setShowCancelModal(false)}
+                    className="flex-1 py-2.5 border border-charcoal/15 text-navy font-sans text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Keep Booking
+                  </button>
+                  <button
+                    onClick={handleCancel}
+                    className="flex-1 py-2.5 bg-red-500 text-white font-sans text-sm font-medium rounded-lg hover:bg-red-600 transition-colors"
+                  >
+                    Yes, Cancel
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ── Reschedule Modal ─────────────────────────────────── */}
+      <AnimatePresence>
+        {showRescheduleModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowRescheduleModal(false)}
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            >
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-teal/10 flex items-center justify-center">
+                      <RefreshCw className="w-5 h-5 text-teal" />
+                    </div>
+                    <h3 className="font-display text-lg font-semibold text-navy">Reschedule Booking</h3>
+                  </div>
+                  <button onClick={() => setShowRescheduleModal(false)} className="text-gray-400 hover:text-gray-600">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <p className="font-sans text-sm text-charcoal/70 mb-1">
+                  <strong>{booking.service}</strong>
+                </p>
+                <p className="font-sans text-xs text-charcoal/50 mb-4">
+                  Currently: {formatDate(booking.date)} at {booking.time}
+                </p>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block font-sans text-sm font-medium text-navy mb-2">New Date</label>
+                    <input
+                      type="date"
+                      value={newDate}
+                      min={today}
+                      onChange={(e) => setNewDate(e.target.value)}
+                      className="w-full px-4 py-3 border border-charcoal/20 rounded-lg font-sans text-sm focus:border-gold focus:ring-1 focus:ring-gold outline-none transition"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-sans text-sm font-medium text-navy mb-2">New Time</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {TIME_SLOTS.map(time => (
+                        <button
+                          key={time}
+                          onClick={() => setNewTime(time)}
+                          className={cn(
+                            'px-3 py-2 rounded-lg font-sans text-sm transition-all duration-200',
+                            newTime === time
+                              ? 'bg-gold text-white shadow-sm'
+                              : 'border border-charcoal/20 text-charcoal hover:border-gold'
+                          )}
+                        >
+                          {time}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <p className="mt-4 font-sans text-xs text-emerald-600">
+                  Your original time slot will be freed up for other customers.
+                </p>
+
+                <div className="mt-6 flex gap-3">
+                  <button
+                    onClick={() => setShowRescheduleModal(false)}
+                    className="flex-1 py-2.5 border border-charcoal/15 text-navy font-sans text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleReschedule}
+                    className="flex-1 py-2.5 bg-gold text-navy font-sans text-sm font-semibold rounded-lg hover:bg-gold-light transition-colors shadow-md"
+                  >
+                    Confirm Reschedule
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

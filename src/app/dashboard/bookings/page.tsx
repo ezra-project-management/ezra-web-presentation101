@@ -3,55 +3,13 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
-import { Plus, Star, ArrowRight, QrCode, LayoutGrid, List } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Plus, Star, ArrowRight, QrCode, LayoutGrid, List, X, RefreshCw, AlertTriangle, CalendarDays } from 'lucide-react'
+import { toast } from 'sonner'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { cn } from '@/lib/utils'
 import { formatCurrency } from '@/lib/utils'
-import { UPCOMING_BOOKINGS, PAST_BOOKINGS } from '@/lib/dashboard-data'
-
-type BookingStatus = 'CONFIRMED' | 'PENDING_PAYMENT' | 'COMPLETED' | 'CANCELLED'
-
-const allBookings = [
-  ...UPCOMING_BOOKINGS.map(b => ({
-    id: b.id,
-    reference: b.reference,
-    service: b.service,
-    serviceSlug: b.serviceSlug,
-    date: b.date,
-    time: b.time,
-    endTime: b.endTime || '',
-    duration: b.duration,
-    resource: b.resource || '',
-    staff: b.staff || '',
-    status: b.status as BookingStatus,
-    amount: b.amount,
-    paymentMethod: b.paymentMethod,
-    mpesaRef: b.mpesaRef,
-    image: b.image,
-    rating: null as number | null,
-    review: null as string | null,
-  })),
-  ...PAST_BOOKINGS.map(b => ({
-    id: b.id,
-    reference: b.reference,
-    service: b.service,
-    serviceSlug: b.serviceSlug,
-    date: b.date,
-    time: b.time,
-    endTime: '',
-    duration: b.duration,
-    resource: '',
-    staff: '',
-    status: b.status as BookingStatus,
-    amount: b.amount,
-    paymentMethod: b.paymentMethod,
-    mpesaRef: null as string | null,
-    image: b.image,
-    rating: b.rating,
-    review: b.review,
-  })),
-]
+import { useBooking, type BookingStatus, type BookingRecord } from '@/lib/booking-context'
 
 const tabs = [
   { key: 'All', filter: () => true },
@@ -60,10 +18,6 @@ const tabs = [
   { key: 'Cancelled', filter: (s: BookingStatus) => s === 'CANCELLED' },
   { key: 'Pending Payment', filter: (s: BookingStatus) => s === 'PENDING_PAYMENT' },
 ]
-
-function getCount(filter: (s: BookingStatus) => boolean) {
-  return allBookings.filter(b => filter(b.status)).length
-}
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-GB', {
@@ -88,19 +42,55 @@ const statusLabel: Record<BookingStatus, string> = {
   CANCELLED: 'Cancelled',
 }
 
+const TIME_SLOTS = [
+  '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
+  '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM',
+]
+
 export default function BookingsPage() {
+  const { bookings, cancelBooking, rescheduleBooking } = useBooking()
   const [activeTab, setActiveTab] = useState('All')
   const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards')
 
+  // Modal state
+  const [cancelModal, setCancelModal] = useState<BookingRecord | null>(null)
+  const [rescheduleModal, setRescheduleModal] = useState<BookingRecord | null>(null)
+  const [newDate, setNewDate] = useState('')
+  const [newTime, setNewTime] = useState('')
+
+  const getCount = (filter: (s: BookingStatus) => boolean) =>
+    bookings.filter(b => filter(b.status)).length
+
   const activeFilter = tabs.find(t => t.key === activeTab)!.filter
   const filtered = activeTab === 'All'
-    ? allBookings
-    : allBookings.filter(b => activeFilter(b.status))
+    ? bookings
+    : bookings.filter(b => activeFilter(b.status))
 
-  const totalCount = allBookings.length
+  const totalCount = bookings.length
   const upcomingCount = getCount(s => s === 'CONFIRMED' || s === 'PENDING_PAYMENT')
   const completedCount = getCount(s => s === 'COMPLETED')
   const cancelledCount = getCount(s => s === 'CANCELLED')
+
+  const today = new Date().toISOString().split('T')[0]
+
+  const handleCancel = () => {
+    if (!cancelModal) return
+    cancelBooking(cancelModal.id)
+    toast.success(`Booking ${cancelModal.reference} cancelled. The time slot is now available for others.`)
+    setCancelModal(null)
+  }
+
+  const handleReschedule = () => {
+    if (!rescheduleModal || !newDate || !newTime) {
+      toast.error('Please select a new date and time')
+      return
+    }
+    rescheduleBooking(rescheduleModal.id, newDate, newTime)
+    toast.success(`Booking rescheduled to ${formatDate(newDate)} at ${newTime}`)
+    setRescheduleModal(null)
+    setNewDate('')
+    setNewTime('')
+  }
 
   return (
     <div className="space-y-6">
@@ -196,7 +186,13 @@ export default function BookingsPage() {
               )}>
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="relative w-full md:w-20 h-20 rounded-xl overflow-hidden shrink-0">
-                    <Image src={booking.image} alt={booking.service} fill className="object-cover" />
+                    {booking.image ? (
+                      <Image src={booking.image} alt={booking.service} fill className="object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-navy/10 flex items-center justify-center">
+                        <CalendarDays className="w-6 h-6 text-navy/30" />
+                      </div>
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between flex-wrap gap-2">
@@ -209,6 +205,16 @@ export default function BookingsPage() {
                         </p>
                         {booking.resource && (
                           <p className="font-sans text-xs text-gray-400">{booking.resource} · with {booking.staff}</p>
+                        )}
+                        {booking.bookedFor && (
+                          <p className="font-sans text-xs text-gold mt-0.5">
+                            Booked for: {booking.bookedFor.name} ({booking.bookedFor.phone})
+                          </p>
+                        )}
+                        {booking.services.length > 1 && (
+                          <p className="font-sans text-xs text-charcoal/50 mt-0.5">
+                            {booking.services.length} services combined
+                          </p>
                         )}
                       </div>
                       <span className={cn(
@@ -249,6 +255,28 @@ export default function BookingsPage() {
                             <QrCode className="w-3.5 h-3.5" />
                             QR Code
                           </Link>
+                          {booking.canReschedule && (
+                            <button
+                              onClick={() => {
+                                setRescheduleModal(booking)
+                                setNewDate(booking.date)
+                                setNewTime(booking.time)
+                              }}
+                              className="flex items-center gap-1.5 px-4 py-2 border border-teal/30 text-teal font-sans text-sm font-medium rounded-lg hover:bg-teal/5 transition-all"
+                            >
+                              <RefreshCw className="w-3.5 h-3.5" />
+                              Reschedule
+                            </button>
+                          )}
+                          {booking.canCancel && (
+                            <button
+                              onClick={() => setCancelModal(booking)}
+                              className="flex items-center gap-1.5 px-4 py-2 border border-red-200 text-red-500 font-sans text-sm font-medium rounded-lg hover:bg-red-50 transition-all"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                              Cancel
+                            </button>
+                          )}
                           <Link
                             href={`/dashboard/bookings/${booking.id}`}
                             className="font-sans text-sm text-gold font-medium hover:text-gold-dark"
@@ -312,7 +340,7 @@ export default function BookingsPage() {
                     <th className="text-left font-sans text-xs uppercase tracking-widest text-gray-400 px-5 py-3">Reference</th>
                     <th className="text-left font-sans text-xs uppercase tracking-widest text-gray-400 px-5 py-3">Amount</th>
                     <th className="text-left font-sans text-xs uppercase tracking-widest text-gray-400 px-5 py-3">Status</th>
-                    <th className="text-right font-sans text-xs uppercase tracking-widest text-gray-400 px-5 py-3"></th>
+                    <th className="text-right font-sans text-xs uppercase tracking-widest text-gray-400 px-5 py-3">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -321,9 +349,18 @@ export default function BookingsPage() {
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
                           <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0">
-                            <Image src={booking.image} alt={booking.service} fill className="object-cover" />
+                            {booking.image ? (
+                              <Image src={booking.image} alt={booking.service} fill className="object-cover" />
+                            ) : (
+                              <div className="w-full h-full bg-navy/10" />
+                            )}
                           </div>
-                          <span className="font-sans text-sm font-medium text-navy">{booking.service}</span>
+                          <div>
+                            <span className="font-sans text-sm font-medium text-navy">{booking.service}</span>
+                            {booking.bookedFor && (
+                              <p className="font-sans text-[10px] text-gold">For: {booking.bookedFor.name}</p>
+                            )}
+                          </div>
                         </div>
                       </td>
                       <td className="px-5 py-4 font-sans text-sm text-gray-500">{formatDate(booking.date)}</td>
@@ -340,9 +377,31 @@ export default function BookingsPage() {
                         </span>
                       </td>
                       <td className="px-5 py-4 text-right">
-                        <Link href={`/dashboard/bookings/${booking.id}`} className="font-sans text-xs text-gold font-medium hover:text-gold-dark">
-                          View
-                        </Link>
+                        <div className="flex items-center gap-2 justify-end">
+                          {booking.canCancel && (
+                            <button
+                              onClick={() => setCancelModal(booking)}
+                              className="font-sans text-xs text-red-500 font-medium hover:text-red-600"
+                            >
+                              Cancel
+                            </button>
+                          )}
+                          {booking.canReschedule && (
+                            <button
+                              onClick={() => {
+                                setRescheduleModal(booking)
+                                setNewDate(booking.date)
+                                setNewTime(booking.time)
+                              }}
+                              className="font-sans text-xs text-teal font-medium hover:text-teal-600"
+                            >
+                              Reschedule
+                            </button>
+                          )}
+                          <Link href={`/dashboard/bookings/${booking.id}`} className="font-sans text-xs text-gold font-medium hover:text-gold-dark">
+                            View
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -352,6 +411,171 @@ export default function BookingsPage() {
           </div>
         </AnimatedSection>
       )}
+
+      {/* ── Cancel Modal ─────────────────────────────────────── */}
+      <AnimatePresence>
+        {cancelModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setCancelModal(null)}
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            >
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
+                    <AlertTriangle className="w-5 h-5 text-red-500" />
+                  </div>
+                  <h3 className="font-display text-lg font-semibold text-navy">Cancel Booking</h3>
+                </div>
+
+                <p className="font-sans text-sm text-charcoal/70">
+                  Are you sure you want to cancel your <strong>{cancelModal.service}</strong> booking
+                  on <strong>{formatDate(cancelModal.date)}</strong> at <strong>{cancelModal.time}</strong>?
+                </p>
+
+                <p className="mt-3 font-sans text-xs text-charcoal/50">
+                  Ref: {cancelModal.reference}
+                </p>
+
+                {cancelModal.cancellationDeadline && (
+                  <div className="mt-4 p-3 bg-amber-50 rounded-lg">
+                    <p className="font-sans text-xs text-amber-700">
+                      {new Date(cancelModal.cancellationDeadline) > new Date()
+                        ? 'Free cancellation — no fees apply.'
+                        : '50% cancellation fee applies as the deadline has passed.'}
+                    </p>
+                  </div>
+                )}
+
+                <p className="mt-3 font-sans text-xs text-emerald-600">
+                  The freed time slot will automatically become available for other customers.
+                </p>
+
+                <div className="mt-6 flex gap-3">
+                  <button
+                    onClick={() => setCancelModal(null)}
+                    className="flex-1 py-2.5 border border-charcoal/15 text-navy font-sans text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Keep Booking
+                  </button>
+                  <button
+                    onClick={handleCancel}
+                    className="flex-1 py-2.5 bg-red-500 text-white font-sans text-sm font-medium rounded-lg hover:bg-red-600 transition-colors"
+                  >
+                    Yes, Cancel
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ── Reschedule Modal ─────────────────────────────────── */}
+      <AnimatePresence>
+        {rescheduleModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setRescheduleModal(null)}
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            >
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-teal/10 flex items-center justify-center">
+                      <RefreshCw className="w-5 h-5 text-teal" />
+                    </div>
+                    <h3 className="font-display text-lg font-semibold text-navy">Reschedule Booking</h3>
+                  </div>
+                  <button onClick={() => setRescheduleModal(null)} className="text-gray-400 hover:text-gray-600">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <p className="font-sans text-sm text-charcoal/70 mb-1">
+                  <strong>{rescheduleModal.service}</strong>
+                </p>
+                <p className="font-sans text-xs text-charcoal/50 mb-4">
+                  Currently: {formatDate(rescheduleModal.date)} at {rescheduleModal.time}
+                </p>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block font-sans text-sm font-medium text-navy mb-2">
+                      New Date
+                    </label>
+                    <input
+                      type="date"
+                      value={newDate}
+                      min={today}
+                      onChange={(e) => setNewDate(e.target.value)}
+                      className="w-full px-4 py-3 border border-charcoal/20 rounded-lg font-sans text-sm focus:border-gold focus:ring-1 focus:ring-gold outline-none transition"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-sans text-sm font-medium text-navy mb-2">
+                      New Time
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {TIME_SLOTS.map(time => (
+                        <button
+                          key={time}
+                          onClick={() => setNewTime(time)}
+                          className={cn(
+                            'px-3 py-2 rounded-lg font-sans text-sm transition-all duration-200',
+                            newTime === time
+                              ? 'bg-gold text-white shadow-sm'
+                              : 'border border-charcoal/20 text-charcoal hover:border-gold'
+                          )}
+                        >
+                          {time}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <p className="mt-4 font-sans text-xs text-emerald-600">
+                  Your original time slot will be freed up for other customers.
+                </p>
+
+                <div className="mt-6 flex gap-3">
+                  <button
+                    onClick={() => setRescheduleModal(null)}
+                    className="flex-1 py-2.5 border border-charcoal/15 text-navy font-sans text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleReschedule}
+                    className="flex-1 py-2.5 bg-gold text-navy font-sans text-sm font-semibold rounded-lg hover:bg-gold-light transition-colors shadow-md"
+                  >
+                    Confirm Reschedule
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
