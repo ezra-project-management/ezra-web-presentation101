@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, X, Send } from 'lucide-react'
+import { MessageCircle, X, Send, Sparkles } from 'lucide-react'
 
 interface Message {
   id: string
@@ -59,7 +59,7 @@ export function AIChatBubble() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-24 lg:bottom-6 right-4 lg:right-6 z-50">
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -67,7 +67,7 @@ export function AIChatBubble() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="absolute bottom-20 right-0 w-[380px] h-[500px] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+            className="absolute bottom-16 right-0 w-[calc(100vw-2rem)] sm:w-[380px] h-[420px] sm:h-[500px] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
           >
             {/* Header */}
             <div className="bg-navy p-4 flex items-center gap-3">
@@ -183,7 +183,7 @@ export function AIChatBubble() {
         {isOpen ? (
           <X className="w-6 h-6" />
         ) : (
-          <Sparkles className="w-6 h-6" />
+          <MessageCircle className="w-6 h-6" />
         )}
       </button>
     </div>
