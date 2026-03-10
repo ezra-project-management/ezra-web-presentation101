@@ -34,7 +34,7 @@ export function AIChatBubble() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, isTyping])
 
-  const sendMessage = (text: string) => {
+  const sendMessage = async (text: string) => {
     if (!text.trim()) return
 
     const userMessage: Message = {
@@ -47,15 +47,36 @@ export function AIChatBubble() {
     setInput('')
     setIsTyping(true)
 
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: `You are Ezra, the AI booking assistant for Ezra Annex — Nairobi's premier luxury hospitality and wellness destination. You help customers book services conversationally. Services: Salon & Spa (from KSh 1,500), Barbershop (from KSh 800), Fitness Centre (from KSh 1,200), Meeting Rooms (from KSh 5,000/hr), Ballroom (from KSh 80,000), Banquet Hall (from KSh 45,000), Swimming Pool Training (from KSh 2,500), Accommodation (from KSh 8,500/night). Working hours: 6am–10pm daily. Be warm, professional, and concise. Help with bookings, cancellations, reschedules, and questions.`,
+          messages: [...messages, { role: 'user', content: text.trim() }].map(m => ({
+            role: m.role === 'ai' ? 'assistant' : 'user',
+            content: m.text,
+          })),
+        }),
+      })
+      const data = await response.json()
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         role: 'ai',
-        text: `Great! Let me help you with that. You can book our services directly through our services page. Would you like me to guide you to the right service?`,
+        text: data.content?.[0]?.text || 'Sorry, I could not process that. Please try again.',
       }
       setMessages((prev) => [...prev, aiResponse])
+    } catch {
+      setMessages((prev) => [...prev, {
+        id: (Date.now() + 1).toString(),
+        role: 'ai',
+        text: 'Connection issue. Please try again in a moment.',
+      }])
+    } finally {
       setIsTyping(false)
-    }, 1500)
+    }
   }
 
   return (
