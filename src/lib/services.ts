@@ -36,10 +36,9 @@ export const SERVICES: Service[] = [
     category: 'WELLNESS',
     description:
       'Our premium salon and spa offers a full range of beauty treatments from expert stylists and therapists. From rejuvenating facials to transformative hair styling, every visit is a sanctuary experience.',
-    basePrice: 1500,
+    basePrice: 0,
     duration: '60 min',
-    image:
-      'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80',
     icon: '✦',
     highlights: [
       'Expert stylists',
@@ -65,10 +64,9 @@ export const SERVICES: Service[] = [
     category: 'WELLNESS',
     description:
       'Our master barbers deliver precision cuts and traditional grooming in a premium setting. Offering appointments and walk-in service for the discerning gentleman.',
-    basePrice: 800,
+    basePrice: 0,
     duration: '45 min',
-    image:
-      'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1503951914875-452c4e4d7960?w=800&q=80',
     icon: '✂',
     highlights: [
       'Master barbers',
@@ -93,10 +91,9 @@ export const SERVICES: Service[] = [
     category: 'FITNESS',
     description:
       'Train in our fully equipped modern gym with certified personal trainers, group classes, and a motivating environment that helps you achieve your fitness goals.',
-    basePrice: 1200,
+    basePrice: 0,
     duration: 'Per session',
-    image:
-      'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
     icon: '⊕',
     highlights: [
       'Modern equipment',
@@ -121,10 +118,9 @@ export const SERVICES: Service[] = [
     category: 'BUSINESS',
     description:
       'Fully equipped meeting and boardrooms with high-speed internet, AV systems, and catering options. Perfect for corporate meetings, presentations, and strategic sessions.',
-    basePrice: 5000,
+    basePrice: 0,
     duration: 'Per hour',
-    image:
-      'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
+    image: '/images/image-resizing-7.avif',
     icon: '◈',
     highlights: [
       'High-speed WiFi',
@@ -149,10 +145,9 @@ export const SERVICES: Service[] = [
     category: 'EVENTS',
     description:
       'Our magnificent ballroom accommodates up to 500 guests in elegance. Featuring stunning decor, professional lighting systems, and full event support for weddings, galas, and corporate events.',
-    basePrice: 80000,
+    basePrice: 0,
     duration: 'Full day',
-    image:
-      'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=80',
+    image: '/images/image-resizing-2.jpeg',
     icon: '❋',
     highlights: [
       '500 guest capacity',
@@ -177,10 +172,9 @@ export const SERVICES: Service[] = [
     category: 'EVENTS',
     description:
       'The perfect venue for intimate celebrations, corporate dinners, and social gatherings. Our banquet hall offers customised menus, impeccable service, and a warm sophisticated atmosphere.',
-    basePrice: 45000,
+    basePrice: 0,
     duration: 'Full day',
-    image:
-      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=80',
+    image: '/images/image-resizing.jpeg',
     icon: '◎',
     highlights: [
       'Custom menus',
@@ -205,10 +199,9 @@ export const SERVICES: Service[] = [
     category: 'FITNESS',
     description:
       'Benefit from professional swimming instruction in our pristine pool. Certified instructors offer one-on-one coaching and group classes for beginners through competitive swimmers.',
-    basePrice: 2500,
+    basePrice: 0,
     duration: 'Per session',
-    image:
-      'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=800&q=80',
+    image: '/images/image-resizing-8.avif',
     icon: '◇',
     highlights: [
       'Certified instructors',
@@ -233,10 +226,9 @@ export const SERVICES: Service[] = [
     category: 'ACCOMMODATION',
     description:
       'Our beautifully appointed rooms offer a serene retreat with premium amenities. Whether for a staycation or extended stay, experience the Ezra Annex standard of comfort and elegance.',
-    basePrice: 8500,
+    basePrice: 0,
     duration: 'Per night',
-    image:
-      'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=800&q=80',
+    image: '/images/image-resizing-9.avif',
     icon: '⬡',
     highlights: [
       'Premium bedding',

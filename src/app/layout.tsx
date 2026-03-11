@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     "Book world-class salon, gym, spa, events, boardrooms, and accommodation at Ezra Annex — Nairobi's premier lifestyle destination.",
   openGraph: {
     images: [
-      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200',
+      '/images/image-resizing-2.jpeg',
     ],
   },
 }

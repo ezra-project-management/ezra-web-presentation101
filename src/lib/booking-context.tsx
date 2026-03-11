@@ -97,6 +97,17 @@ type SeedBooking = {
   date: string; time: string; status: BookingStatus
 }
 
+const SERVICE_IMAGES: Record<string, string> = {
+  'salon-spa': '/images/image-resizing-4.avif',
+  'barbershop': '/images/image-resizing-5.avif',
+  'gym': '/images/image-resizing-6.avif',
+  'boardroom': '/images/image-resizing-7.avif',
+  'ballroom': '/images/image-resizing-2.jpeg',
+  'banquet-hall': '/images/image-resizing.jpeg',
+  'swimming-pool': '/images/image-resizing-8.avif',
+  'rooms': '/images/image-resizing-9.avif',
+}
+
 function makeSeed(id: string, serviceSlug: string, serviceName: string, date: string, time: string): SeedBooking {
   return { id, reference: `EZR-DEMO${id}`, service: serviceName, serviceSlug, date, time, status: 'CONFIRMED' }
 }
@@ -241,7 +252,7 @@ function seedBookings(): BookingRecord[] {
     id: b.id, reference: b.reference, service: b.service, serviceSlug: b.serviceSlug,
     serviceCategory: '', resource: '', staff: '', date: b.date, time: b.time,
     endTime: '', duration: '60 min', guests: 1, status: b.status, amount: 0,
-    paymentMethod: null, mpesaRef: null, image: '', notes: null,
+    paymentMethod: null, mpesaRef: null, image: SERVICE_IMAGES[b.serviceSlug] ?? '/images/image-resizing-3.avif', notes: null,
     canReschedule: false, canCancel: false, cancellationDeadline: null,
     rating: null, review: null, bookedFor: null, services: [b.service], smsReminder: false,
   }))

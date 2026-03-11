@@ -48,13 +48,13 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="relative h-64 md:h-80 flex items-center justify-center overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80"
+          src="/images/image-resizing-11.avif"
           alt="Ezra Annex team"
           fill
           priority
-          className="object-cover"
+          className="object-cover brightness-110"
         />
-        <div className="absolute inset-0 bg-navy/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-navy/50 via-navy/40 to-navy/60" />
         <div className="relative z-10 text-center">
           <h1 className="font-display text-4xl md:text-5xl text-white font-semibold">
             About Ezra Annex
@@ -96,7 +96,7 @@ export default function AboutPage() {
             <AnimatedSection delay={0.2}>
               <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
                 <Image
-                  src="https://images.unsplash.com/photo-1561501900-3701fa6a0864?auto=format&fit=crop&w=600&q=80"
+                  src="/images/image-resizing-12.avif"
                   alt="Ezra Annex facility"
                   fill
                   className="object-cover"

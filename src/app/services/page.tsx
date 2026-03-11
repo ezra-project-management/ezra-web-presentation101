@@ -21,13 +21,13 @@ export default function ServicesPage() {
       {/* Hero Header */}
       <section className="relative h-64 md:h-80 flex items-center justify-center overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1200&q=80"
+          src="/images/image-resizing-3.avif"
           alt="Ezra Annex services"
           fill
           priority
-          className="object-cover"
+          className="object-cover brightness-110"
         />
-        <div className="absolute inset-0 bg-navy/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-navy/50 via-navy/40 to-navy/60" />
         <div className="relative z-10 text-center">
           <h1 className="font-display text-4xl md:text-5xl text-white font-semibold">
             Our Services

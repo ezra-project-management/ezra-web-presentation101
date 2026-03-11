@@ -158,12 +158,18 @@ export default function DashboardPage() {
               {/* Main booking card */}
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="relative w-full md:w-[140px] h-[140px] rounded-2xl overflow-hidden shrink-0">
-                  <Image
-                    src={nextBooking.image}
-                    alt={nextBooking.service}
-                    fill
-                    className="object-cover"
-                  />
+                  {nextBooking.image ? (
+                    <Image
+                      src={nextBooking.image}
+                      alt={nextBooking.service}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-navy to-navy-light flex items-center justify-center">
+                      <span className="text-gold text-2xl font-bold">{nextBooking.service.charAt(0)}</span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2 flex-wrap">
@@ -243,7 +249,13 @@ export default function DashboardPage() {
                         className="flex items-center gap-3 p-3 rounded-xl bg-white border border-gray-100 hover:border-gold/30 hover:shadow-sm transition-all duration-300 group"
                       >
                         <div className="relative w-12 h-12 rounded-lg overflow-hidden shrink-0">
-                          <Image src={booking.image} alt={booking.service} fill className="object-cover" />
+                          {booking.image ? (
+                            <Image src={booking.image} alt={booking.service} fill className="object-cover" />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-navy to-navy-light flex items-center justify-center">
+                              <span className="text-gold text-xs font-bold">{booking.service.charAt(0)}</span>
+                            </div>
+                          )}
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-sans text-sm font-medium text-navy truncate">
@@ -415,7 +427,7 @@ export default function DashboardPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/30 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-3">
                 <p className="font-display text-sm font-semibold text-white">{service.name}</p>
-                <p className="font-sans text-[10px] text-white/60">{formatCurrency(service.basePrice)}+</p>
+                <p className="font-sans text-[10px] text-white/60">Starting from KShs 0</p>
               </div>
             </Link>
           ))}

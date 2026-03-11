@@ -36,7 +36,7 @@ export const UPCOMING_BOOKINGS = [
     amount: 3500,
     paymentMethod: 'MPESA',
     mpesaRef: 'QJK123ABC',
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=80',
+    image: '/images/image-resizing-4.avif',
     notes: 'Preference: rose oil for massage',
     canReschedule: true,
     canCancel: true,
@@ -59,7 +59,7 @@ export const UPCOMING_BOOKINGS = [
     amount: 1200,
     paymentMethod: 'MPESA',
     mpesaRef: 'QJK456DEF',
-    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80',
+    image: '/images/image-resizing-6.avif',
     notes: null,
     canReschedule: true,
     canCancel: true,
@@ -82,7 +82,7 @@ export const UPCOMING_BOOKINGS = [
     amount: 20000,
     paymentMethod: null,
     mpesaRef: null,
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=400&q=80',
+    image: '/images/image-resizing-7.avif',
     notes: 'Catering for 8 people requested',
     canReschedule: false,
     canCancel: true,
@@ -104,7 +104,7 @@ export const PAST_BOOKINGS = [
     paymentMethod: 'MPESA',
     rating: 5,
     review: 'Grace was absolutely amazing. Best facial I have ever had.',
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=80',
+    image: '/images/image-resizing-4.avif',
   },
   {
     id: 'bk-011',
@@ -119,7 +119,7 @@ export const PAST_BOOKINGS = [
     paymentMethod: 'MPESA',
     rating: 4,
     review: null,
-    image: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=400&q=80',
+    image: '/images/image-resizing-8.avif',
   },
   {
     id: 'bk-012',
@@ -134,7 +134,7 @@ export const PAST_BOOKINGS = [
     paymentMethod: 'CASH',
     rating: 5,
     review: null,
-    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80',
+    image: '/images/image-resizing-6.avif',
   },
   {
     id: 'bk-013',
@@ -149,7 +149,7 @@ export const PAST_BOOKINGS = [
     paymentMethod: 'MPESA',
     rating: null,
     review: null,
-    image: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=400&q=80',
+    image: '/images/image-resizing-5.avif',
   },
   {
     id: 'bk-014',
@@ -164,7 +164,7 @@ export const PAST_BOOKINGS = [
     paymentMethod: 'MPESA',
     rating: 5,
     review: 'The room was pristine and the service was impeccable. Felt like a true 5-star stay.',
-    image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=400&q=80',
+    image: '/images/image-resizing-9.avif',
   },
 ]
 
@@ -283,7 +283,7 @@ export const FAVOURITE_SERVICES = [
   {
     slug: 'salon-spa',
     name: 'Salon & Spa',
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=80',
+    image: '/images/image-resizing-4.avif',
     rating: 4.9,
     basePrice: 1500,
     lastVisited: '2026-03-08',
@@ -291,7 +291,7 @@ export const FAVOURITE_SERVICES = [
   {
     slug: 'gym',
     name: 'Fitness Centre',
-    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80',
+    image: '/images/image-resizing-6.avif',
     rating: 4.8,
     basePrice: 1200,
     lastVisited: '2026-02-22',
@@ -299,7 +299,7 @@ export const FAVOURITE_SERVICES = [
   {
     slug: 'swimming-pool',
     name: 'Swimming Pool',
-    image: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=400&q=80',
+    image: '/images/image-resizing-8.avif',
     rating: 4.7,
     basePrice: 2500,
     lastVisited: '2026-03-01',

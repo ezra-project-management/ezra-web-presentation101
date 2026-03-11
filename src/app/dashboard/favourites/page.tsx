@@ -76,7 +76,7 @@ export default function FavouritesPage() {
                     {service.rating}
                   </span>
                   <span className="font-sans text-sm text-gray-400">
-                    {formatCurrency(service.basePrice)}+
+                    Starting from KShs 0
                   </span>
                 </div>
                 <p className="mt-2 font-sans text-xs text-gray-400">
@@ -126,7 +126,7 @@ export default function FavouritesPage() {
                     <p className="font-sans text-xs text-gray-400 mt-1">You haven&apos;t tried this yet</p>
                     <div className="mt-3 flex items-center justify-between">
                       <span className="font-sans text-sm text-navy font-medium">
-                        {formatCurrency(service.basePrice)}+
+                        KShs 0+
                       </span>
                       <span className="font-sans text-xs text-gold font-medium flex items-center gap-1">
                         Explore <ArrowRight className="w-3 h-3" />

@@ -47,7 +47,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
         </p>
         <div className="flex items-center justify-between mt-4">
           <span className="font-sans text-gold font-medium">
-            From {formatCurrency(service.basePrice)}
+            Starting from KShs 0
           </span>
           <span className="font-sans text-sm text-charcoal/50">
             {service.duration}

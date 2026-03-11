@@ -42,12 +42,12 @@ export default function RegisterPage() {
       {/* Left - Image */}
       <div className="hidden lg:flex lg:w-1/2 relative items-center justify-center">
         <Image
-          src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=80"
+          src="/images/image-resizing-2.jpeg"
           alt="Ezra Annex"
           fill
-          className="object-cover"
+          className="object-cover brightness-110"
         />
-        <div className="absolute inset-0 bg-navy/70" />
+        <div className="absolute inset-0 bg-gradient-to-br from-navy/55 via-navy/40 to-navy/50" />
         <div className="relative z-10 text-center px-12">
           <h2 className="font-display text-4xl text-white font-semibold">
             Join Ezra Annex

@@ -59,8 +59,8 @@ export function ServicesGrid() {
                       fill
                       className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.15]"
                     />
-                    {/* Cinematic gradient — darker, more dramatic */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-700" />
+                    {/* Subtle gradient — keeps images vibrant */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/20 to-transparent opacity-70 group-hover:opacity-80 transition-opacity duration-700" />
                   </div>
 
                   {/* Content */}
@@ -77,7 +77,7 @@ export function ServicesGrid() {
                       {service.tagline}
                     </p>
                     <p className="font-sans text-sm text-gold font-medium mt-2">
-                      From {formatCurrency(service.basePrice)}
+                      Starting from KShs 0
                     </p>
 
                     {/* Hover CTA — slides up with gold line */}
