@@ -8,25 +8,25 @@ import { ChevronDown } from 'lucide-react'
 
 const heroSlides = [
   {
-    image: '/images/hero-banquet.jpeg',
+    image: '/images/image-resizing-2.jpeg',
     badge: "Nairobi's Premier Destination",
     heading: ['Where Luxury Meets', 'Every Experience'],
     subtitle: 'Discover world-class salon, fitness, events, and accommodation — all in one extraordinary place.',
   },
   {
-    image: '/images/hero-spa.jpeg',
+    image: '/images/image-resizing-12.avif',
     badge: 'Wellness & Beauty',
     heading: ['Rejuvenate Your', 'Body & Soul'],
     subtitle: 'Indulge in premium spa treatments, expert styling, and holistic wellness services tailored to you.',
   },
   {
-    image: '/images/hero-lounge.jpeg',
+    image: '/images/image-resizing-9.avif',
     badge: 'Premium Lifestyle',
     heading: ['Elevate Every', 'Moment Here'],
     subtitle: 'From sunrise workouts to evening retreats — experience luxury living at its finest.',
   },
   {
-    image: '/images/hero-table.jpeg',
+    image: '/images/image-resizing-8.avif',
     badge: 'Unforgettable Events',
     heading: ['Grand Celebrations', 'Perfectly Crafted'],
     subtitle: 'From intimate dinners to lavish galas — our ballroom and banquet halls set the stage for memories that last.',
