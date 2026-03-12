@@ -53,7 +53,7 @@ export function Navbar() {
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="fixed top-5 left-1/2 -translate-x-1/2 z-50 hidden lg:block"
           >
-            <div className="flex items-center gap-1 px-2 py-1.5 bg-white/10 backdrop-blur-xl rounded-full border border-white/15 shadow-[0_8px_40px_rgba(0,0,0,0.2)]">
+            <div className="flex items-center gap-1 px-2 py-1.5 bg-navy/80 backdrop-blur-xl rounded-full border border-white/15 shadow-[0_8px_40px_rgba(0,0,0,0.2)]">
               {/* Logo */}
               <Link
                 href="/"
