@@ -14,6 +14,7 @@ import {
   MapPin,
   Users,
   ChevronRight,
+  ChevronDown,
   Crown,
 } from 'lucide-react'
 import CountUp from 'react-countup'
@@ -80,6 +81,7 @@ export default function DashboardPage() {
   const nextBooking = upcomingBookings[0] ?? null
   const otherUpcoming = upcomingBookings.slice(1)
   const [qrOpen, setQrOpen] = useState(false)
+  const [showAllUpcoming, setShowAllUpcoming] = useState(false)
 
   return (
     <div className="space-y-8">
@@ -242,14 +244,30 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Other upcoming (mini cards) */}
+              {/* Other upcoming (collapsible dropdown) */}
               {otherUpcoming.length > 0 && (
                 <div className="mt-6 pt-6 border-t border-gray-100">
-                  <p className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-3">
-                    Also upcoming
-                  </p>
+                  <button
+                    onClick={() => setShowAllUpcoming(!showAllUpcoming)}
+                    className="w-full flex items-center justify-between mb-3 group"
+                  >
+                    <p className="font-sans text-xs uppercase tracking-widest text-gray-400">
+                      Also upcoming
+                      <span className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full bg-gold/10 text-gold text-[10px] font-bold">
+                        {otherUpcoming.length}
+                      </span>
+                    </p>
+                    <ChevronDown
+                      className={cn(
+                        'w-4 h-4 text-gray-400 transition-transform duration-300',
+                        showAllUpcoming && 'rotate-180'
+                      )}
+                    />
+                  </button>
+
+                  {/* Always show first 3 */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {otherUpcoming.map((booking) => (
+                    {otherUpcoming.slice(0, 3).map((booking) => (
                       <Link
                         key={booking.id}
                         href={`/dashboard/bookings/${booking.id}`}
@@ -281,6 +299,63 @@ export default function DashboardPage() {
                       </Link>
                     ))}
                   </div>
+
+                  {/* Expandable rest */}
+                  {otherUpcoming.length > 3 && (
+                    <>
+                      <div
+                        className={cn(
+                          'grid grid-cols-1 md:grid-cols-2 gap-3 overflow-hidden transition-all duration-500 ease-in-out',
+                          showAllUpcoming ? 'max-h-[2000px] opacity-100 mt-3' : 'max-h-0 opacity-0'
+                        )}
+                      >
+                        {otherUpcoming.slice(3).map((booking) => (
+                          <Link
+                            key={booking.id}
+                            href={`/dashboard/bookings/${booking.id}`}
+                            className="flex items-center gap-3 p-3 rounded-xl bg-white border border-gray-100 hover:border-gold/30 hover:shadow-sm transition-all duration-300 group"
+                          >
+                            <div className="relative w-12 h-12 rounded-lg overflow-hidden shrink-0">
+                              {booking.image ? (
+                                <Image src={booking.image} alt={booking.service} fill className="object-cover" />
+                              ) : (
+                                <div className="w-full h-full bg-gradient-to-br from-navy to-navy-light flex items-center justify-center">
+                                  <span className="text-gold text-xs font-bold">{booking.service.charAt(0)}</span>
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-sans text-sm font-medium text-navy truncate">
+                                {booking.service}
+                              </p>
+                              <p className="font-sans text-xs text-gray-400">
+                                {formatDate(booking.date)} · {booking.time}
+                              </p>
+                            </div>
+                            <span className="flex items-center gap-1">
+                              <span className={cn('w-1.5 h-1.5 rounded-full', statusDot[booking.status])} />
+                              <span className={cn('font-sans text-xs font-medium', statusStyles[booking.status])}>
+                                {statusLabel[booking.status]}
+                              </span>
+                            </span>
+                          </Link>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={() => setShowAllUpcoming(!showAllUpcoming)}
+                        className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-cream/60 hover:bg-cream transition-colors duration-300 font-sans text-xs text-charcoal/60 hover:text-navy"
+                      >
+                        {showAllUpcoming ? 'Show less' : `Show all ${otherUpcoming.length} bookings`}
+                        <ChevronDown
+                          className={cn(
+                            'w-3.5 h-3.5 transition-transform duration-300',
+                            showAllUpcoming && 'rotate-180'
+                          )}
+                        />
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
             </>
