@@ -201,7 +201,7 @@ export const SERVICES: Service[] = [
       'Benefit from professional swimming instruction in our pristine pool. Certified instructors offer one-on-one coaching and group classes for beginners through competitive swimmers.',
     basePrice: 0,
     duration: 'Per session',
-    image: '/images/image-resizing-8.avif',
+    image: '/images/image-resizing-10.avif',
     icon: '◇',
     highlights: [
       'Certified instructors',
