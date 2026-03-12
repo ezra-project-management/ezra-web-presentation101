@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
 import { Menu, X, ChevronDown, Home, Briefcase, Info, Phone, LogIn, CalendarCheck } from 'lucide-react'
@@ -56,15 +57,15 @@ export function Navbar() {
               {/* Logo */}
               <Link
                 href="/"
-                className="flex items-center gap-1 pl-4 pr-3"
+                className="flex items-center pl-3 pr-3"
               >
-                <span className="font-display text-lg font-bold text-white">E</span>
-                <motion.span
-                  className="w-1 h-1 rounded-full bg-gold inline-block"
-                  animate={{ scale: [1, 1.4, 1] }}
-                  transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+                <Image
+                  src="/ezralogo.jpeg"
+                  alt="Ezra Annex"
+                  width={36}
+                  height={36}
+                  className="rounded-full object-cover"
                 />
-                <span className="font-display text-lg font-light text-white/80">A</span>
               </Link>
 
               {/* Divider */}
@@ -186,26 +187,15 @@ export function Navbar() {
               {/* Logo */}
               <Link
                 href="/"
-                className="flex items-center justify-center gap-1 mb-3 px-2 py-2"
+                className="flex items-center justify-center mb-3 px-2 py-2"
               >
-                <span className="font-display text-lg font-bold text-white">E</span>
-                <motion.span
-                  className="w-1 h-1 rounded-full bg-gold inline-block"
-                  animate={{ scale: [1, 1.4, 1] }}
-                  transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+                <Image
+                  src="/ezralogo.jpeg"
+                  alt="Ezra Annex"
+                  width={36}
+                  height={36}
+                  className="rounded-full object-cover"
                 />
-                <AnimatePresence>
-                  {sidebarExpanded && (
-                    <motion.span
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: 'auto' }}
-                      exit={{ opacity: 0, width: 0 }}
-                      className="font-display text-lg font-light text-white/80 overflow-hidden whitespace-nowrap"
-                    >
-                      A
-                    </motion.span>
-                  )}
-                </AnimatePresence>
               </Link>
 
               <div className="w-full h-px bg-white/10 mb-2" />
@@ -348,11 +338,16 @@ export function Navbar() {
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <Link
           href="/"
-          className="flex items-center gap-1 px-4 py-2.5 bg-navy/80 backdrop-blur-xl rounded-full border border-white/10 shadow-lg"
+          className="flex items-center gap-2 px-3 py-2 bg-navy/80 backdrop-blur-xl rounded-full border border-white/10 shadow-lg"
         >
+          <Image
+            src="/ezralogo.jpeg"
+            alt="Ezra Annex"
+            width={32}
+            height={32}
+            className="rounded-full object-cover"
+          />
           <span className="font-display text-base font-bold text-white">EZRA</span>
-          <span className="w-1 h-1 rounded-full bg-gold inline-block" />
-          <span className="font-display text-base font-light text-white/80">ANNEX</span>
         </Link>
       </div>
 

@@ -112,6 +112,23 @@ img {
   animation: gradientShift 8s ease infinite;
 }
 
+/* Loading page animations */
+@keyframes logoBreathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.9; }
+}
+.animate-logo-breathe {
+  animation: logoBreathe 2.5s ease-in-out infinite;
+}
+
+@keyframes loadingSlide {
+  0% { transform: translateX(-150%); }
+  100% { transform: translateX(450%); }
+}
+.animate-loading-slide {
+  animation: loadingSlide 1.5s ease-in-out infinite;
+}
+
 /* Pulsing dot for pending status */
 @keyframes pulseDot {
   0%, 100% { opacity: 1; transform: scale(1); }

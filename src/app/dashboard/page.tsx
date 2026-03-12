@@ -297,7 +297,7 @@ export default function DashboardPage() {
 
       {/* Section C — Loyalty Progress */}
       <AnimatedSection delay={0.16}>
-        <div className="bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-50 border border-gold/30 rounded-2xl p-6 lg:p-8">
+        <div className="bg-gradient-to-r from-amber-50 via-gold/10 to-amber-50 border border-gold/30 rounded-2xl p-6 lg:p-8">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
               <p className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-2">
