@@ -3,9 +3,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import * as Accordion from '@radix-ui/react-accordion'
-import { CheckCircle, ChevronDown, Star } from 'lucide-react'
+import { CheckCircle, ChevronDown, Star, ArrowRight, Clock, LogIn } from 'lucide-react'
 import type { Service } from '@/lib/services'
-import { BookingWidget } from '@/components/booking/BookingWidget'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 
 interface ServiceDetailClientProps {
@@ -126,14 +125,64 @@ export function ServiceDetailClient({ service }: ServiceDetailClientProps) {
             </AnimatedSection>
           </div>
 
-          {/* Right Widget */}
+          {/* Right — Book Now Card */}
           <div className="lg:col-span-2">
-            <BookingWidget
-              serviceName={service.name}
-              serviceSlug={service.slug}
-              basePrice={service.basePrice}
-              duration={service.duration}
-            />
+            <div className="bg-white rounded-2xl shadow-xl border border-gold/20 p-6 sticky top-24">
+              <h3 className="font-display text-xl font-semibold text-navy">
+                {service.name}
+              </h3>
+              <div className="mt-1 mb-5">
+                <p className="font-display text-2xl text-gold font-semibold">
+                  Starting from KShs 0
+                </p>
+                <div className="flex items-center gap-1.5 mt-1 text-charcoal/50">
+                  <Clock className="w-4 h-4" />
+                  <span className="font-sans text-sm">{service.duration}</span>
+                </div>
+              </div>
+
+              {/* Service highlights mini */}
+              <div className="space-y-2 mb-6">
+                {service.highlights.slice(0, 3).map((h) => (
+                  <div key={h} className="flex items-center gap-2">
+                    <CheckCircle className="w-3.5 h-3.5 text-gold shrink-0" />
+                    <span className="font-sans text-sm text-charcoal/70">{h}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Login to Book CTA */}
+              <Link
+                href={`/auth/login?redirect=/services/${service.slug}/book`}
+                className="flex items-center justify-center gap-2 w-full py-4 bg-gold text-navy-dark font-sans font-bold text-base rounded-xl hover:bg-gold-light transition-all duration-300 shadow-gold hover:shadow-lg"
+              >
+                <LogIn className="w-5 h-5" />
+                Sign in to Book
+              </Link>
+
+              <p className="mt-3 text-center font-sans text-xs text-charcoal/45">
+                Don&apos;t have an account?{' '}
+                <Link
+                  href={`/auth/register?redirect=/services/${service.slug}/book`}
+                  className="text-gold font-medium hover:text-gold-dark"
+                >
+                  Register here
+                </Link>
+              </p>
+
+              {/* Trust badges */}
+              <div className="mt-5 pt-5 border-t border-charcoal/10 flex flex-wrap gap-x-4 gap-y-1.5">
+                <p className="flex items-center gap-1.5 font-sans text-xs text-charcoal/45">
+                  <CheckCircle className="w-3.5 h-3.5" /> Free cancellation
+                </p>
+                <p className="flex items-center gap-1.5 font-sans text-xs text-charcoal/45">
+                  <CheckCircle className="w-3.5 h-3.5" /> Instant confirmation
+                </p>
+                <p className="flex items-center gap-1.5 font-sans text-xs text-charcoal/45">
+                  <CheckCircle className="w-3.5 h-3.5" /> Secure M-Pesa payment
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

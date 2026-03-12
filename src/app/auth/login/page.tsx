@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Eye, EyeOff } from 'lucide-react'
 
 export default function LoginPage() {
@@ -12,20 +12,22 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirect') || '/dashboard'
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     // Simulate login
     setTimeout(() => {
-      router.push('/dashboard')
+      router.push(redirectTo)
     }, 800)
   }
 
   const handleSocialLogin = () => {
     setLoading(true)
     setTimeout(() => {
-      router.push('/dashboard')
+      router.push(redirectTo)
     }, 800)
   }
 
