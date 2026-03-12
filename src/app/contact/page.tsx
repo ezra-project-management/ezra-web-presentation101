@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, FormEvent } from 'react'
+import Image from 'next/image'
 import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
@@ -165,10 +166,13 @@ export default function ContactPage() {
 
               {/* Map Placeholder */}
               <div className="bg-navy-light rounded-xl p-8 flex flex-col items-center justify-center min-h-[200px]">
-                <MapPin className="w-10 h-10 text-gold mb-3" />
-                <p className="font-display text-lg text-white font-semibold">
-                  Ezra Annex
-                </p>
+                <Image
+                  src="/ezralogo.jpeg"
+                  alt="Ezra Annex"
+                  width={64}
+                  height={64}
+                  className="rounded-full object-cover mb-3"
+                />
                 <p className="font-sans text-sm text-white/60 mt-1">
                   Nairobi, Kenya
                 </p>

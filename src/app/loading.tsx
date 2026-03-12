@@ -4,37 +4,36 @@ import Image from 'next/image'
 
 export default function Loading() {
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-navy">
-      {/* Radial glow behind logo */}
-      <div className="absolute w-[300px] h-[300px] rounded-full bg-gold/10 blur-3xl" />
+    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-navy overflow-hidden">
+      {/* Animated radial glows */}
+      <div className="absolute w-[400px] h-[400px] rounded-full bg-gold/8 blur-[100px] animate-logo-breathe" />
+      <div className="absolute w-[200px] h-[200px] rounded-full bg-gold/5 blur-[60px] animate-loading-pulse-slow" />
 
-      {/* Logo */}
-      <div className="relative animate-logo-breathe">
-        <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-gold/30 shadow-gold">
-          <Image
-            src="/ezralogo.jpeg"
-            alt="Ezra Annex"
-            width={112}
-            height={112}
-            className="object-cover"
-            priority
-          />
+      {/* Spinning ring behind logo */}
+      <div className="relative">
+        <div className="absolute -inset-4 rounded-full border border-gold/20 animate-spin-slow" />
+        <div className="absolute -inset-4 rounded-full border border-transparent border-t-gold/50 animate-spin-slow" />
+
+        {/* Logo container */}
+        <div className="relative animate-logo-breathe">
+          <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-gold/40 shadow-[0_0_40px_rgba(201,168,76,0.2)]">
+            <Image
+              src="/ezralogo.jpeg"
+              alt="Ezra Annex"
+              width={128}
+              height={128}
+              className="object-cover"
+              priority
+            />
+          </div>
         </div>
       </div>
 
-      {/* Brand name */}
-      <div className="mt-6 flex items-center gap-1.5">
-        <span className="font-display text-2xl font-bold text-white tracking-wider">
-          EZRA
-        </span>
-        <span className="font-display text-2xl font-light text-white/60 tracking-wider">
-          ANNEX
-        </span>
-      </div>
-
-      {/* Animated gold line */}
-      <div className="mt-8 w-40 h-[2px] rounded-full bg-white/10 overflow-hidden">
-        <div className="h-full w-1/3 rounded-full bg-gradient-to-r from-transparent via-gold to-transparent animate-loading-slide" />
+      {/* Animated gold dots */}
+      <div className="mt-10 flex items-center gap-2">
+        <span className="w-2 h-2 rounded-full bg-gold/80 animate-loading-dot-1" />
+        <span className="w-2 h-2 rounded-full bg-gold/60 animate-loading-dot-2" />
+        <span className="w-2 h-2 rounded-full bg-gold/40 animate-loading-dot-3" />
       </div>
     </div>
   )

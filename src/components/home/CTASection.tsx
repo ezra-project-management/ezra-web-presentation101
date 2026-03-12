@@ -60,10 +60,24 @@ export function CTASection() {
           Start Your Journey
         </motion.div>
 
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={isInView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-6"
+        >
+          <Image
+            src="/ezralogo.jpeg"
+            alt="Ezra Annex"
+            width={80}
+            height={80}
+            className="rounded-full object-cover mx-auto"
+          />
+        </motion.div>
         <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-white font-semibold leading-tight">
           <TextReveal text="Ready to Experience" delay={0} />
           <br />
-          <TextReveal text="Ezra Annex?" delay={0.3} className="text-gold" />
+          <TextReveal text="Excellence?" delay={0.3} className="text-gold" />
         </h2>
 
         <motion.p

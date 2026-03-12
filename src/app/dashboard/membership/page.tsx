@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Crown, Gift, Star, Phone, Cake, ArrowRight, Zap } from 'lucide-react'
 import CountUp from 'react-countup'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
@@ -67,7 +68,13 @@ export default function MembershipPage() {
             <div className="absolute top-6 right-20 w-10 h-7 rounded-md bg-gradient-to-br from-gold/40 to-gold/20 border border-gold/30" />
 
             <div className="relative z-10 flex items-start justify-between">
-              <p className="font-display text-white/80 tracking-[0.3em] text-sm">EZRA ANNEX</p>
+              <Image
+                src="/ezralogo.jpeg"
+                alt="Ezra Annex"
+                width={48}
+                height={48}
+                className="rounded-full object-cover"
+              />
               <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gold/20 border border-gold/30">
                 <Crown className="w-3.5 h-3.5 text-gold" />
                 <span className="font-sans text-xs font-bold text-gold">GOLD</span>

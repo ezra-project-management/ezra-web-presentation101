@@ -62,20 +62,14 @@ export default function RegisterPage() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="inline-block">
             <Image
               src="/ezralogo.jpeg"
               alt="Ezra Annex"
-              width={52}
-              height={52}
+              width={80}
+              height={80}
               className="rounded-full object-cover"
             />
-            <span className="font-display text-2xl font-bold text-navy">
-              EZRA
-            </span>
-            <span className="font-display text-2xl font-light text-navy/60">
-              ANNEX
-            </span>
           </Link>
 
           <h2 className="mt-8 font-display text-2xl text-navy font-semibold">

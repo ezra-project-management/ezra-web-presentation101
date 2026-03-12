@@ -343,11 +343,10 @@ export function Navbar() {
           <Image
             src="/ezralogo.jpeg"
             alt="Ezra Annex"
-            width={40}
-            height={40}
+            width={44}
+            height={44}
             className="rounded-full object-cover"
           />
-          <span className="font-display text-base font-bold text-white">EZRA</span>
         </Link>
       </div>
 

@@ -56,8 +56,15 @@ export default function AboutPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-navy/50 via-navy/40 to-navy/60" />
         <div className="relative z-10 text-center">
+          <Image
+            src="/ezralogo.jpeg"
+            alt="Ezra Annex"
+            width={80}
+            height={80}
+            className="rounded-full object-cover mx-auto mb-4"
+          />
           <h1 className="font-display text-4xl md:text-5xl text-white font-semibold">
-            About Ezra Annex
+            About Us
           </h1>
           <div className="mt-3 flex items-center justify-center gap-2 font-sans text-sm text-white/60">
             <Link href="/" className="hover:text-gold transition-colors">

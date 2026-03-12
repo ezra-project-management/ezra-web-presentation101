@@ -97,9 +97,16 @@ export default function DashboardPage() {
                   <span className="font-light">{greeting}, </span>
                   <span className="font-bold">{CURRENT_USER.firstName}</span>
                 </h1>
-                <p className="mt-2 font-sans text-white/60 text-sm">
-                  Welcome back to Ezra Annex
-                </p>
+                <div className="mt-2 flex items-center gap-2">
+                  <p className="font-sans text-white/60 text-sm">Welcome back to</p>
+                  <Image
+                    src="/ezralogo.jpeg"
+                    alt="Ezra Annex"
+                    width={28}
+                    height={28}
+                    className="rounded-full object-cover inline-block"
+                  />
+                </div>
               </div>
               <Link
                 href="/services"

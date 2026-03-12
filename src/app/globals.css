@@ -115,19 +115,35 @@ img {
 /* Loading page animations */
 @keyframes logoBreathe {
   0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.9; }
+  50% { transform: scale(1.06); opacity: 0.92; }
 }
 .animate-logo-breathe {
   animation: logoBreathe 2.5s ease-in-out infinite;
 }
 
-@keyframes loadingSlide {
-  0% { transform: translateX(-150%); }
-  100% { transform: translateX(450%); }
+@keyframes spinSlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
-.animate-loading-slide {
-  animation: loadingSlide 1.5s ease-in-out infinite;
+.animate-spin-slow {
+  animation: spinSlow 4s linear infinite;
 }
+
+@keyframes loadingPulseSlow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.2); }
+}
+.animate-loading-pulse-slow {
+  animation: loadingPulseSlow 3s ease-in-out infinite;
+}
+
+@keyframes loadingDot {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+.animate-loading-dot-1 { animation: loadingDot 1.2s ease-in-out infinite; }
+.animate-loading-dot-2 { animation: loadingDot 1.2s ease-in-out 0.2s infinite; }
+.animate-loading-dot-3 { animation: loadingDot 1.2s ease-in-out 0.4s infinite; }
 
 /* Pulsing dot for pending status */
 @keyframes pulseDot {
