@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { AnimatePresence } from 'framer-motion'
 import { SERVICES } from '@/lib/services'
 import { ServiceCard } from '@/components/services/ServiceCard'
 import { ServiceFilters } from '@/components/services/ServiceFilters'
@@ -50,11 +49,9 @@ export default function ServicesPage() {
         />
 
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AnimatePresence mode="popLayout">
-            {filteredServices.map((service) => (
-              <ServiceCard key={service.id} service={service} />
-            ))}
-          </AnimatePresence>
+          {filteredServices.map((service) => (
+            <ServiceCard key={service.id} service={service} />
+          ))}
         </div>
       </section>
     </>

@@ -2,9 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import type { Service } from '@/lib/services'
-import { formatCurrency } from '@/lib/utils'
 import { Badge } from '@/components/ui/Badge'
 
 interface ServiceCardProps {
@@ -13,13 +11,9 @@ interface ServiceCardProps {
 
 export function ServiceCard({ service }: ServiceCardProps) {
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20 }}
-      whileHover={{ y: -4 }}
-      className="bg-white rounded-xl overflow-hidden shadow-lg border border-transparent hover:border-gold/30 hover:shadow-xl transition-all duration-300 group flex flex-col"
+    <Link
+      href={`/services/${service.slug}`}
+      className="bg-white rounded-xl overflow-hidden shadow-lg border border-transparent hover:border-gold/30 hover:shadow-xl transition-all duration-300 group flex flex-col hover:-translate-y-1"
     >
       {/* Image */}
       <div className="relative aspect-video overflow-hidden">
@@ -57,13 +51,10 @@ export function ServiceCard({ service }: ServiceCardProps) {
 
       {/* Footer */}
       <div className="px-6 pb-6">
-        <Link
-          href={`/services/${service.slug}`}
-          className="block w-full text-center py-3 bg-navy text-white font-sans font-medium rounded-lg hover:bg-gold hover:text-navy-dark transition-all duration-300"
-        >
+        <span className="block w-full text-center py-3 bg-navy text-white font-sans font-medium rounded-lg group-hover:bg-gold group-hover:text-navy-dark transition-all duration-300">
           View &amp; Book
-        </Link>
+        </span>
       </div>
-    </motion.div>
+    </Link>
   )
 }
