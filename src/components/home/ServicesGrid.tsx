@@ -50,7 +50,7 @@ export function ServicesGrid() {
 
                 {/* Content */}
                 <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <p className="text-2xl mb-1 transition-transform duration-500 group-hover:scale-110 inline-block">
+                  <p className="text-2xl mb-1 transition-transform duration-500 group-hover:scale-110 inline-block" suppressHydrationWarning>
                     {service.icon}
                   </p>
                   <h3 className="font-display text-xl font-semibold text-white">

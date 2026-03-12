@@ -26,7 +26,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
         <Badge className="absolute top-3 left-3" variant="cream">
           {service.category}
         </Badge>
-        <div className="absolute top-3 right-3 w-10 h-10 rounded-full bg-gold/90 flex items-center justify-center text-lg">
+        <div className="absolute top-3 right-3 w-10 h-10 rounded-full bg-gold/90 flex items-center justify-center text-lg" suppressHydrationWarning>
           {service.icon}
         </div>
       </div>

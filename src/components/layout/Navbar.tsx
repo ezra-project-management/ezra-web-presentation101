@@ -125,7 +125,7 @@ export function Navbar() {
                                 href={`/services/${service.slug}`}
                                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-cream transition-all duration-200 group"
                               >
-                                <span className="text-base group-hover:scale-110 transition-transform duration-300">
+                                <span className="text-base group-hover:scale-110 transition-transform duration-300" suppressHydrationWarning>
                                   {service.icon}
                                 </span>
                                 <div>
@@ -256,7 +256,7 @@ export function Navbar() {
                                 href={`/services/${service.slug}`}
                                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-cream transition-colors text-sm font-sans text-navy hover:text-gold"
                               >
-                                <span>{service.icon}</span>
+                                <span suppressHydrationWarning>{service.icon}</span>
                                 {service.name}
                               </Link>
                             ))}
@@ -421,7 +421,7 @@ export function Navbar() {
                                     href={`/services/${service.slug}`}
                                     className="flex items-center gap-2 px-3 py-2.5 rounded-lg font-sans text-sm text-white/50 active:bg-white/5 hover:text-gold transition-colors"
                                   >
-                                    <span>{service.icon}</span>
+                                    <span suppressHydrationWarning>{service.icon}</span>
                                     {service.name}
                                   </Link>
                                 ))}
