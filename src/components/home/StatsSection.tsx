@@ -2,6 +2,7 @@
 
 import { motion, useInView, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
+import CountUp from 'react-countup'
 import { STATS } from '@/lib/services'
 
 export function StatsSection() {
@@ -14,6 +15,13 @@ export function StatsSection() {
     offset: ['start end', 'end start'],
   })
   const bgY = useTransform(scrollYProgress, [0, 1], ['-5%', '5%'])
+
+  // Helper to parse stats like "5,000+" or "99%"
+  const parseStatValue = (value: string) => {
+    const number = parseInt(value.replace(/[^0-9]/g, ''), 10)
+    const suffix = value.replace(/[0-9,]/g, '')
+    return { number, suffix }
+  }
 
   return (
     <section ref={ref} className="relative py-24 overflow-hidden">
@@ -39,44 +47,55 @@ export function StatsSection() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {STATS.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
-              animate={
-                isInView
-                  ? { opacity: 1, y: 0, filter: 'blur(0px)' }
-                  : {}
-              }
-              transition={{
-                duration: 0.9,
-                delay: index * 0.2,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="text-center relative"
-            >
-              {/* Gold Divider */}
-              {index > 0 && (
-                <motion.div
-                  initial={{ scaleY: 0 }}
-                  animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
-                  transition={{
-                    duration: 0.8,
-                    delay: 0.4 + index * 0.15,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-px h-16 bg-gradient-to-b from-transparent via-gold/40 to-transparent origin-center"
-                />
-              )}
+          {STATS.map((stat, index) => {
+            const { number, suffix } = parseStatValue(stat.value)
+            
+            return (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
+                animate={
+                  isInView
+                    ? { opacity: 1, y: 0, filter: 'blur(0px)' }
+                    : {}
+                }
+                transition={{
+                  duration: 0.9,
+                  delay: index * 0.2,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="text-center relative"
+              >
+                {/* Gold Divider */}
+                {index > 0 && (
+                  <motion.div
+                    initial={{ scaleY: 0 }}
+                    animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
+                    transition={{
+                      duration: 0.8,
+                      delay: 0.4 + index * 0.15,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                    className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-px h-16 bg-gradient-to-b from-transparent via-gold/40 to-transparent origin-center"
+                  />
+                )}
 
-              <p className="font-display text-5xl md:text-6xl font-bold bg-gradient-to-b from-gold to-gold-light bg-clip-text text-transparent">
-                {stat.value}
-              </p>
-              <p className="mt-3 font-sans text-sm text-white/50 uppercase tracking-[0.15em]">
-                {stat.label}
-              </p>
-            </motion.div>
-          ))}
+                <div className="font-display text-5xl md:text-6xl font-bold bg-gradient-to-b from-gold to-gold-light bg-clip-text text-transparent">
+                  <CountUp
+                    end={number}
+                    duration={2.5}
+                    suffix={suffix}
+                    separator=","
+                    enableScrollSpy={true}
+                    scrollSpyOnce={true}
+                  />
+                </div>
+                <p className="mt-3 font-sans text-sm text-white/50 uppercase tracking-[0.15em]">
+                  {stat.label}
+                </p>
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </section>

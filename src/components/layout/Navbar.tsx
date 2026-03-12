@@ -336,14 +336,15 @@ export function Navbar() {
 
       {/* Mobile Logo */}
       <div className="lg:hidden fixed top-4 left-4 z-[60]">
-        <Link href="/" className="block">
+        <Link href="/" className="flex items-center gap-2 px-2 py-1.5 bg-cream/90 backdrop-blur-xl border border-white/20 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] active:scale-95 transition-transform duration-200">
           <Image
             src="/ezralogo.jpeg"
             alt="Ezra Annex"
-            width={44}
-            height={44}
-            className="rounded-full object-cover shadow-lg"
+            width={34}
+            height={34}
+            className="rounded-full object-cover"
           />
+          <span className="font-display text-sm font-bold text-navy pr-2">EZRA</span>
         </Link>
       </div>
 
