@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowLeft,
@@ -84,7 +84,6 @@ function convertTo24(time12: string) {
 
 export default function BookingDetailPage() {
   const params = useParams()
-  const router = useRouter()
   const { bookings, cancelBooking, rescheduleBooking } = useBooking()
   const [qrExpanded, setQrExpanded] = useState(false)
 

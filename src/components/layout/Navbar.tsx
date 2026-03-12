@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
 import { Menu, X, ChevronDown, Home, Briefcase, Info, Phone, LogIn, CalendarCheck } from 'lucide-react'
 import { SERVICES } from '@/lib/services'
@@ -22,7 +22,6 @@ export function Navbar() {
   const [servicesOpen, setServicesOpen] = useState(false)
   const [sidebarExpanded, setSidebarExpanded] = useState(false)
   const pathname = usePathname()
-  const router = useRouter()
   const { scrollY } = useScroll()
 
   // Hide on auth and dashboard pages
@@ -34,9 +33,12 @@ export function Navbar() {
   })
 
   useEffect(() => {
-    setMobileOpen(false)
-    setServicesOpen(false)
-    setSidebarExpanded(false)
+    const id = setTimeout(() => {
+      setMobileOpen(false)
+      setServicesOpen(false)
+      setSidebarExpanded(false)
+    }, 0)
+    return () => clearTimeout(id)
   }, [pathname])
 
   if (isAuthPage || isDashboard) return null

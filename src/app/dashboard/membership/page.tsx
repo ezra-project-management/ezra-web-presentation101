@@ -1,9 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import Link from 'next/link'
 import Image from 'next/image'
-import { Crown, Gift, Star, Phone, Cake, ArrowRight, Zap } from 'lucide-react'
+import { Crown, Gift, Star, Phone, Cake, Zap } from 'lucide-react'
 import CountUp from 'react-countup'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { cn } from '@/lib/utils'

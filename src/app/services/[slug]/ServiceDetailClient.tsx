@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import * as Accordion from '@radix-ui/react-accordion'
-import { CheckCircle, ChevronDown, Star, ArrowRight, Clock, LogIn } from 'lucide-react'
+import { CheckCircle, ChevronDown, Star, Clock, LogIn } from 'lucide-react'
 import type { Service } from '@/lib/services'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 

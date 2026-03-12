@@ -6,7 +6,6 @@ import Image from 'next/image'
 import { Heart, Star, ArrowRight } from 'lucide-react'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { cn } from '@/lib/utils'
-import { formatCurrency } from '@/lib/utils'
 import { FAVOURITE_SERVICES } from '@/lib/dashboard-data'
 import { SERVICES } from '@/lib/services'
 
