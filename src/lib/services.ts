@@ -120,7 +120,7 @@ export const SERVICES: Service[] = [
       'Fully equipped meeting and boardrooms with high-speed internet, AV systems, and catering options. Perfect for corporate meetings, presentations, and strategic sessions.',
     basePrice: 0,
     duration: 'Per hour',
-    image: image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/5ca5a320-c813-45c1-97df-16afea14bc00/public',
+    image: image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/5ca5a320-c813-45c1-97df-16afea14bc00/public', 
     icon: '◈',
     highlights: [
       'High-speed WiFi',
