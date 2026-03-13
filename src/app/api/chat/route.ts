@@ -20,7 +20,8 @@ export async function POST(request: Request) {
   })
 
   const data = await response.json()
-  return NextResponse.json({
-    content: [{ text: data.choices?.[0]?.message?.content || 'Sorry, try again.' }]
-  })
+  console.log('Groq response:', JSON.stringify(data))
+return NextResponse.json({
+  content: [{ text: data.choices?.[0]?.message?.content || 'Sorry, try again.' }]
+})
 }
