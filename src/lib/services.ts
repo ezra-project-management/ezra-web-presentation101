@@ -147,7 +147,7 @@ export const SERVICES: Service[] = [
       'Our magnificent ballroom accommodates up to 500 guests in elegance. Featuring stunning decor, professional lighting systems, and full event support for weddings, galas, and corporate events.',
     basePrice: 0,
     duration: 'Full day',
-    image: image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/4e93453c-c18f-40f7-1d44-47348a51c600/public',
+    image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/4e93453c-c18f-40f7-1d44-47348a51c600/public',
     icon: '❋',
     highlights: [
       '500 guest capacity',
@@ -174,7 +174,7 @@ export const SERVICES: Service[] = [
       'The perfect venue for intimate celebrations, corporate dinners, and social gatherings. Our banquet hall offers customised menus, impeccable service, and a warm sophisticated atmosphere.',
     basePrice: 0,
     duration: 'Full day',
-    image: image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/ba91ccad-a7a1-463e-25be-00131cc7d300/public',
+    image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/ba91ccad-a7a1-463e-25be-00131cc7d300/public',
     icon: '◎',
     highlights: [
       'Custom menus',
@@ -228,7 +228,7 @@ export const SERVICES: Service[] = [
       'Our beautifully appointed rooms offer a serene retreat with premium amenities. Whether for a staycation or extended stay, experience the Ezra Annex standard of comfort and elegance.',
     basePrice: 0,
     duration: 'Per night',
-    image: image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/75f3d810-00c8-4af6-9421-be2ea21dbf00/public',
+    image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/75f3d810-00c8-4af6-9421-be2ea21dbf00/public',
     icon: '⬡',
     highlights: [
       'Premium bedding',
