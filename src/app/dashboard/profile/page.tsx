@@ -27,7 +27,7 @@ const tabsList = [
 
 const serviceChips = [
   'Salon & Spa', 'Barbershop', 'Fitness Centre', 'Meeting Rooms',
-  'Ballroom', 'Banquet Hall', 'Swimming Pool', 'Accommodation',
+  'Ballroom', 'Banquet Hall', 'Swimming Pool',
 ]
 
 const dietaryOptions = ['Vegetarian', 'Vegan', 'Halal', 'Gluten-free', 'None']

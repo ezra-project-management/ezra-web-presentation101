@@ -3,7 +3,7 @@ export interface Service {
   slug: string
   name: string
   tagline: string
-  category: 'WELLNESS' | 'FITNESS' | 'BUSINESS' | 'EVENTS' | 'ACCOMMODATION'
+  category: 'WELLNESS' | 'FITNESS' | 'BUSINESS' | 'EVENTS'
   description: string
   basePrice: number
   duration: string
@@ -218,32 +218,6 @@ export const SERVICES: Service[] = [
     ],
     available: true,
   },
-  {
-    id: '8',
-    slug: 'rooms',
-    name: 'Accommodation',
-    tagline: 'Luxurious rooms for rest and rejuvenation',
-    category: 'ACCOMMODATION',
-    description:
-      'Our beautifully appointed rooms offer a serene retreat with premium amenities. Whether for a staycation or extended stay, experience the Ezra Annex standard of comfort and elegance.',
-    basePrice: 0,
-    duration: 'Per night',
-    image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/75f3d810-00c8-4af6-9421-be2ea21dbf00/public',
-    icon: '⬡',
-    highlights: [
-      'Premium bedding',
-      'En-suite bathroom',
-      'Room service',
-      'Free WiFi',
-    ],
-    services: [
-      'Standard Room',
-      'Deluxe Room',
-      'Suite',
-      'Extended Stay Package',
-    ],
-    available: true,
-  },
 ]
 
 export const TESTIMONIALS: Testimonial[] = [
@@ -275,18 +249,11 @@ export const TESTIMONIALS: Testimonial[] = [
     rating: 5,
     avatar: 'JW',
   },
-  {
-    name: 'Grace A.',
-    role: 'Hotel Guest',
-    text: 'Stayed for a week and absolutely loved the experience. The room was immaculate, the service was warm, and having spa access was a wonderful bonus.',
-    rating: 5,
-    avatar: 'GA',
-  },
 ]
 
 export const STATS: Stat[] = [
   { value: '5,000+', label: 'Happy Clients' },
-  { value: '8', label: 'Premium Services' },
+  { value: '7', label: 'Premium Services' },
   { value: '15+', label: 'Expert Staff' },
   { value: '99%', label: 'Satisfaction Rate' },
 ]

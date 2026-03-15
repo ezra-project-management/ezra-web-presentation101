@@ -151,21 +151,6 @@ export const PAST_BOOKINGS = [
     review: null,
     image: '/images/image-resizing-5.avif',
   },
-  {
-    id: 'bk-014',
-    reference: 'EZR-P4I5J6',
-    service: 'Accommodation',
-    serviceSlug: 'rooms',
-    date: '2026-02-10',
-    time: '2:00 PM',
-    duration: '2 nights',
-    status: 'COMPLETED' as const,
-    amount: 17000,
-    paymentMethod: 'MPESA',
-    rating: 5,
-    review: 'The room was pristine and the service was impeccable. Felt like a true 5-star stay.',
-    image: '/images/image-resizing-9.avif',
-  },
 ]
 
 export const NOTIFICATIONS_DATA = [
@@ -256,7 +241,6 @@ export const LOYALTY_HISTORY = [
   { id: 'lp-002', date: '2026-03-01', description: 'Swimming Pool session', points: 25, type: 'earn' as const, balance: 4215 },
   { id: 'lp-003', date: '2026-02-22', description: 'Fitness Centre visit', points: 12, type: 'earn' as const, balance: 4190 },
   { id: 'lp-004', date: '2026-02-15', description: 'Booking cancelled - reversal', points: -8, type: 'deduct' as const, balance: 4178 },
-  { id: 'lp-005', date: '2026-02-10', description: 'Accommodation stay (2 nights)', points: 170, type: 'earn' as const, balance: 4186 },
   { id: 'lp-006', date: '2026-01-28', description: 'Gold Member bonus - January', points: 500, type: 'bonus' as const, balance: 4016 },
   { id: 'lp-007', date: '2026-01-20', description: 'Spa treatment', points: 28, type: 'earn' as const, balance: 3516 },
   { id: 'lp-008', date: '2026-01-10', description: 'Redeemed: 500 points (KES 500 off)', points: -500, type: 'redeem' as const, balance: 3488 },
@@ -275,7 +259,6 @@ export const SERVICE_HISTORY_CHART = [
   { service: 'Salon & Spa', visits: 8 },
   { service: 'Gym', visits: 5 },
   { service: 'Pool', visits: 3 },
-  { service: 'Rooms', visits: 1 },
   { service: 'Boardroom', visits: 1 },
 ]
 

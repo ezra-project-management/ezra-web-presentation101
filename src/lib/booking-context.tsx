@@ -12,7 +12,6 @@ export const SERVICE_CAPACITY: Record<string, number> = {
   'ballroom':       1,
   'banquet-hall':   1,
   'swimming-pool':  4,
-  'rooms':          3,
   default:          4,
 }
 
@@ -105,7 +104,6 @@ const SERVICE_IMAGES: Record<string, string> = {
   'ballroom': '/images/image-resizing-2.jpeg',
   'banquet-hall': '/images/image-resizing.jpeg',
   'swimming-pool': '/images/image-resizing-8.avif',
-  'rooms': '/images/image-resizing-9.avif',
 }
 
 function makeSeed(id: string, serviceSlug: string, serviceName: string, date: string, time: string): SeedBooking {

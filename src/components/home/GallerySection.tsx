@@ -34,11 +34,6 @@ const galleryImages = [
     span: 'col-span-1 row-span-1',
   },
   {
-    src: '/images/image-resizing-9.avif',
-    alt: 'Ezra Annex accommodation suite',
-    span: 'col-span-1 row-span-1',
-  },
-  {
     src: '/images/image-resizing-6.avif',
     alt: 'Ezra Annex fitness centre',
     span: 'col-span-1 row-span-1',
@@ -182,7 +177,7 @@ export function GallerySection() {
           className="mt-16 flex flex-wrap items-center justify-center gap-8 md:gap-16"
         >
           {[
-            { value: '8', label: 'Premium Services' },
+            { value: '7', label: 'Premium Services' },
             { value: '15+', label: 'Expert Staff' },
             { value: '24/7', label: 'Available' },
           ].map((stat) => (

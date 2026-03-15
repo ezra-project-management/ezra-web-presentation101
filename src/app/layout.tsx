@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ezraannex.com'),
   title: 'Ezra Annex | Premium Hospitality & Wellness in Nairobi',
   description:
-    "Book world-class salon, gym, spa, events, boardrooms, and accommodation at Ezra Annex — Nairobi's premier lifestyle destination.",
+    "Book world-class salon, gym, spa, events, and boardrooms at Ezra Annex — Nairobi's premier lifestyle destination.",
   openGraph: {
     images: [
       '/images/image-resizing-2.jpeg',

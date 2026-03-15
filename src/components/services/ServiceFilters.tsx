@@ -9,7 +9,6 @@ const categories = [
   { value: 'FITNESS', label: 'Fitness' },
   { value: 'EVENTS', label: 'Events' },
   { value: 'BUSINESS', label: 'Business' },
-  { value: 'ACCOMMODATION', label: 'Accommodation' },
 ]
 
 interface ServiceFiltersProps {

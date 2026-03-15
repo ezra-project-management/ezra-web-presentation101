@@ -11,7 +11,7 @@ const heroSlides = [
     image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/4e93453c-c18f-40f7-1d44-47348a51c600/public',
     badge: "Nairobi's Premier Destination",
     heading: ['Where Luxury Meets', 'Every Experience'],
-    subtitle: 'Discover world-class salon, fitness, events, and accommodation — all in one extraordinary place.',
+    subtitle: 'Discover world-class salon, fitness, and events — all in one extraordinary place.',
   },
   {
     image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/fe2b36a1-529b-43dd-0205-06cb17418000/public',
@@ -23,7 +23,7 @@ const heroSlides = [
 
 const floatingPills = [
   '5,000+ Happy Clients',
-  '8 Premium Services',
+  '7 Premium Services',
   'Est. 2020',
 ]
 
