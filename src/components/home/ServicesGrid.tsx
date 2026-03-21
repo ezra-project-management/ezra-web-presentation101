@@ -15,11 +15,11 @@ export function ServicesGrid() {
         <div className="text-center mb-20">
           <AnimatedSection variant="blurIn">
             <span className="text-gold font-sans text-sm font-medium uppercase tracking-[0.25em]">
-              Our Services
+              Everything in one place
             </span>
           </AnimatedSection>
           <h2 className="mt-4 font-display text-4xl md:text-5xl text-navy font-semibold">
-            <TextReveal text="Experience the Extraordinary" delay={0.2} />
+            <TextReveal text="How we can help you" delay={0.2} />
           </h2>
           <LineReveal className="mx-auto mt-6 w-20" delay={0.6} />
         </div>

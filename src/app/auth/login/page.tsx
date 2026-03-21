@@ -60,9 +60,9 @@ export default function LoginPage() {
             <Image
               src="/ezralogo.jpeg"
               alt="Ezra Annex"
-              width={80}
-              height={80}
-              className="rounded-full object-cover"
+              width={100}
+              height={100}
+              className="rounded-full object-cover shadow-md"
             />
           </Link>
 

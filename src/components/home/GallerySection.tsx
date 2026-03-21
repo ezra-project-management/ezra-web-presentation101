@@ -10,51 +10,33 @@ import { TextReveal, LineReveal } from '@/components/ui/AnimatedSection'
 const galleryImages = [
   {
     src: '/images/image-resizing-2.jpeg',
-    alt: 'Ezra Annex grand ballroom',
-    label: 'The Ballroom',
-    span: 'col-span-2 row-span-2',
+    alt: 'Ezra Annex ballroom tables',
+    label: 'Grand Ballroom',
   },
   {
     src: '/images/image-resizing.jpeg',
-    alt: 'Ezra Annex banquet table setting',
+    alt: 'Ezra Annex dining',
     label: 'Fine Dining',
-    span: 'col-span-1 row-span-1',
-  },
-  {
-    src: '/images/image-resizing-3.avif',
-    alt: 'Ezra Annex premium lounge',
-    label: 'Lounge',
-    span: 'col-span-1 row-span-1',
-  },
-  {
-    src: '/images/image-resizing-10.avif',
-    alt: 'Ezra Annex wellness centre',
-    label: 'Wellness',
-    span: 'col-span-1 row-span-2',
-  },
-  {
-    src: '/images/image-resizing-8.avif',
-    alt: 'Ezra Annex pool area',
-    label: 'Pool',
-    span: 'col-span-1 row-span-1',
   },
   {
     src: '/images/image-resizing-9.avif',
-    alt: 'Ezra Annex accommodation suite',
-    label: 'Suites',
-    span: 'col-span-1 row-span-1',
+    alt: 'Ezra Annex luxury suite',
+    label: 'Premium Suites',
+  },
+  {
+    src: '/images/image-resizing-8.avif',
+    alt: 'Ezra Annex pool sunset',
+    label: 'Poolside',
+  },
+  {
+    src: '/images/image-resizing-6.avif',
+    alt: 'Ezra Annex lobby',
+    label: 'Luxury Lounge',
   },
   {
     src: '/images/image-resizing-11.avif',
-    alt: 'Ezra Annex fitness centre',
-    label: 'Fitness',
-    span: 'col-span-1 row-span-1',
-  },
-  {
-    src: '/images/image-resizing-12.avif',
-    alt: 'Ezra Annex spa treatment',
-    label: 'Spa',
-    span: 'col-span-1 row-span-1',
+    alt: 'Ezra Annex gym',
+    label: 'Fitness Centre',
   },
 ]
 
@@ -73,58 +55,39 @@ function GalleryCard({
     target: cardRef,
     offset: ['start end', 'end start'],
   })
-  const y = useTransform(scrollYProgress, [0, 1], [30, -30])
+  const y = useTransform(scrollYProgress, [0, 1], [20, -20])
 
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 80, scale: 0.9 }}
-      animate={
-        isInView
-          ? { opacity: 1, y: 0, scale: 1 }
-          : {}
-      }
+      initial={{ opacity: 0, y: 40 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{
-        duration: 1.2,
+        duration: 0.8,
         delay: index * 0.1,
         ease: [0.16, 1, 0.3, 1],
       }}
-      className={`${image.span} min-h-[200px] md:min-h-[280px]`}
+      className="aspect-square md:aspect-[4/5]"
     >
       <motion.button
         onClick={onClick}
         style={{ y }}
         whileHover={{ scale: 1.02 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="relative w-full h-full rounded-2xl overflow-hidden group cursor-pointer"
       >
         <Image
           src={image.src}
           alt={image.alt}
           fill
-          className="object-cover transition-all duration-[1.8s] ease-out group-hover:scale-110"
+          className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"
         />
-
-        {/* Multi-layer hover overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/10 to-transparent opacity-30 group-hover:opacity-70 transition-all duration-700" />
-
-        {/* Animated border glow on hover */}
-        <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-gold/50 transition-all duration-700" />
-        <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 shadow-[inset_0_0_40px_rgba(201,168,76,0.15)]" />
-
-        {/* Label with slide-up reveal */}
-        <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
-          <div className="w-8 h-px bg-gold mb-3 transition-all duration-700 group-hover:w-12" />
-          <p className="font-display text-xl text-white font-semibold tracking-wide">
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500" />
+        
+        {/* Label on hover */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <p className="font-display text-2xl text-white font-semibold tracking-wide">
             {image.label}
           </p>
-        </div>
-
-        {/* View indicator */}
-        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-          <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-white/90 text-xs font-sans tracking-wider uppercase">
-            View
-          </span>
         </div>
       </motion.button>
     </motion.div>
@@ -145,40 +108,34 @@ export function GallerySection() {
   }
 
   return (
-    <section ref={sectionRef} className="py-32 bg-cream relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
-      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={sectionRef} className="py-20 md:py-24 bg-white relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Header */}
-        <div className="text-center mb-20">
+        <div className="mb-12">
           <motion.span
-            initial={{ opacity: 0, letterSpacing: '0.1em' }}
-            whileInView={{ opacity: 1, letterSpacing: '0.25em' }}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-gold font-sans text-sm font-medium uppercase inline-block"
+            className="text-gold font-sans text-xs font-bold uppercase tracking-[0.3em] inline-block mb-4"
           >
             Gallery
           </motion.span>
-          <h2 className="mt-4 font-display text-4xl md:text-6xl text-navy font-semibold">
-            <TextReveal text="A Glimpse Inside" delay={0.2} />
+          <h2 className="font-display text-5xl md:text-7xl text-navy font-semibold">
+            A Glimpse <span className="text-gold italic">Inside</span>
           </h2>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-6 text-charcoal/60 font-sans max-w-lg mx-auto"
+            transition={{ delay: 0.3 }}
+            className="mt-6 text-charcoal/60 font-sans max-w-lg mx-auto leading-relaxed"
           >
-            Step into the world of Ezra Annex — where every detail is crafted for excellence.
+            Take a look around our space and see where the magic happens.
           </motion.p>
-          <LineReveal className="mx-auto mt-8 w-20" delay={0.5} />
         </div>
 
-        {/* Bento Grid Gallery */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[180px] md:auto-rows-[240px]">
+        {/* 3-Column Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto px-4">
           {galleryImages.map((image, index) => (
             <GalleryCard
               key={image.src}
@@ -188,26 +145,6 @@ export function GallerySection() {
             />
           ))}
         </div>
-
-        {/* Stats bar below gallery */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="mt-16 flex flex-wrap items-center justify-center gap-8 md:gap-16"
-        >
-          {[
-            { value: '8', label: 'Premium Services' },
-            { value: '15+', label: 'Expert Staff' },
-            { value: '24/7', label: 'Available' },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <p className="font-display text-3xl md:text-4xl text-gold font-semibold">{stat.value}</p>
-              <p className="font-sans text-sm text-charcoal/50 mt-1">{stat.label}</p>
-            </div>
-          ))}
-        </motion.div>
       </div>
 
       {/* Lightbox */}

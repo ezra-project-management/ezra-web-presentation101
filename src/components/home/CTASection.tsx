@@ -20,23 +20,34 @@ export function CTASection() {
   const imageScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.15])
 
   return (
-    <section ref={sectionRef} className="relative py-32 md:py-40 overflow-hidden">
+    <section ref={sectionRef} className="relative py-24 md:py-28 overflow-hidden">
       {/* Parallax Background — brighter */}
       <motion.div
         style={{ y: imageY, scale: imageScale }}
         className="absolute inset-0 will-change-transform"
       >
         <Image
-          src="/images/image-resizing-10.avif"
-          alt="Ezra Annex booking"
+          src="/images/image-resizing-6.avif"
+          alt="Ezra Annex lobby"
           fill
           className="object-cover brightness-110"
         />
       </motion.div>
 
-      {/* Lighter, warmer overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-navy/60 via-navy/40 to-navy/50" />
-      <div className="absolute inset-0 bg-gradient-to-t from-navy/50 to-transparent" />
+      {/* Cinematic Overlays */}
+      {/* 1. Base darkened overlay for legibility */}
+      <div className="absolute inset-0 bg-black/40 z-[1]" />
+
+      {/* 2. Deep bottom vignetting for text contrast */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-[2]" />
+
+      {/* 3. Side vignette for depth */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/40 z-[2]" />
+
+      {/* 4. Subtle Film Grain / Noise Overlay for premium texture */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay z-[3]" 
+           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} 
+      />
 
       {/* Gold accent glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gold/5 blur-[120px]" />
@@ -57,13 +68,13 @@ export function CTASection() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="inline-flex items-center px-5 py-2 rounded-full bg-gold/20 border border-gold/30 text-gold text-sm font-sans font-medium mb-8 backdrop-blur-sm"
         >
-          Start Your Journey
+          Book a Visit
         </motion.div>
 
         <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-white font-semibold leading-tight">
-          <TextReveal text="Ready to Experience" delay={0} />
+          <TextReveal text="We're ready" delay={0} />
           <br />
-          <TextReveal text="Excellence?" delay={0.3} className="text-gold" />
+          <TextReveal text="when you are." delay={0.3} className="text-gold" />
         </h2>
 
         <motion.p
@@ -97,7 +108,7 @@ export function CTASection() {
             href="/services"
             className="group relative inline-flex items-center gap-2 px-10 py-4 bg-gold text-navy-dark font-sans font-semibold text-lg rounded-lg overflow-hidden transition-all duration-500 shadow-lg hover:shadow-gold/30 hover:shadow-2xl"
           >
-            <span className="relative z-10">Book Your Experience</span>
+            <span className="relative z-10">Book an Appointment</span>
             <ArrowRight className="relative z-10 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             <span className="absolute inset-0 bg-gold-light translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
           </Link>
@@ -116,7 +127,7 @@ export function CTASection() {
           className="mt-10 flex items-center justify-center gap-2 text-white/50 font-sans text-sm"
         >
           <MessageCircle className="w-4 h-4" />
-          Or chat with our AI assistant 24/7
+          Or message us anytime
         </motion.p>
       </div>
 

@@ -9,27 +9,27 @@ import { ChevronDown } from 'lucide-react'
 const heroSlides = [
   {
     image: '/images/image-resizing-2.jpeg',
-    badge: "Nairobi's Premier Destination",
-    heading: ['Where Luxury Meets', 'Every Experience'],
-    subtitle: 'Discover world-class salon, fitness, events, and accommodation — all in one extraordinary place.',
+    badge: "Welcome to Ezra Annex",
+    heading: ['The Heart of', 'Nairobi Style'],
+    subtitle: 'Your local spot for a fresh look, a great workout, and a place to stay — all in one building.',
+  },
+  {
+    image: '/images/image-resizing-8.avif',
+    badge: 'A Better Way to Live',
+    heading: ['Make the Most', 'of Every Day'],
+    subtitle: 'Start with a morning workout and end with a relaxing evening retreat — we handle the rest.',
   },
   {
     image: '/images/image-resizing.jpeg',
-    badge: 'Unforgettable Events',
-    heading: ['Grand Celebrations', 'Perfectly Crafted'],
-    subtitle: 'From intimate dinners to lavish galas — our ballroom and banquet halls set the stage for memories that last.',
+    badge: 'Host Your Next Event',
+    heading: ['Celebrations Made', 'Just for You'],
+    subtitle: "Whether it's a family dinner or a big party, we'll help you make it a night to remember.",
   },
   {
-    image: '/images/image-resizing-10.avif',
-    badge: 'Wellness & Beauty',
-    heading: ['Rejuvenate Your', 'Body & Soul'],
-    subtitle: 'Indulge in premium spa treatments, expert styling, and holistic wellness services tailored to you.',
-  },
-  {
-    image: '/images/image-resizing-3.avif',
-    badge: 'Premium Lifestyle',
-    heading: ['Elevate Every', 'Moment Here'],
-    subtitle: 'From sunrise workouts to evening retreats — experience luxury living at its finest.',
+    image: '/images/image-resizing-2.avif',
+    badge: 'Take a Break',
+    heading: ['Refresh Your', 'Look & Feel'],
+    subtitle: 'Treat yourself to a new style or a relaxing day at the spa designed for exactly what you need.',
   },
 ]
 
@@ -46,7 +46,7 @@ export function HeroSection() {
     offset: ['start start', 'end start'],
   })
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [direction, setDirection] = useState(1)
+  const [direction, setDirection] = useState(0) // 0 for initial, 1 for next, -1 for prev
 
   const goToSlide = useCallback((index: number) => {
     setDirection(index > currentSlide ? 1 : -1)
@@ -63,9 +63,9 @@ export function HeroSection() {
   }, [])
 
   // Parallax
-  const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.15])
-  const contentY = useTransform(scrollYProgress, [0, 0.5], ['0%', '15%'])
+  const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1.1, 1.2])
+  const contentY = useTransform(scrollYProgress, [0, 0.5], ['0%', '10%'])
   const contentOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0])
 
   const slide = heroSlides[currentSlide]
@@ -73,189 +73,179 @@ export function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-navy-dark"
     >
-      {/* Parallax Background with Image Carousel */}
-      <motion.div
-        style={{ y: imageY, scale: imageScale }}
-        className="absolute inset-0 will-change-transform"
-      >
-        <AnimatePresence mode="wait" custom={direction}>
+      {/* Background Carousel */}
+      <div className="absolute inset-0 overflow-hidden">
+        <AnimatePresence initial={false}>
           <motion.div
             key={currentSlide}
-            custom={direction}
-            initial={{ opacity: 0, scale: 1.08 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1.5 }}
             className="absolute inset-0"
           >
-            <Image
-              src={slide.image}
-              alt="Ezra Annex"
-              fill
-              priority
-              className="object-cover brightness-105"
-            />
-          </motion.div>
-        </AnimatePresence>
-      </motion.div>
-
-      {/* Subtle gradient overlay — minimal, not dull */}
-      <div className="absolute inset-0 bg-gradient-to-t from-navy/70 via-navy/25 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-r from-navy/30 to-transparent" />
-
-      {/* Content */}
-      <motion.div
-        style={{ y: contentY, opacity: contentOpacity }}
-        className="relative z-10 text-center px-4 max-w-5xl mx-auto"
-      >
-        {/* Badge */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`badge-${currentSlide}`}
-            initial={{ opacity: 0, filter: 'blur(10px)', y: 20 }}
-            animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
-            exit={{ opacity: 0, filter: 'blur(6px)', y: -10 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <span className="inline-flex items-center px-5 py-2 rounded-full bg-white/15 border border-white/25 text-white text-sm font-sans font-medium mb-8 backdrop-blur-sm shadow-lg">
-              {slide.badge}
-            </span>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Heading — animated per slide */}
-        <AnimatePresence mode="wait">
-          <motion.h1
-            key={`heading-${currentSlide}`}
-            className="font-display text-5xl md:text-7xl lg:text-8xl leading-tight"
-          >
-            <span className="block overflow-hidden">
-              <motion.span
-                className="inline-block font-light text-white drop-shadow-lg"
-                initial={{ y: '120%' }}
-                animate={{ y: '0%' }}
-                exit={{ y: '-120%' }}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {slide.heading[0]}
-              </motion.span>
-            </span>
-            <span className="block overflow-hidden">
-              <motion.span
-                className="inline-block font-bold italic text-gold drop-shadow-lg"
-                initial={{ y: '120%' }}
-                animate={{ y: '0%' }}
-                exit={{ y: '-120%' }}
-                transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {slide.heading[1]}
-              </motion.span>
-            </span>
-          </motion.h1>
-        </AnimatePresence>
-
-        {/* Subtitle — changes per slide */}
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={`subtitle-${currentSlide}`}
-            initial={{ opacity: 0, filter: 'blur(8px)', y: 20 }}
-            animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
-            exit={{ opacity: 0, filter: 'blur(6px)', y: -10 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-8 text-lg md:text-xl text-white/90 font-sans max-w-2xl mx-auto leading-relaxed drop-shadow-md"
-          >
-            {slide.subtitle}
-          </motion.p>
-        </AnimatePresence>
-
-        {/* Horizontal line accent */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto mt-8 w-24 h-px bg-gold/60 origin-center"
-        />
-
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          <Link
-            href="/services"
-            className="group relative px-8 py-4 bg-gold text-navy-dark font-sans font-medium rounded-lg text-lg overflow-hidden transition-all duration-500 shadow-lg hover:shadow-gold/25 hover:shadow-2xl"
-          >
-            <span className="relative z-10">Explore Our Services</span>
-            <span className="absolute inset-0 bg-gold-light translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-          </Link>
-          <Link
-            href="/services"
-            className="px-8 py-4 border-2 border-white/50 text-white font-sans font-medium rounded-lg text-lg hover:bg-white/15 hover:border-white/80 transition-all duration-500 backdrop-blur-sm"
-          >
-            Book Now
-          </Link>
-        </motion.div>
-
-        {/* Floating Stat Pills */}
-        <div className="mt-16 flex flex-wrap items-center justify-center gap-4">
-          {floatingPills.map((pill, i) => (
-            <motion.span
-              key={pill}
-              initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{
-                duration: 0.8,
-                delay: 1.2 + i * 0.15,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="px-5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-sm font-sans shadow-sm"
+            <motion.div 
+              animate={{ scale: [1, 1.1] }}
+              transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+              className="relative w-full h-full"
             >
-              {pill}
-            </motion.span>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* Image indicators */}
-      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10 flex gap-2">
-        {heroSlides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => goToSlide(i)}
-            className={`h-1.5 rounded-full transition-all duration-500 ${
-              i === currentSlide
-                ? 'w-10 bg-gold shadow-gold/50 shadow-sm'
-                : 'w-3 bg-white/40 hover:bg-white/60'
-            }`}
-            aria-label={`View slide ${i + 1}`}
-          />
-        ))}
+              <Image
+                src={slide.image}
+                alt=""
+                fill
+                priority
+                className="object-cover"
+              />
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Cinematic Overlays (Local to Background) */}
+      <div className="absolute inset-0 bg-black/30 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+
+      {/* Content Layered for Premium Look */}
+      <div className="relative z-10 w-full h-full flex items-end pb-32 md:pb-40">
+        <motion.div
+          style={{ y: contentY, opacity: contentOpacity }}
+          className="max-w-7xl mx-auto px-6 md:px-12 w-full grid grid-cols-1 md:grid-cols-2 items-end gap-12"
+        >
+          {/* Main Text Content */}
+          <div className="max-w-2xl">
+            {/* Badge */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`badge-${currentSlide}`}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.6 }}
+                className="mb-8"
+              >
+                <span className="bg-gold/90 text-navy-dark px-4 py-1 text-[10px] font-bold uppercase tracking-[0.3em] rounded-sm shadow-xl">
+                  {slide.badge}
+                </span>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Heading */}
+            <AnimatePresence mode="wait">
+              <div key={`heading-container-${currentSlide}`} className="overflow-hidden">
+                <motion.h1
+                  className="font-display text-5xl md:text-7xl lg:text-8xl leading-[1.1] text-white"
+                >
+                  <motion.span
+                    className="block font-light"
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "-100%" }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {slide.heading[0]}
+                  </motion.span>
+                  <motion.span
+                    className="block font-bold italic text-gold mt-2"
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "-100%" }}
+                    transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {slide.heading[1]}
+                  </motion.span>
+                </motion.h1>
+              </div>
+            </AnimatePresence>
+
+            {/* Subtitle */}
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={`subtitle-${currentSlide}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="mt-8 text-lg font-sans text-white/90 max-w-xl leading-relaxed border-l-2 border-gold/50 pl-6"
+              >
+                {slide.subtitle}
+              </motion.p>
+            </AnimatePresence>
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="mt-12 flex flex-wrap items-center gap-6"
+            >
+              <Link
+                href="/services"
+                className="px-12 py-5 bg-white text-navy-dark font-sans font-bold rounded-sm text-xs uppercase tracking-widest transition-all duration-500 hover:bg-gold hover:text-navy-dark shadow-2xl"
+              >
+                Explore Services
+              </Link>
+              <Link
+                href="/services"
+                className="group flex items-center gap-4 text-white font-sans font-bold text-xs uppercase tracking-widest"
+              >
+                <span className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-gold group-hover:border-gold transition-all duration-500">
+                  <ChevronDown className="w-5 h-5 -rotate-90" />
+                </span>
+                Book Now
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* Side Info / Stats Layer */}
+          <div className="hidden md:flex flex-col items-end gap-12 pb-6">
+            <div className="flex gap-1">
+              {heroSlides.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goToSlide(i)}
+                  className={`h-0.5 transition-all duration-700 ${
+                    i === currentSlide ? 'w-12 bg-gold' : 'w-4 bg-white/20 hover:bg-white/40'
+                  }`}
+                  aria-label={`View slide ${i + 1}`}
+                />
+              ))}
+            </div>
+
+            <div className="flex flex-col items-end gap-4">
+              {floatingPills.map((pill, i) => (
+                <motion.span
+                  key={pill}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.7 + i * 0.1 }}
+                  className="text-white/60 font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-right"
+                >
+                  {pill}
+                </motion.span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+
+      {/* Refined Scroll Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+        className="absolute bottom-10 right-12 z-10 hidden md:flex flex-col items-center gap-6"
       >
-        <motion.span
-          className="font-sans text-xs text-white/50 uppercase tracking-[0.2em]"
-          animate={{ opacity: [0.3, 0.7, 0.3] }}
-          transition={{ repeat: Infinity, duration: 2.5 }}
-        >
-          Scroll
-        </motion.span>
         <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-        >
-          <ChevronDown className="w-6 h-6 text-white/50" />
-        </motion.div>
+          className="w-px h-20 bg-gradient-to-b from-transparent via-gold/50 to-transparent"
+          animate={{ scaleY: [0, 1, 0], opacity: [0, 1, 0] }}
+          transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+        />
+        <span className="font-sans text-[10px] text-white/40 uppercase tracking-[0.5em] [writing-mode:vertical-lr]">
+          Explore
+        </span>
       </motion.div>
     </section>
   )

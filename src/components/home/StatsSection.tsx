@@ -24,25 +24,16 @@ export function StatsSection() {
   }
 
   return (
-    <section ref={ref} className="relative py-24 overflow-hidden">
-      {/* Parallax navy background */}
-      <motion.div
-        style={{ y: bgY }}
-        className="absolute inset-[-10%] bg-navy"
-      />
-
-      {/* Decorative gold accent lines */}
+    <section ref={ref} className="relative py-16 md:py-20 overflow-hidden bg-white">
+      {/* Subtle architectural background element */}
+      <div className="absolute top-0 right-0 w-1/3 h-full bg-cream/50 skew-x-[-12deg] translate-x-1/2" />
+      
+      {/* Refined gold accent lines */}
       <motion.div
         initial={{ scaleX: 0 }}
         animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
         transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute top-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent origin-center"
-      />
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
-        transition={{ duration: 1.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute bottom-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent origin-center"
+        className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent"
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -90,7 +81,7 @@ export function StatsSection() {
                     scrollSpyOnce={true}
                   />
                 </div>
-                <p className="mt-3 font-sans text-sm text-white/50 uppercase tracking-[0.15em]">
+                <p className="mt-3 font-sans text-xs text-charcoal/50 uppercase tracking-[0.3em]">
                   {stat.label}
                 </p>
               </motion.div>
