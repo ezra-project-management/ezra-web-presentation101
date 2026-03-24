@@ -104,7 +104,7 @@ export function HeroSection() {
       </div>
 
       {/* Cinematic Overlays (Local to Background) */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 pointer-events-none h-2/3 bottom-0 mt-auto" />
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
 
       {/* Content Layered for Premium Look */}
       <div className="relative z-10 w-full h-full flex items-end pb-12 md:pb-20">
