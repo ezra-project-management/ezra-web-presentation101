@@ -6,11 +6,10 @@ import Image from 'next/image'
 import { Heart, Star, ArrowRight } from 'lucide-react'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { cn } from '@/lib/utils'
-import { formatCurrency } from '@/lib/utils'
 import { FAVOURITE_SERVICES } from '@/lib/dashboard-data'
 import { SERVICES } from '@/lib/services'
 
-const visitedSlugs = ['salon-spa', 'gym', 'swimming-pool', 'barbershop', 'rooms']
+const visitedSlugs = ['salon-spa', 'gym', 'swimming-pool', 'barbershop']
 const recommended = SERVICES.filter(s => !visitedSlugs.includes(s.slug)).slice(0, 4)
 
 function formatDate(dateStr: string) {

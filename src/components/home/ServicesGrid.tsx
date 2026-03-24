@@ -45,7 +45,7 @@ export function ServicesGrid() {
                     fill
                     className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.15]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/20 to-transparent opacity-70 group-hover:opacity-80 transition-opacity duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/10 opacity-80 transition-opacity duration-700" />
                 </div>
 
                 {/* Content */}
@@ -53,13 +53,13 @@ export function ServicesGrid() {
                   <p className="text-2xl mb-1 transition-transform duration-500 group-hover:scale-110 inline-block" suppressHydrationWarning>
                     {service.icon}
                   </p>
-                  <h3 className="font-display text-xl font-semibold text-white">
+                  <h3 className="font-display text-xl font-semibold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
                     {service.name}
                   </h3>
-                  <p className="font-sans text-sm text-white/60 mt-1 line-clamp-1 transition-colors duration-500 group-hover:text-white/80">
+                  <p className="font-sans text-xs text-white/90 mt-1 line-clamp-2 transition-colors duration-500 group-hover:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
                     {service.tagline}
                   </p>
-                  <p className="font-sans text-sm text-gold font-medium mt-2">
+                  <p className="font-sans text-[10px] text-gold font-bold mt-2 uppercase tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
                     Starting from KShs 0
                   </p>
 

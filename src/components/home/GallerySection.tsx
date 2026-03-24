@@ -5,7 +5,6 @@ import Image from 'next/image'
 import * as Dialog from '@radix-ui/react-dialog'
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
-import { TextReveal, LineReveal } from '@/components/ui/AnimatedSection'
 
 const galleryImages = [
   {
@@ -24,19 +23,29 @@ const galleryImages = [
     label: 'Premium Suites',
   },
   {
-    src: '/images/image-resizing-8.avif',
-    alt: 'Ezra Annex pool sunset',
-    label: 'Poolside',
-  },
-  {
     src: '/images/image-resizing-6.avif',
     alt: 'Ezra Annex lobby',
     label: 'Luxury Lounge',
   },
   {
-    src: '/images/image-resizing-11.avif',
+    src: '/images/image-resizing-10.avif',
+    alt: 'Ezra Annex pool',
+    label: 'Poolside',
+  },
+  {
+    src: '/images/image-resizing-4.avif',
+    alt: 'Ezra Annex premium lounge',
+    label: 'Relaxation Zone',
+  },
+  {
+    src: '/images/image-resizing-5.avif',
     alt: 'Ezra Annex gym',
     label: 'Fitness Centre',
+  },
+  {
+    src: '/images/image-resizing-8.avif',
+    alt: 'Ezra Annex exterior',
+    label: 'Modern Facade',
   },
 ]
 
@@ -51,29 +60,23 @@ function GalleryCard({
 }) {
   const cardRef = useRef(null)
   const isInView = useInView(cardRef, { once: true, margin: '-60px' })
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ['start end', 'end start'],
-  })
-  const y = useTransform(scrollYProgress, [0, 1], [20, -20])
 
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{
         duration: 0.8,
         delay: index * 0.1,
         ease: [0.16, 1, 0.3, 1],
       }}
-      className="aspect-square md:aspect-[4/5]"
+      className="relative group aspect-square md:aspect-[4/3]"
     >
       <motion.button
         onClick={onClick}
-        style={{ y }}
         whileHover={{ scale: 1.02 }}
-        className="relative w-full h-full rounded-2xl overflow-hidden group cursor-pointer"
+        className="relative w-full h-full rounded-2xl overflow-hidden cursor-pointer"
       >
         <Image
           src={image.src}
@@ -81,14 +84,9 @@ function GalleryCard({
           fill
           className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500" />
-        
-        {/* Label on hover */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-          <p className="font-display text-2xl text-white font-semibold tracking-wide">
-            {image.label}
-          </p>
-        </div>
+
+        {/* Subtle Hover Overlay */}
+        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/40 transition-all duration-700" />
       </motion.button>
     </motion.div>
   )
@@ -108,19 +106,19 @@ export function GallerySection() {
   }
 
   return (
-    <section ref={sectionRef} className="py-20 md:py-24 bg-white relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <section ref={sectionRef} className="py-24 bg-white relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-12">
+        <div className="text-center mb-16">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-gold font-sans text-xs font-bold uppercase tracking-[0.3em] inline-block mb-4"
+            className="text-gold font-sans text-[10px] font-bold uppercase tracking-[0.4em] inline-block mb-4"
           >
-            Gallery
+            GALLERY
           </motion.span>
-          <h2 className="font-display text-5xl md:text-7xl text-navy font-semibold">
+          <h2 className="font-display text-5xl md:text-6xl text-navy-dark font-medium mb-4">
             A Glimpse <span className="text-gold italic">Inside</span>
           </h2>
           <motion.p
@@ -128,14 +126,14 @@ export function GallerySection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="mt-6 text-charcoal/60 font-sans max-w-lg mx-auto leading-relaxed"
+            className="text-charcoal/60 font-sans max-w-xl mx-auto leading-relaxed text-sm"
           >
             Take a look around our space and see where the magic happens.
           </motion.p>
         </div>
 
-        {/* 3-Column Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto px-4">
+        {/* 4-column Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
           {galleryImages.map((image, index) => (
             <GalleryCard
               key={image.src}
@@ -150,89 +148,101 @@ export function GallerySection() {
       {/* Lightbox */}
       <Dialog.Root
         open={selectedIndex !== null}
-        onOpenChange={() => setSelectedIndex(null)}
+        onOpenChange={(open) => !open && setSelectedIndex(null)}
       >
         <AnimatePresence>
-          {selectedIndex !== null && (
-            <Dialog.Portal forceMount>
-              <Dialog.Overlay asChild>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4 }}
-                  className="fixed inset-0 bg-black/95 z-50 backdrop-blur-xl"
-                />
-              </Dialog.Overlay>
-              <Dialog.Content asChild>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.85, filter: 'blur(10px)' }}
-                  animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, scale: 0.95, filter: 'blur(5px)' }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[92vw] max-w-5xl aspect-[16/10] rounded-2xl overflow-hidden shadow-2xl"
-                >
-                  <Dialog.Title className="sr-only">
-                    {galleryImages[selectedIndex].label}
-                  </Dialog.Title>
+          {selectedIndex !== null && (() => {
+            const selectedImage = galleryImages[selectedIndex]
+            if (!selectedImage) return null
 
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={selectedIndex}
-                      initial={{ opacity: 0, x: 100 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -100 }}
-                      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                      className="absolute inset-0"
-                    >
-                      <Image
-                        src={galleryImages[selectedIndex].src}
-                        alt={galleryImages[selectedIndex].alt}
-                        fill
-                        className="object-cover"
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-
-                  {/* Bottom info bar */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-8 py-6">
-                    <p className="font-display text-2xl text-white font-semibold">
-                      {galleryImages[selectedIndex].label}
-                    </p>
-                    <p className="font-sans text-sm text-white/60 mt-1">
-                      {selectedIndex + 1} / {galleryImages.length}
-                    </p>
-                  </div>
-
-                  {/* Navigation */}
-                  <button
-                    onClick={() => navigateLightbox('prev')}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300"
-                    aria-label="Previous"
+            return (
+              <Dialog.Portal forceMount>
+                <Dialog.Overlay asChild>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="fixed inset-0 bg-black/95 z-[9999] backdrop-blur-xl"
+                  />
+                </Dialog.Overlay>
+                <Dialog.Content asChild>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.85, filter: 'blur(10px)' }}
+                    animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, scale: 0.95, filter: 'blur(5px)' }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[10000] w-[92vw] max-w-6xl aspect-[16/10] rounded-2xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)]"
                   >
-                    <ChevronLeft className="w-6 h-6" />
-                  </button>
-                  <button
-                    onClick={() => navigateLightbox('next')}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300"
-                    aria-label="Next"
-                  >
-                    <ChevronRight className="w-6 h-6" />
-                  </button>
+                    <Dialog.Title className="sr-only">
+                      {selectedImage.alt}
+                    </Dialog.Title>
 
-                  {/* Close */}
-                  <Dialog.Close asChild>
-                    <button
-                      className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300"
-                      aria-label="Close"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  </Dialog.Close>
-                </motion.div>
-              </Dialog.Content>
-            </Dialog.Portal>
-          )}
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={selectedIndex}
+                        initial={{ opacity: 0, x: 100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -100 }}
+                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                        className="absolute inset-0"
+                      >
+                        <Image
+                          src={selectedImage.src}
+                          alt={selectedImage.alt}
+                          fill
+                          className="object-cover"
+                        />
+                      </motion.div>
+                    </AnimatePresence>
+
+                    {/* Navigation & Controls */}
+                    <div className="absolute inset-0 pointer-events-none flex items-center justify-between px-6">
+                      <button
+                        onClick={() => navigateLightbox('prev')}
+                        className="pointer-events-auto w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-gold hover:text-navy-dark transition-all duration-300"
+                        aria-label="Previous"
+                      >
+                        <ChevronLeft className="w-8 h-8" />
+                      </button>
+                      <button
+                        onClick={() => navigateLightbox('next')}
+                        className="pointer-events-auto w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-gold hover:text-navy-dark transition-all duration-300"
+                        aria-label="Next"
+                      >
+                        <ChevronRight className="w-8 h-8" />
+                      </button>
+                    </div>
+
+                    {/* Close */}
+                    <Dialog.Close asChild>
+                      <button
+                        className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-red-500/50 transition-all duration-300"
+                        aria-label="Close"
+                      >
+                        <X className="w-6 h-6" />
+                      </button>
+                    </Dialog.Close>
+
+                    {/* Caption */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-12">
+                      <motion.p 
+                        key={selectedIndex}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="font-display text-3xl text-white font-bold"
+                      >
+                        {selectedImage.label}
+                      </motion.p>
+                      <p className="font-sans text-white/50 mt-2 text-sm uppercase tracking-widest">
+                        {selectedIndex + 1} of {galleryImages.length}
+                      </p>
+                    </div>
+                  </motion.div>
+                </Dialog.Content>
+              </Dialog.Portal>
+            )
+          })()}
         </AnimatePresence>
       </Dialog.Root>
     </section>

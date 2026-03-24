@@ -90,7 +90,7 @@ export default function AboutPage() {
               <p className="mt-6 font-sans text-charcoal/80 leading-relaxed">
                 Founded with a vision to create an all-in-one lifestyle destination, Ezra
                 Annex brings together world-class wellness, fitness, events, and
-                accommodation under one roof. Located in the heart of Nairobi, we combine
+                wellness under one roof. Located in the heart of Nairobi, we combine
                 African warmth with international luxury standards.
               </p>
               <p className="mt-4 font-sans text-charcoal/80 leading-relaxed">

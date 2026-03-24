@@ -38,7 +38,7 @@ export const SERVICES: Service[] = [
       'Our friendly stylists and therapists are here to help you relax. Whether you need a fresh haircut or a calming massage, we make sure you leave feeling refreshed and happy.',
     basePrice: 0,
     duration: '60 min',
-    image: '/images/image-resizing-3.avif',
+    image: '/images/hero-spa.jpeg',
     icon: '✦',
     highlights: [
       'Friendly stylists',
@@ -120,7 +120,7 @@ export const SERVICES: Service[] = [
       "Get some work done in our private meeting rooms. We have fast internet, ready-to-use screens, and coffee/catering so you can focus on what's important.",
     basePrice: 0,
     duration: 'Per hour',
-    image: '/images/image-resizing-7.avif',
+    image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/5ca5a320-c813-45c1-97df-16afea14bc00/public', 
     icon: '◈',
     highlights: [
       'Fast WiFi',
@@ -147,7 +147,7 @@ export const SERVICES: Service[] = [
       "Host up to 500 guests in our large ballroom. It's the perfect spot for weddings and big parties, with plenty of space for dancing and local support to help you plan it all.",
     basePrice: 0,
     duration: 'Full day',
-    image: '/images/image-resizing-2.jpeg',
+    image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/4e93453c-c18f-40f7-1d44-47348a51c600/public',
     icon: '❋',
     highlights: [
       'Space for 500 people',
@@ -174,7 +174,7 @@ export const SERVICES: Service[] = [
       'Great for family gatherings or office dinners. Our banquet hall fits up to 150 people and comes with a friendly team and a menu that your guests will really enjoy.',
     basePrice: 0,
     duration: 'Full day',
-    image: '/images/image-resizing.jpeg',
+    image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/ba91ccad-a7a1-463e-25be-00131cc7d300/public',
     icon: '◎',
     highlights: [
       'Custom menus',

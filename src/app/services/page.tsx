@@ -20,7 +20,7 @@ export default function ServicesPage() {
       {/* Hero Header */}
       <section className="relative h-64 md:h-80 flex items-center justify-center overflow-hidden">
         <Image
-          src="/images/image-resizing-3.avif"
+          src="/images/hero-lounge.jpeg"
           alt="Ezra Annex services"
           fill
           priority

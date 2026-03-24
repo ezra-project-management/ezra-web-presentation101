@@ -53,8 +53,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [])
 
   useEffect(() => {
-    setMobileOpen(false)
-    setSidebarHover(false)
+    const id = setTimeout(() => {
+      setMobileOpen(false)
+      setSidebarHover(false)
+    }, 0)
+    return () => clearTimeout(id)
   }, [pathname])
 
   return (

@@ -12,7 +12,7 @@ import { formatCurrency } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import { SERVICES } from '@/lib/services'
 import {
-  useBooking, isClosedDay, PUBLIC_HOLIDAYS,
+  useBooking, isClosedDay,
   getServiceCapacity
 } from '@/lib/booking-context'
 
@@ -423,7 +423,7 @@ function ServicePicker({
 // ── Main Widget ───────────────────────────────────────────────────────
 export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }: BookingWidgetProps) {
   const router = useRouter()
-  const { createBooking, getSlotBookingCount, getBookedTimes } = useBooking()
+  const { createBooking, getSlotBookingCount } = useBooking()
 
   const [step, setStep] = useState<1 | 2 | 3>(1)
   const [selectedDate, setSelectedDate] = useState('')
