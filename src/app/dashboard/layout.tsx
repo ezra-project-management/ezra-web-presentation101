@@ -97,18 +97,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   className={cn(
                     'relative flex items-center gap-1.5 px-3 py-2 rounded-full transition-all duration-300 group',
                     isActive(link.href)
-                      ? 'text-navy-dark'
+                      ? 'text-gold'
                       : 'text-white/80 hover:text-white hover:bg-white/10'
                   )}
                   title={link.name}
                 >
-                  {isActive(link.href) && (
-                    <motion.span
-                      layoutId="dashPill"
-                      className="absolute inset-0 bg-gold rounded-full"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
                   <link.icon className="w-4 h-4 relative z-10" />
                   <span className="relative z-10 hidden xl:inline font-sans text-xs font-medium">{link.name}</span>
                   {link.badge > 0 && (
@@ -192,7 +185,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     className={cn(
                       'relative flex items-center gap-3 px-1.5 py-2 rounded-full font-sans text-sm transition-all duration-300',
                       isActive(link.href)
-                        ? 'bg-gold/20 text-gold'
+                        ? 'text-gold'
                         : 'text-white/80 hover:text-white hover:bg-white/5'
                     )}
                   >
@@ -291,13 +284,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     : 'text-white/75 active:scale-95'
                 )}
               >
-                {isActive(link.href) && (
-                  <motion.span
-                    layoutId="mobileDock"
-                    className="absolute inset-0 bg-gold/15 rounded-2xl"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
-                )}
                 <link.icon className="w-4.5 h-4.5 relative z-10" />
                 <span className="relative z-10 text-[9px] font-sans font-medium">{link.name}</span>
                 {link.badge > 0 && (
@@ -383,7 +369,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         className={cn(
                           'flex items-center gap-3 px-4 py-3 rounded-2xl font-sans text-sm font-medium transition-all',
                           isActive(link.href)
-                            ? 'bg-gold/15 text-gold'
+                            ? 'text-gold'
                             : 'text-white/75 active:bg-white/5'
                         )}
                       >
