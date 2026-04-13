@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Lock, Phone, ChevronLeft, ChevronRight, Minus, Plus,
@@ -18,6 +18,12 @@ import {
 } from '@/lib/booking-context'
 import { computeCancellationDeadline } from '@/lib/booking-copy'
 import { BookingCancellationNote } from '@/components/booking/BookingCancellationNote'
+import {
+  isVenueSlug,
+  defaultVenueAttendees,
+  maxVenueAttendees,
+  minVenueAttendees,
+} from '@/lib/venue-booking'
 
 interface BookingWidgetProps {
   serviceName: string
@@ -433,6 +439,8 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
   const [selectedTime, setSelectedTime] = useState('')
   const [selectedStaff, setSelectedStaff] = useState<StaffMember | null>(null)
   const [guests, setGuests] = useState(1)
+  const [venueAttendees, setVenueAttendees] = useState(() => defaultVenueAttendees(serviceSlug))
+  const [venueEventNotes, setVenueEventNotes] = useState('')
   const [showRequest, setShowRequest] = useState(false)
   const [specialRequest, setSpecialRequest] = useState('')
   const [smsReminder, setSmsReminder] = useState(true)
@@ -449,6 +457,12 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
   const otherServices = SERVICES.filter(s => s.slug !== serviceSlug)
   const closedReason = selectedDate ? isClosedDay(selectedDate) : null
   const mainCapacity = getServiceCapacity(serviceSlug)
+  const isVenue = isVenueSlug(serviceSlug)
+
+  useEffect(() => {
+    setVenueAttendees(defaultVenueAttendees(serviceSlug))
+    setVenueEventNotes('')
+  }, [serviceSlug])
 
   // Per-slot booking counts for current service on selected date
   const slotCounts = useMemo(() => {
@@ -478,8 +492,9 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
       const svc = SERVICES.find(s => s.slug === slug)
       if (svc) total += svc.basePrice
     })
+    if (isVenue) return total
     return total * guests
-  }, [basePrice, addedServices, guests])
+  }, [basePrice, addedServices, guests, isVenue])
 
   const parseMins = (d: string) => {
     const m = d.match(/(\d+)\s*min/i); if (m) return parseInt(m[1])
@@ -541,20 +556,39 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
     if (bookingForOther && (!otherName.trim() || !otherPhone.trim())) {
       toast.error("Please fill in the details of the person you're booking for"); return
     }
+    if (isVenue) {
+      const cap = maxVenueAttendees(serviceSlug)
+      const n = Math.min(cap, Math.max(minVenueAttendees(serviceSlug), Math.round(venueAttendees) || 1))
+      if (n < 1) {
+        toast.error('Enter how many guests you expect.')
+        return
+      }
+    }
     const allServices = [serviceName, ...addedServices.map(s => s.name)]
+
+    const headcount = isVenue
+      ? Math.min(maxVenueAttendees(serviceSlug), Math.max(minVenueAttendees(serviceSlug), Math.round(venueAttendees) || 1))
+      : guests
+
+    let combinedNotes = specialRequest?.trim() || null
+    if (isVenue && venueEventNotes.trim()) {
+      const ev = venueEventNotes.trim()
+      combinedNotes = combinedNotes ? `${combinedNotes}\n\nEvent details: ${ev}` : `Event details: ${ev}`
+    }
 
     createBooking({
       service: allServices.length > 1 ? allServices.join(' + ') : serviceName,
       serviceSlug, serviceCategory: currentService?.category || '',
       resource: '', staff: selectedStaff?.name || '', date: selectedDate, time: selectedTime, endTime: '',
-      duration: totalDuration, guests, status: 'CONFIRMED', amount: totalPrice,
+      duration: totalDuration, guests: headcount, status: 'CONFIRMED', amount: totalPrice,
       paymentMethod: 'MPESA', mpesaRef: `QJK${Date.now().toString(36).toUpperCase()}`,
-      image: currentService?.image || '', notes: specialRequest || null,
+      image: currentService?.image || '', notes: combinedNotes,
       canReschedule: true, canCancel: true,
       cancellationDeadline: computeCancellationDeadline(selectedDate, selectedTime),
       rating: null, review: null,
       bookedFor: bookingForOther ? { name: otherName, phone: otherPhone } : null,
       services: allServices, smsReminder,
+      eventNotes: isVenue ? (venueEventNotes.trim() || null) : null,
     })
 
     toast.success('Booking confirmed! Redirecting...')
@@ -829,8 +863,8 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
             )}
           </div>
 
-          {/* Duration + price summary (when multi or guests) */}
-          {(addedServices.length > 0 || guests > 1) && (
+          {/* Duration + price summary */}
+          {(addedServices.length > 0 || (!isVenue && guests > 1) || isVenue) && (
             <div className="p-3 rounded-xl bg-navy/4 border border-navy/8 space-y-1.5">
               {addedServices.length > 0 && (
                 <div className="flex justify-between font-sans text-xs text-charcoal/60">
@@ -841,7 +875,12 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
                 <span className="text-charcoal/60">Total amount</span>
                 <span className="font-bold text-navy">{formatCurrency(totalPrice)}</span>
               </div>
-              {guests > 1 && (
+              {isVenue && (
+                <p className="font-sans text-xs text-charcoal/50">
+                  Space hire for your date &amp; time — not multiplied by guest count. Add-ons are itemised above.
+                </p>
+              )}
+              {!isVenue && guests > 1 && (
                 <p className="font-sans text-xs text-charcoal/40">
                   {guests} guests × {formatCurrency(totalPrice / guests)} each
                 </p>
@@ -849,21 +888,56 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
             </div>
           )}
 
-          {/* Guests */}
-          <div>
-            <label className="block font-sans text-xs font-semibold text-charcoal/50 uppercase tracking-wide mb-2">Guests</label>
-            <div className="flex items-center gap-3">
-              <button onClick={() => setGuests(Math.max(1, guests - 1))}
-                className="w-9 h-9 rounded-lg border border-charcoal/20 flex items-center justify-center hover:border-gold transition-colors" aria-label="−">
-                <Minus className="w-4 h-4" />
-              </button>
-              <span className="font-sans text-lg font-bold w-8 text-center text-navy">{guests}</span>
-              <button onClick={() => setGuests(Math.min(20, guests + 1))}
-                className="w-9 h-9 rounded-lg border border-charcoal/20 flex items-center justify-center hover:border-gold transition-colors" aria-label="+">
-                <Plus className="w-4 h-4" />
-              </button>
+          {/* Headcount: venues vs wellness party size */}
+          {isVenue ? (
+            <div className="space-y-3 rounded-xl border border-gold/25 bg-gradient-to-br from-navy/[0.04] to-cream/30 p-4">
+              <div className="flex items-start gap-2">
+                <Users className="w-4 h-4 text-gold mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-sans text-sm font-semibold text-navy">Expected guests</p>
+                  <p className="font-sans text-xs text-charcoal/50 mt-0.5">
+                    Helps our team plan seating, catering, and safety. Max {maxVenueAttendees(serviceSlug)} for this space.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 flex-wrap">
+                <input
+                  type="number"
+                  min={minVenueAttendees(serviceSlug)}
+                  max={maxVenueAttendees(serviceSlug)}
+                  value={venueAttendees}
+                  onChange={(e) => setVenueAttendees(Number(e.target.value))}
+                  className="w-28 px-3 py-2 rounded-lg border border-charcoal/20 font-sans text-sm font-semibold text-navy focus:border-gold focus:ring-1 focus:ring-gold outline-none"
+                />
+                <span className="font-sans text-xs text-charcoal/45">people</span>
+              </div>
+              <div>
+                <label className="font-sans text-xs font-semibold text-charcoal/50 uppercase tracking-wide">Event details (optional)</label>
+                <textarea
+                  value={venueEventNotes}
+                  onChange={(e) => setVenueEventNotes(e.target.value)}
+                  placeholder="Layout (theatre, banquet, dance floor), AV, catering, timeline…"
+                  rows={3}
+                  className="mt-2 w-full px-4 py-3 border border-charcoal/20 rounded-xl font-sans text-sm focus:border-gold focus:ring-1 focus:ring-gold outline-none resize-none"
+                />
+              </div>
             </div>
-          </div>
+          ) : (
+            <div>
+              <label className="block font-sans text-xs font-semibold text-charcoal/50 uppercase tracking-wide mb-2">Guests</label>
+              <div className="flex items-center gap-3">
+                <button onClick={() => setGuests(Math.max(1, guests - 1))}
+                  className="w-9 h-9 rounded-lg border border-charcoal/20 flex items-center justify-center hover:border-gold transition-colors" aria-label="−">
+                  <Minus className="w-4 h-4" />
+                </button>
+                <span className="font-sans text-lg font-bold w-8 text-center text-navy">{guests}</span>
+                <button onClick={() => setGuests(Math.min(20, guests + 1))}
+                  className="w-9 h-9 rounded-lg border border-charcoal/20 flex items-center justify-center hover:border-gold transition-colors" aria-label="+">
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Book for someone else */}
           <div>

@@ -26,6 +26,7 @@ import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { cn } from '@/lib/utils'
 import { formatCurrency } from '@/lib/utils'
 import { useBooking, DEFAULT_SPECIALIST_BY_SERVICE } from '@/lib/booking-context'
+import { isVenueSlug } from '@/lib/venue-booking'
 import { BookingCancellationNote } from '@/components/booking/BookingCancellationNote'
 
 const timelineSteps = ['Booked', 'Confirmed', 'Checked In', 'Completed']
@@ -283,7 +284,11 @@ export default function BookingDetailPage() {
                   { icon: Clock, label: 'Time', value: `${booking.time}${booking.endTime ? ` - ${booking.endTime}` : ''}` },
                   { icon: Clock, label: 'Duration', value: booking.duration },
                   { icon: MapPin, label: 'Location', value: booking.resource || 'Ezra Center' },
-                  { icon: Users, label: 'Guests', value: String(booking.guests) },
+                  {
+                    icon: Users,
+                    label: isVenueSlug(booking.serviceSlug) ? 'Expected guests' : 'Guests',
+                    value: String(booking.guests),
+                  },
                 ].map((item) => (
                   <div key={item.label} className="flex items-start gap-3">
                     <item.icon className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
@@ -294,6 +299,24 @@ export default function BookingDetailPage() {
                   </div>
                 ))}
               </div>
+
+              {isVenueSlug(booking.serviceSlug) && (
+                <div className="mt-6 pt-6 border-t border-gray-100">
+                  <p className="font-sans text-xs text-gray-400 uppercase tracking-wider mb-2">Event &amp; space</p>
+                  <p className="font-sans text-sm text-charcoal/70 leading-relaxed">
+                    This reservation is for a meeting or event space. The headcount above helps us prepare seating, AV, and
+                    catering. Our events team will confirm layout details with you before the date.
+                  </p>
+                  {booking.eventNotes && (
+                    <div className="mt-4 rounded-xl border border-gold/20 bg-navy/[0.03] p-4">
+                      <p className="font-sans text-xs font-semibold text-navy uppercase tracking-wide mb-1">
+                        Your event notes
+                      </p>
+                      <p className="font-sans text-sm text-navy/90 whitespace-pre-wrap">{booking.eventNotes}</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Multi-service info */}
               {booking.services.length > 1 && (

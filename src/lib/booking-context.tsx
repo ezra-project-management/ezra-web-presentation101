@@ -72,6 +72,8 @@ export interface BookingRecord {
   bookedFor: { name: string; phone: string } | null
   services: string[]
   smsReminder: boolean
+  /** Boardroom / ballroom / banquet: layout, AV, catering notes */
+  eventNotes?: string | null
 }
 
 export interface StaffBlock {
@@ -258,6 +260,7 @@ function seedBookings(): BookingRecord[] {
       notes: b.notes, canReschedule: b.canReschedule, canCancel: b.canCancel,
       cancellationDeadline: b.cancellationDeadline, rating: null, review: null,
       bookedFor: null, services: [b.service], smsReminder: true,
+      eventNotes: 'eventNotes' in b && b.eventNotes != null ? b.eventNotes : null,
     })),
     ...PAST_BOOKINGS.map(b => ({
       id: b.id, reference: b.reference, service: b.service, serviceSlug: b.serviceSlug,
@@ -265,7 +268,7 @@ function seedBookings(): BookingRecord[] {
       endTime: '', duration: b.duration, guests: 1, status: b.status as BookingStatus,
       amount: b.amount, paymentMethod: b.paymentMethod, mpesaRef: null, image: b.image,
       notes: null, canReschedule: false, canCancel: false, cancellationDeadline: null,
-      rating: b.rating, review: b.review, bookedFor: null, services: [b.service], smsReminder: true,
+      rating: b.rating, review: b.review, bookedFor: null, services: [b.service], smsReminder: true, eventNotes: null,
     })),
   ]
 
@@ -276,7 +279,7 @@ function seedBookings(): BookingRecord[] {
     endTime: '', duration: '60 min', guests: 1, status: b.status, amount: 0,
     paymentMethod: null, mpesaRef: null, image: SERVICE_IMAGES[b.serviceSlug] ?? '/images/image-resizing-3.avif', notes: null,
     canReschedule: false, canCancel: false, cancellationDeadline: null,
-    rating: null, review: null, bookedFor: null, services: [b.service], smsReminder: false,
+    rating: null, review: null, bookedFor: null, services: [b.service], smsReminder: false, eventNotes: null,
   }))
 
   return [...base, ...demo]
@@ -373,6 +376,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     const newBooking: BookingRecord = {
       ...booking,
       staff: staffName,
+      eventNotes: booking.eventNotes ?? null,
       id: `bk-${Date.now()}`,
       reference: generateRef(),
     }

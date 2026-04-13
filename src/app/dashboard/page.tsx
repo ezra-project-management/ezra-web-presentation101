@@ -206,6 +206,7 @@ export default function DashboardPage() {
       bookedFor: null,
       services: [selectedService.name],
       smsReminder: true,
+      eventNotes: null,
     })
 
     toast.success(`${selectedService.name} booked for ${new Date(selectedDate).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })} at ${selectedTime}`)

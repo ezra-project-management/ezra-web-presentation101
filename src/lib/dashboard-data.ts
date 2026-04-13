@@ -45,6 +45,7 @@ export const UPCOMING_BOOKINGS = [
     canReschedule: true,
     canCancel: true,
     cancellationDeadline: '2026-03-14T10:00:00Z',
+    eventNotes: null,
   },
   {
     id: 'bk-002',
@@ -68,6 +69,7 @@ export const UPCOMING_BOOKINGS = [
     canReschedule: true,
     canCancel: true,
     cancellationDeadline: '2026-03-17T06:00:00Z',
+    eventNotes: null,
   },
   {
     id: 'bk-003',
@@ -91,6 +93,7 @@ export const UPCOMING_BOOKINGS = [
     canReschedule: false,
     canCancel: true,
     cancellationDeadline: '2026-03-21T09:00:00Z',
+    eventNotes: 'U-shape · screen + VC · catering for 8',
   },
 ]
 
