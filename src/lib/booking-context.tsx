@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
 import { computeCancellationDeadline } from '@/lib/booking-copy'
 import { UPCOMING_BOOKINGS, PAST_BOOKINGS } from './dashboard-data'
 
@@ -18,6 +18,28 @@ export const SERVICE_CAPACITY: Record<string, number> = {
 
 export function getServiceCapacity(slug: string): number {
   return SERVICE_CAPACITY[slug] ?? SERVICE_CAPACITY.default
+}
+
+/** Default specialist label when the guest did not pick someone — shown on confirmations & detail. */
+export const DEFAULT_SPECIALIST_BY_SERVICE: Record<string, string> = {
+  'salon-spa': 'Grace M.',
+  barbershop: 'Tony B.',
+  gym: 'Coach Mike T.',
+  boardroom: 'James K.',
+  ballroom: 'Sarah W.',
+  'banquet-hall': 'Rose A.',
+  'swimming-pool': 'Coach Ali',
+}
+
+const BOOKINGS_STORAGE_KEY = 'ezra-center-member-bookings-v1'
+
+function mergeStoredWithSeed(seed: BookingRecord[], stored: BookingRecord[] | null): BookingRecord[] {
+  if (!stored?.length) return seed
+  const map = new Map(seed.map((b) => [b.id, b]))
+  for (const b of stored) {
+    if (b?.id) map.set(b.id, b)
+  }
+  return Array.from(map.values())
 }
 
 // ── Types ──────────────────────────────────────────────────────────────
@@ -249,7 +271,8 @@ function seedBookings(): BookingRecord[] {
 
   const demo: BookingRecord[] = DEMO_BOOKINGS.map(b => ({
     id: b.id, reference: b.reference, service: b.service, serviceSlug: b.serviceSlug,
-    serviceCategory: '', resource: '', staff: '', date: b.date, time: b.time,
+    serviceCategory: '', resource: '', staff: DEFAULT_SPECIALIST_BY_SERVICE[b.serviceSlug] ?? 'Ezra team',
+    date: b.date, time: b.time,
     endTime: '', duration: '60 min', guests: 1, status: b.status, amount: 0,
     paymentMethod: null, mpesaRef: null, image: SERVICE_IMAGES[b.serviceSlug] ?? '/images/image-resizing-3.avif', notes: null,
     canReschedule: false, canCancel: false, cancellationDeadline: null,
@@ -291,8 +314,33 @@ function generateRef() {
 
 // ── Provider ───────────────────────────────────────────────────────────
 export function BookingProvider({ children }: { children: ReactNode }) {
-  const [bookings, setBookings] = useState<BookingRecord[]>(seedBookings)
+  const [bookings, setBookings] = useState<BookingRecord[]>(() => seedBookings())
+  const [storageReady, setStorageReady] = useState(false)
   const [staffBlocks, setStaffBlocks] = useState<StaffBlock[]>(INITIAL_STAFF_BLOCKS)
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(BOOKINGS_STORAGE_KEY)
+      if (raw) {
+        const parsed = JSON.parse(raw) as BookingRecord[]
+        if (Array.isArray(parsed)) {
+          setBookings(mergeStoredWithSeed(seedBookings(), parsed))
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+    setStorageReady(true)
+  }, [])
+
+  useEffect(() => {
+    if (!storageReady || typeof window === 'undefined') return
+    try {
+      localStorage.setItem(BOOKINGS_STORAGE_KEY, JSON.stringify(bookings))
+    } catch {
+      /* ignore */
+    }
+  }, [bookings, storageReady])
 
   const cancelBooking = useCallback((id: string) => {
     setBookings(prev =>
@@ -318,7 +366,16 @@ export function BookingProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const createBooking = useCallback((booking: Omit<BookingRecord, 'id' | 'reference'>) => {
-    const newBooking: BookingRecord = { ...booking, id: `bk-${Date.now()}`, reference: generateRef() }
+    const staffName =
+      booking.staff?.trim() ||
+      DEFAULT_SPECIALIST_BY_SERVICE[booking.serviceSlug] ||
+      'Ezra team'
+    const newBooking: BookingRecord = {
+      ...booking,
+      staff: staffName,
+      id: `bk-${Date.now()}`,
+      reference: generateRef(),
+    }
     setBookings(prev => [newBooking, ...prev])
     return newBooking
   }, [])

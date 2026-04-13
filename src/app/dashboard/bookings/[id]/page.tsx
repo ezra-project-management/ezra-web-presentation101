@@ -25,7 +25,7 @@ import { toast } from 'sonner'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { cn } from '@/lib/utils'
 import { formatCurrency } from '@/lib/utils'
-import { useBooking } from '@/lib/booking-context'
+import { useBooking, DEFAULT_SPECIALIST_BY_SERVICE } from '@/lib/booking-context'
 import { BookingCancellationNote } from '@/components/booking/BookingCancellationNote'
 
 const timelineSteps = ['Booked', 'Confirmed', 'Checked In', 'Completed']
@@ -95,6 +95,11 @@ export default function BookingDetailPage() {
   const [newTime, setNewTime] = useState('')
 
   const booking = useMemo(() => bookings.find(b => b.id === params.id), [bookings, params.id])
+
+  const specialistName =
+    booking?.staff?.trim() ||
+    (booking ? DEFAULT_SPECIALIST_BY_SERVICE[booking.serviceSlug] : '') ||
+    ''
 
   if (!booking) {
     return (
@@ -180,6 +185,26 @@ export default function BookingDetailPage() {
         </div>
       </AnimatedSection>
 
+      {/* Who is looking after you — prominent, hotel-style */}
+      <AnimatedSection delay={0.04}>
+        <div className="rounded-2xl border border-gold/25 bg-gradient-to-br from-navy/[0.03] via-white to-cream/40 p-6 shadow-card">
+          <p className="font-sans text-[11px] uppercase tracking-[0.2em] text-gold-dark/90 mb-2">Your specialist</p>
+          {specialistName ? (
+            <>
+              <p className="font-display text-2xl font-semibold text-navy">{specialistName}</p>
+              <p className="font-sans text-sm text-charcoal/60 mt-2 max-w-xl">
+                Scheduled for your service. For any change, speak with reception — they coordinate the team.
+              </p>
+            </>
+          ) : (
+            <p className="font-sans text-sm text-charcoal/70 max-w-xl">
+              Your specialist will be confirmed before you arrive. Mention a preference at check-in and we will do our best
+              to match it.
+            </p>
+          )}
+        </div>
+      </AnimatedSection>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left column — Details */}
         <div className="lg:col-span-2 space-y-6">
@@ -258,7 +283,6 @@ export default function BookingDetailPage() {
                   { icon: Clock, label: 'Time', value: `${booking.time}${booking.endTime ? ` - ${booking.endTime}` : ''}` },
                   { icon: Clock, label: 'Duration', value: booking.duration },
                   { icon: MapPin, label: 'Location', value: booking.resource || 'Ezra Center' },
-                  { icon: Users, label: 'Staff', value: booking.staff || '-' },
                   { icon: Users, label: 'Guests', value: String(booking.guests) },
                 ].map((item) => (
                   <div key={item.label} className="flex items-start gap-3">

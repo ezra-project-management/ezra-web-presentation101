@@ -36,18 +36,17 @@ export function formatPolicyDeadline(iso: string | null): string | null {
   })
 }
 
-export const POLICY_HEADLINE = 'Your 24-hour grace window'
+export const POLICY_HEADLINE = 'Cancelling or rescheduling'
 
 export const POLICY_LEAD_UPCOMING =
-  'Think of it as hotel-style flexibility: you may cancel this visit or move it to another time without charge — as long as you let us know at least twenty-four hours before you were due to walk through our doors.'
+  'Cancel or move your visit for free if you tell us at least 24 hours before your appointment time.'
 
 export const POLICY_LEAD_UPCOMING_PAST =
-  'The complimentary twenty-four-hour window for this visit has passed. Cancellations from here carry a 50% fee — we still love you; we just need to protect our team and the room we held for you.'
+  'The free 24-hour window has passed. If you cancel now, a 50% fee applies.'
 
 export const POLICY_LEAD_ARCHIVED =
-  'Every Ezra reservation carries the same twenty-four-hour courtesy on future bookings — cancel or reschedule free until the day before your slot.'
+  'Future bookings follow the same rule: free changes until 24 hours before your slot.'
 
 export const POLICY_TRUST_BADGE = '24-hour flexible cancellation'
 
-export const POLICY_MICRO =
-  '24h free cancel / reschedule before your slot — open the booking for the full story.'
+export const POLICY_MICRO = 'Free cancel or reschedule up to 24h before your visit.'

@@ -103,24 +103,27 @@ export function BookingCancellationNote({
       </p>
       <p className={leadCls}>{lead}</p>
       {deadlineLine && upcoming && (
-        <p className={cn('font-sans text-amber-800/75 mt-2', isCard ? 'text-[11px] leading-snug' : 'text-xs')}>
+        <ul className={cn('font-sans text-amber-900/90 mt-3 space-y-1.5 list-disc pl-4', isCard ? 'text-[11px]' : 'text-sm')}>
           {withinWindow ? (
             <>
-              Your personal cut-off: <strong>{deadlineLine}</strong>. After that, a 50% fee applies — fair to you, fair to
-              the specialist who reserved that moment.
+              <li>
+                <strong>Free until:</strong> {deadlineLine}
+              </li>
+              <li>After that, cancelling costs 50% of this booking.</li>
             </>
           ) : (
             <>
-              The cut-off was <strong>{deadlineLine}</strong>. You can still cancel from your account; the reduced refund
-              reflects the notice period.
+              <li>
+                <strong>Free window ended:</strong> {deadlineLine}
+              </li>
+              <li>Cancelling now: 50% fee. You can still cancel in the app.</li>
             </>
           )}
-        </p>
+        </ul>
       )}
       {!deadlineLine && upcoming && (
-        <p className={cn('font-sans text-amber-800/75 mt-2', isCard ? 'text-[11px] leading-snug' : 'text-xs')}>
-          Count back twenty-four hours from your scheduled time — that is when complimentary changes end and the 50% fee
-          begins.
+        <p className={cn('font-sans text-amber-800/80 mt-2', isCard ? 'text-[11px] leading-snug' : 'text-sm')}>
+          The deadline is 24 hours before your scheduled start time.
         </p>
       )}
     </>
