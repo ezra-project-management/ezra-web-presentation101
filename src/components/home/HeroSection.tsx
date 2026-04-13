@@ -13,7 +13,7 @@ const heroImages = [
   '/images/image-resizing-2.avif',
 ]
 
-const stats = '5k+ visits · 7 services · Est. 2020'
+const stats = '4,200+ visits · 7 service lines · Est. 2020'
 
 export function HeroSection() {
   const sectionRef = useRef(null)
@@ -69,15 +69,15 @@ export function HeroSection() {
 
       {/* Cinematic grade: legibility without flattening the photograph */}
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_120%_at_15%_55%,rgba(5,12,20,0.88)_0%,rgba(5,12,20,0.35)_45%,transparent_72%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_95%_130%_at_18%_52%,rgba(4,10,18,0.52)_0%,rgba(4,10,18,0.18)_48%,transparent_70%)]"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#04080c] via-[#04080c]/50 to-[#0a1520]/40"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.35)_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(0,0,0,0.18)_100%)]"
         aria-hidden
       />
 

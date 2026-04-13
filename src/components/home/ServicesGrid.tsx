@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { SERVICES } from '@/lib/services'
+import { formatCurrency } from '@/lib/utils'
 import { AnimatedSection, TextReveal, LineReveal } from '@/components/ui/AnimatedSection'
 
 export function ServicesGrid() {
@@ -61,7 +62,7 @@ export function ServicesGrid() {
                     {service.tagline}
                   </p>
                   <p className="font-sans text-[10px] text-gold font-bold mt-2 uppercase tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                    Starting from KShs 0
+                    From {formatCurrency(service.basePrice)}
                   </p>
 
                   {/* Hover CTA */}

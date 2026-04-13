@@ -132,6 +132,9 @@ export default function MembershipPage() {
         <p className="font-sans text-sm text-charcoal/50 mt-1 max-w-xl">
           Three clear levels. Real perks. Earn your way up with visits, or choose an annual plan whenever you are ready.
         </p>
+        <p className="font-sans text-sm text-charcoal/45 mt-3 max-w-xl leading-relaxed">
+          Whether you are a student balancing classes, a young professional building your routine, or visiting Nairobi for a short stay, the programme stays approachable: small spends add up, and you never pay for fluff you will not use.
+        </p>
       </AnimatedSection>
 
       {/* Membership Card */}

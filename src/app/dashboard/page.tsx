@@ -991,7 +991,7 @@ export default function DashboardPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/30 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-3">
                 <p className="font-display text-sm font-semibold text-white">{service.name}</p>
-                <p className="font-sans text-[10px] text-white/60">Starting from KShs 0</p>
+                <p className="font-sans text-[10px] text-white/60">From {formatCurrency(service.basePrice)}</p>
               </div>
             </Link>
           ))}

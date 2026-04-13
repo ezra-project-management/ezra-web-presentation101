@@ -15,8 +15,8 @@ import { SERVICES } from '@/lib/services'
 const quickLinks = [
   { name: 'About', href: '/about' },
   { name: 'Contact', href: '/contact' },
-  { name: 'Privacy Policy', href: '#' },
-  { name: 'Terms of Service', href: '#' },
+  { name: 'Privacy Policy', href: '/privacy' },
+  { name: 'Terms of Service', href: '/terms' },
   { name: 'Careers', href: '#' },
 ]
 

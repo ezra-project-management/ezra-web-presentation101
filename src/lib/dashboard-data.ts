@@ -272,7 +272,7 @@ export const FAVOURITE_SERVICES = [
     name: 'Salon & Spa',
     image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80',
     rating: 4.9,
-    basePrice: 1500,
+    basePrice: 1800,
     lastVisited: '2026-03-08',
   },
   {
@@ -288,7 +288,7 @@ export const FAVOURITE_SERVICES = [
     name: 'Swimming Pool',
     image: '/images/image-resizing-8.avif',
     rating: 4.7,
-    basePrice: 2500,
+    basePrice: 2200,
     lastVisited: '2026-03-01',
   },
 ]

@@ -566,7 +566,7 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
       {/* Header */}
       <h3 className="font-display text-xl font-semibold text-navy">Book This Service</h3>
       <div className="mt-1 mb-5">
-        <p className="font-display text-2xl text-gold font-semibold">Starting from KShs 0</p>
+        <p className="font-display text-2xl text-gold font-semibold">Starting from {formatCurrency(basePrice)}</p>
         <p className="font-sans text-sm text-charcoal/50">{duration}</p>
       </div>
 

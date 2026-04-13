@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Service } from '@/lib/services'
+import { formatCurrency } from '@/lib/utils'
 import { Badge } from '@/components/ui/Badge'
 
 interface ServiceCardProps {
@@ -41,7 +42,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
         </p>
         <div className="flex items-center justify-between mt-4">
           <span className="font-sans text-gold font-medium">
-            Starting from KShs 0
+            From {formatCurrency(service.basePrice)}
           </span>
           <span className="font-sans text-sm text-charcoal/50">
             {service.duration}

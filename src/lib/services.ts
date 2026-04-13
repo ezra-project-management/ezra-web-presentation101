@@ -1,3 +1,5 @@
+import { startingPriceForSlug } from '@/lib/service-prices'
+
 export interface StaffMember {
   id: string
   name: string
@@ -46,7 +48,7 @@ export const SERVICES: Service[] = [
     category: 'WELLNESS',
     description:
       'Our friendly stylists and therapists are here to help you relax. Whether you need a fresh haircut or a calming massage, we make sure you leave feeling refreshed and happy.',
-    basePrice: 0,
+    basePrice: startingPriceForSlug('salon-spa'),
     duration: '60 min',
     image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80',
     icon: '✦',
@@ -79,7 +81,7 @@ export const SERVICES: Service[] = [
     category: 'WELLNESS',
     description:
       "Our barbers know how to get your look just right. Whether you're coming in for a quick trim or a traditional shave, we'll make sure you leave looking sharp.",
-    basePrice: 0,
+    basePrice: startingPriceForSlug('barbershop'),
     duration: '45 min',
     image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80',
     icon: '✂',
@@ -110,7 +112,7 @@ export const SERVICES: Service[] = [
     category: 'FITNESS',
     description:
       'Everything you need for a great workout. We have a fully equipped gym, professional trainers, and group classes to help you reach your goals in a friendly environment.',
-    basePrice: 0,
+    basePrice: startingPriceForSlug('gym'),
     duration: 'Per session',
     image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
     icon: '⊕',
@@ -141,7 +143,7 @@ export const SERVICES: Service[] = [
     category: 'BUSINESS',
     description:
       "Get some work done in our private meeting rooms. We have fast internet, ready-to-use screens, and coffee/catering so you can focus on what's important.",
-    basePrice: 0,
+    basePrice: startingPriceForSlug('boardroom'),
     duration: 'Per hour',
     image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/5ca5a320-c813-45c1-97df-16afea14bc00/public',
     icon: '◈',
@@ -171,7 +173,7 @@ export const SERVICES: Service[] = [
     category: 'EVENTS',
     description:
       'Host up to 500 guests in our large ballroom. It is a beautiful setting for weddings and major celebrations, with room to dine and dance, and a team to help you plan the day.',
-    basePrice: 0,
+    basePrice: startingPriceForSlug('ballroom'),
     duration: 'Full day',
     image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/4e93453c-c18f-40f7-1d44-47348a51c600/public',
     icon: '❋',
@@ -202,7 +204,7 @@ export const SERVICES: Service[] = [
     category: 'EVENTS',
     description:
       'Ideal for family gatherings, office dinners, and receptions. Our banquet hall fits up to 150 people, with a thoughtful team and menus your guests will remember.',
-    basePrice: 0,
+    basePrice: startingPriceForSlug('banquet-hall'),
     duration: 'Full day',
     image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/ba91ccad-a7a1-463e-25be-00131cc7d300/public',
     icon: '◎',
@@ -234,7 +236,7 @@ export const SERVICES: Service[] = [
     category: 'FITNESS',
     description:
       'Join us for swimming lessons in our clean, safe pool. We have classes for all ages and skill levels, so everyone can feel comfortable in the water.',
-    basePrice: 0,
+    basePrice: startingPriceForSlug('swimming-pool'),
     duration: 'Per session',
     image: '/images/image-resizing-10.avif',
     icon: '◇',
@@ -288,8 +290,8 @@ export const TESTIMONIALS: Testimonial[] = [
 ]
 
 export const STATS: Stat[] = [
-  { value: '5,000+', label: 'Members' },
-  { value: '7', label: 'Services' },
-  { value: '15+', label: 'Friendly Staff' },
-  { value: '100%', label: 'Satisfaction' },
+  { value: '4,200+', label: 'Visits (since 2020)' },
+  { value: '7', label: 'Service lines' },
+  { value: '18', label: 'Specialists' },
+  { value: '97%', label: 'Would recommend' },
 ]
