@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Eye, EyeOff } from 'lucide-react'
+import { setWebSessionLoggedIn } from '@/lib/web-session'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -20,6 +21,7 @@ export default function LoginPage() {
     setLoading(true)
     // Simulate login
     setTimeout(() => {
+      setWebSessionLoggedIn()
       router.push(redirectTo)
     }, 800)
   }
@@ -27,6 +29,7 @@ export default function LoginPage() {
   const handleSocialLogin = () => {
     setLoading(true)
     setTimeout(() => {
+      setWebSessionLoggedIn()
       router.push(redirectTo)
     }, 800)
   }

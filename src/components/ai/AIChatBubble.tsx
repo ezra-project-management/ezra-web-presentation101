@@ -2,7 +2,12 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X, Send, Sparkles } from 'lucide-react'
+import { MessageCircle, X, Send } from 'lucide-react'
+import { SERVICE_STARTING_PRICE_KES } from '@/lib/service-pricing'
+
+const WEB_CHAT_PRICE_HINT = Object.entries(SERVICE_STARTING_PRICE_KES)
+  .map(([slug, n]) => `${slug.replace(/-/g, ' ')} from KES ${n.toLocaleString()}`)
+  .join('; ')
 
 interface Message {
   id: string
@@ -11,16 +16,16 @@ interface Message {
 }
 
 const quickReplies = [
-  'Book Spa',
-  'Check Gym Schedule',
-  'Check Availability',
-  'Contact Us',
+  'Salon & spa',
+  'Gym & pool',
+  'What’s free this week?',
+  'Speak to someone',
 ]
 
 const initialMessage: Message = {
   id: '1',
   role: 'ai',
-  text: "Hello! I'm your Ezra Center assistant. I can help you book any service, check availability, or answer questions. How can I assist you today?",
+  text: "Hi — ask about a space, a time, or what something roughly costs. If it needs a human, we’ll point you there.",
 }
 
 export function AIChatBubble() {
@@ -52,7 +57,9 @@ export function AIChatBubble() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-  system: `You are Ezra, the AI booking assistant for Ezra Center — a premier luxury hospitality and wellness destination. You help customers book services conversationally. Services: Salon & Spa (from KSh 0), Barbershop (from KSh 0), Fitness Centre (from KSh 0), Meeting Rooms (from KSh 0/hr), Ballroom (from KSh 0), Banquet Hall (from KSh 0), Swimming Pool Training (from KSh 0). Working hours: 6am–10pm daily. Be warm, professional, and concise. Help with bookings, cancellations, reschedules, and questions.`,
+  system: `You are the messaging guide for Ezra Center in Nairobi — a calm, full-service venue (wellness, fitness, meetings, events, dining spaces). Speak in short, warm, human sentences — never corporate or robotic. Hours: 6am–10pm daily.
+
+Official “from” prices (KES) for the public site: ${WEB_CHAT_PRICE_HINT}. Use these for ballpark questions; say the final amount is confirmed when they book. Help with booking intent, what each space is like, timing, and how to reach the team.`,
   messages: [...messages.filter(m => m.id !== '1'), userMessage].map(m => ({
     role: m.role === 'ai' ? 'assistant' : 'user',
     content: m.text,
@@ -91,16 +98,16 @@ export function AIChatBubble() {
             {/* Header */}
             <div className="bg-navy p-4 flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-gold" />
+                <MessageCircle className="w-4 h-4 text-gold" />
               </div>
               <div className="flex-1">
                 <p className="font-display text-sm font-semibold text-white">
-                  Ezra AI Assistant
+                  Ask Ezra
                 </p>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-400" />
                   <span className="font-sans text-xs text-white/60">
-                    Online
+                    Typical reply in a few minutes
                   </span>
                 </div>
               </div>
@@ -194,7 +201,7 @@ export function AIChatBubble() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative w-14 h-14 rounded-full bg-gold flex items-center justify-center text-white shadow-lg hover:bg-gold-light transition-all duration-300 hover:shadow-xl"
-        aria-label="Open AI chat"
+        aria-label="Open messages"
       >
         {!isOpen && (
           <span className="absolute inset-0 rounded-full bg-gold animate-ping opacity-20" />

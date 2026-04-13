@@ -19,10 +19,10 @@ export function TestimonialsSection() {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="text-gold font-sans text-sm font-medium uppercase inline-block"
           >
-            Testimonials
+            Real People, Real Stories
           </motion.span>
           <h2 className="mt-4 font-display text-4xl md:text-5xl text-navy font-semibold">
-            <TextReveal text="What Our Guests Say" delay={0.2} />
+            <TextReveal text="Hear it from our guests" delay={0.2} />
           </h2>
           <LineReveal className="mx-auto mt-6 w-20" delay={0.5} />
         </div>

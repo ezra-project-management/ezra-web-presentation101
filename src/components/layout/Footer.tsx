@@ -44,7 +44,7 @@ export function Footer() {
               />
             </Link>
             <p className="font-sans text-sm text-white/60 leading-relaxed mb-6">
-              A place to look and feel your best — all under one roof.
+              Where Nairobi comes to reset, celebrate, and get things done — with people who notice the little things.
             </p>
             <div className="flex gap-3">
               {socials.map((social) => (

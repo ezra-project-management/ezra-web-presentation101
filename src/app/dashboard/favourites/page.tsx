@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Heart, Star, ArrowRight } from 'lucide-react'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
-import { cn } from '@/lib/utils'
+import { cn, formatServicePrice } from '@/lib/utils'
 import { FAVOURITE_SERVICES } from '@/lib/dashboard-data'
 import { SERVICES } from '@/lib/services'
 
@@ -75,7 +75,7 @@ export default function FavouritesPage() {
                     {service.rating}
                   </span>
                   <span className="font-sans text-sm text-gray-400">
-                    Starting from KShs 0
+                    {formatServicePrice(service.basePrice)}
                   </span>
                 </div>
                 <p className="mt-2 font-sans text-xs text-gray-400">
@@ -125,7 +125,7 @@ export default function FavouritesPage() {
                     <p className="font-sans text-xs text-gray-400 mt-1">You haven&apos;t tried this yet</p>
                     <div className="mt-3 flex items-center justify-between">
                       <span className="font-sans text-sm text-navy font-medium">
-                        KShs 0+
+                        {formatServicePrice(service.basePrice)}
                       </span>
                       <span className="font-sans text-xs text-gold font-medium flex items-center gap-1">
                         Explore <ArrowRight className="w-3 h-3" />

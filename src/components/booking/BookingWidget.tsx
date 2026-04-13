@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation'
 import {
   Lock, Phone, ChevronLeft, ChevronRight, Minus, Plus,
   UserPlus, X, AlertCircle, Bell, Check, Users, Clock,
-  CalendarDays, ArrowRight, ChevronDown, Info, Zap
+  CalendarDays, ArrowRight, ChevronDown, Info, Star
 } from 'lucide-react'
 import { toast } from 'sonner'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, formatServicePrice } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 import { SERVICES } from '@/lib/services'
+import type { StaffMember } from '@/lib/services'
 import {
   useBooking, isClosedDay,
   getServiceCapacity
@@ -90,27 +91,40 @@ const STATUS = {
 }
 
 // ── Step Indicator ────────────────────────────────────────────────────
-function StepIndicator({ step }: { step: number }) {
-  const steps = [{ n: 1, label: 'Date' }, { n: 2, label: 'Slot' }, { n: 3, label: 'Confirm' }]
+function StepIndicator({ step, hasStaff }: { step: number; hasStaff: boolean }) {
+  const steps = hasStaff
+    ? [
+        { n: 1, label: 'Date' },
+        { n: 2, label: 'Host' },
+        { n: 3, label: 'Time' },
+        { n: 4, label: 'Review' },
+      ]
+    : [
+        { n: 1, label: 'Date' },
+        { n: 3, label: 'Time' },
+        { n: 4, label: 'Review' },
+      ]
   return (
-    <div className="flex items-center justify-center gap-2 mb-5">
+    <div className="flex items-center justify-center gap-1 sm:gap-2 mb-5 flex-wrap">
       {steps.map((s, i) => (
-        <div key={s.n} className="flex items-center gap-2">
+        <div key={s.n} className="flex items-center gap-1 sm:gap-2">
           <div className="flex flex-col items-center gap-0.5">
-            <div className={cn(
-              'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300',
-              step > s.n ? 'bg-emerald-500 text-white' :
-              step === s.n ? 'bg-gold text-navy-dark ring-4 ring-gold/20' :
-              'bg-charcoal/10 text-charcoal/40'
-            )}>
-              {step > s.n ? <Check className="w-3.5 h-3.5" /> : s.n}
+            <div
+              className={cn(
+                'w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300',
+                step > s.n ? 'bg-emerald-500 text-white' :
+                step === s.n ? 'bg-gold text-navy-dark ring-4 ring-gold/20' :
+                'bg-charcoal/10 text-charcoal/40'
+              )}
+            >
+              {step > s.n ? <Check className="w-3.5 h-3.5" /> : i + 1}
             </div>
             <span className={cn('text-[10px] font-medium', step >= s.n ? 'text-charcoal/60' : 'text-charcoal/25')}>
               {s.label}
             </span>
           </div>
           {i < steps.length - 1 && (
-            <div className={cn('w-8 h-px mb-4 transition-all duration-300', step > s.n ? 'bg-emerald-300' : 'bg-charcoal/15')} />
+            <div className={cn('w-4 sm:w-6 h-px mb-4 transition-all duration-300', step > s.n ? 'bg-emerald-300' : 'bg-charcoal/15')} />
           )}
         </div>
       ))}
@@ -425,9 +439,10 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
   const router = useRouter()
   const { createBooking, getSlotBookingCount } = useBooking()
 
-  const [step, setStep] = useState<1 | 2 | 3>(1)
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
+  const [selectedStaff, setSelectedStaff] = useState<StaffMember | null>(null)
   const [guests, setGuests] = useState(1)
   const [showRequest, setShowRequest] = useState(false)
   const [specialRequest, setSpecialRequest] = useState('')
@@ -440,6 +455,8 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
   // Added services stored as { slug, name } pairs
   const [addedServices, setAddedServices] = useState<{ slug: string; name: string }[]>([])
 
+  const currentService = SERVICES.find(s => s.slug === serviceSlug)
+  const serviceStaff = currentService?.staff ?? []
   const otherServices = SERVICES.filter(s => s.slug !== serviceSlug)
   const closedReason = selectedDate ? isClosedDay(selectedDate) : null
   const mainCapacity = getServiceCapacity(serviceSlug)
@@ -512,26 +529,42 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
     return TIME_SLOTS.filter(t => (slotCounts[t] ?? 0) < mainCapacity).length
   }, [selectedDate, slotCounts, closedReason, mainCapacity])
 
-  const handleDateSelect = (date: string) => { setSelectedDate(date); setSelectedTime(''); setStep(2) }
-  const handleSlotSelect = (time: string) => { setSelectedTime(time); setStep(3) }
+  const handleDateSelect = (date: string) => {
+    setSelectedDate(date)
+    setSelectedTime('')
+    // If service has staff, go to staff selection; otherwise go straight to slots
+    if (serviceStaff.length > 0) {
+      setStep(2)
+    } else {
+      setStep(3)
+    }
+  }
+  const handleStaffSelect = (staff: StaffMember | null) => { setSelectedStaff(staff); setStep(3) }
+  const handleSlotSelect = (time: string) => { setSelectedTime(time); setStep(4) }
 
   const handleBook = () => {
-    if (!selectedDate || !selectedTime) { toast.error('Please select a date and time'); return }
-    if (closedReason) { toast.error(closedReason); return }
+    if (!selectedDate || !selectedTime) {
+      toast.error('Choose a date and time to continue.')
+      return
+    }
+    if (closedReason) {
+      toast.error(closedReason)
+      return
+    }
     if (conflictingServices.length > 0) {
-      toast.error(`Some services are fully booked at ${selectedTime}. Please remove them or change your time.`)
+      toast.error(`That time is full for one of your add-ons. Swap the time or remove a service.`)
       return
     }
     if (bookingForOther && (!otherName.trim() || !otherPhone.trim())) {
-      toast.error("Please fill in the details of the person you're booking for"); return
+      toast.error('Add their name and phone so we know who to expect.')
+      return
     }
     const allServices = [serviceName, ...addedServices.map(s => s.name)]
-    const currentService = SERVICES.find(s => s.slug === serviceSlug)
 
     createBooking({
       service: allServices.length > 1 ? allServices.join(' + ') : serviceName,
       serviceSlug, serviceCategory: currentService?.category || '',
-      resource: '', staff: '', date: selectedDate, time: selectedTime, endTime: '',
+      resource: '', staff: selectedStaff?.name || '', date: selectedDate, time: selectedTime, endTime: '',
       duration: totalDuration, guests, status: 'CONFIRMED', amount: totalPrice,
       paymentMethod: 'MPESA', mpesaRef: `QJK${Date.now().toString(36).toUpperCase()}`,
       image: currentService?.image || '', notes: specialRequest || null,
@@ -542,7 +575,7 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
       services: allServices, smsReminder,
     })
 
-    toast.success('Booking confirmed! Redirecting...')
+    toast.success('You’re all set — taking you to confirmation.')
     setTimeout(() => router.push('/dashboard/booking-confirmed'), 500)
   }
 
@@ -551,20 +584,20 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-gold/20 p-6 sticky top-24">
       {/* Header */}
-      <h3 className="font-display text-xl font-semibold text-navy">Book This Service</h3>
+      <h3 className="font-display text-xl font-semibold text-navy">Book this experience</h3>
       <div className="mt-1 mb-5">
-        <p className="font-display text-2xl text-gold font-semibold">Starting from KShs 0</p>
+        <p className="font-display text-2xl text-gold font-semibold">{formatServicePrice(basePrice)}</p>
         <p className="font-sans text-sm text-charcoal/50">{duration}</p>
       </div>
 
-      <StepIndicator step={step} />
+      <StepIndicator step={step} hasStaff={serviceStaff.length > 0} />
 
       {/* ── STEP 1: Calendar ─────────────────────────────── */}
       {step === 1 && (
         <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex items-center gap-2 mb-3">
             <CalendarDays className="w-4 h-4 text-gold" />
-            <p className="font-sans text-sm font-semibold text-navy">Select a date</p>
+            <p className="font-sans text-sm font-semibold text-navy">Pick a date</p>
           </div>
           <MiniCalendar
             selectedDate={selectedDate}
@@ -575,20 +608,95 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
           <div className="mt-4 flex items-start gap-2 px-3 py-2.5 bg-navy/4 rounded-xl">
             <Info className="w-3.5 h-3.5 text-charcoal/40 mt-0.5 shrink-0" />
             <p className="font-sans text-xs text-charcoal/50 leading-relaxed">
-              Calendar dots show availability for <strong>{serviceName}</strong>.
-              You can add more services after choosing a slot.
+              Dots hint at how full the day is for <strong>{serviceName}</strong>.
+              After you pick a time, you can tuck in another service if there’s room.
             </p>
           </div>
         </div>
       )}
 
-      {/* ── STEP 2: Slot Grid ────────────────────────────── */}
-      {step === 2 && selectedDate && (
+      {/* ── STEP 2: Staff Selection ──────────────────────── */}
+      {step === 2 && serviceStaff.length > 0 && (
         <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-          {/* Date pill + back */}
           <div className="flex items-center justify-between mb-4">
             <button onClick={() => setStep(1)} className="flex items-center gap-1 text-sm text-charcoal/45 hover:text-navy transition-colors">
               <ChevronLeft className="w-4 h-4" /> Change date
+            </button>
+          </div>
+          <p className="font-sans text-sm font-semibold text-navy mb-1">Who would you love to see?</p>
+          <p className="font-sans text-xs text-charcoal/50 mb-4 leading-relaxed">
+            Choose someone you connect with — or leave it open and we&apos;ll match you with the next free pair of hands.
+          </p>
+
+          <div className="space-y-3">
+            {serviceStaff.map(member => (
+              <button
+                key={member.id}
+                type="button"
+                onClick={() => handleStaffSelect(member)}
+                className={cn(
+                  'w-full flex flex-col sm:flex-row sm:items-stretch gap-4 p-4 rounded-xl border-2 text-left transition-all duration-200',
+                  selectedStaff?.id === member.id
+                    ? 'border-gold bg-gold/5 ring-2 ring-gold/20'
+                    : 'border-charcoal/10 hover:border-gold/50 hover:bg-gold/3'
+                )}
+              >
+                <div className="flex gap-4 min-w-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={member.avatar} alt="" className="w-14 h-14 rounded-full object-cover shrink-0 ring-2 ring-white shadow-md" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                      <p className="font-sans text-sm font-semibold text-navy">{member.name}</p>
+                      <span className="font-sans text-[11px] text-charcoal/45">{member.yearsExperience}+ yrs</span>
+                    </div>
+                    <p className="font-sans text-xs text-gold-dark font-medium mt-0.5">{member.role}</p>
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {member.specialties.slice(0, 3).map((sp) => (
+                        <span key={sp} className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-navy/5 text-navy/80 border border-navy/10">
+                          {sp}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="font-sans text-xs text-charcoal/55 mt-2 line-clamp-2 leading-relaxed">{member.bio}</p>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <Star className="w-3.5 h-3.5 text-gold fill-gold shrink-0" />
+                      <span className="font-sans text-xs font-semibold text-navy">{member.rating}</span>
+                      <span className="font-sans text-xs text-charcoal/40">· {member.reviewCount} guest reviews</span>
+                    </div>
+                  </div>
+                </div>
+                {selectedStaff?.id === member.id && (
+                  <span className="sm:self-center w-8 h-8 rounded-full bg-gold flex items-center justify-center shrink-0">
+                    <Check className="w-4 h-4 text-navy-dark" />
+                  </span>
+                )}
+              </button>
+            ))}
+
+            <button
+              type="button"
+              onClick={() => handleStaffSelect(null)}
+              className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-dashed border-charcoal/15 text-left hover:border-gold/40 hover:bg-gold/3 transition-all duration-200"
+            >
+              <div className="w-14 h-14 rounded-full bg-charcoal/8 flex items-center justify-center shrink-0">
+                <Users className="w-6 h-6 text-charcoal/40" />
+              </div>
+              <div>
+                <p className="font-sans text-sm font-semibold text-navy">Surprise me</p>
+                <p className="font-sans text-xs text-charcoal/50 leading-relaxed">We&apos;ll choose someone wonderful who&apos;s free for your time.</p>
+              </div>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── STEP 3: Slot Grid ────────────────────────────── */}
+      {step === 3 && selectedDate && (
+        <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+          {/* Date pill + back */}
+          <div className="flex items-center justify-between mb-4">
+            <button onClick={() => setStep(serviceStaff.length > 0 ? 2 : 1)} className="flex items-center gap-1 text-sm text-charcoal/45 hover:text-navy transition-colors">
+              <ChevronLeft className="w-4 h-4" /> {serviceStaff.length > 0 ? 'Change host' : 'Change date'}
             </button>
             <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gold/10 rounded-full">
               <CalendarDays className="w-3.5 h-3.5 text-gold" />
@@ -646,15 +754,15 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
         </div>
       )}
 
-      {/* ── STEP 3: Confirm ──────────────────────────────── */}
-      {step === 3 && selectedDate && selectedTime && (
+      {/* ── STEP 4: Confirm ──────────────────────────────── */}
+      {step === 4 && selectedDate && selectedTime && (
         <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 space-y-4">
 
           {/* Selection summary */}
           <div className="p-4 rounded-xl bg-navy/4 border border-navy/8">
             <div className="flex items-start justify-between">
               <div>
-                <p className="font-sans text-xs text-charcoal/45 mb-0.5">Your selection</p>
+                <p className="font-sans text-xs text-charcoal/45 mb-0.5">Your visit</p>
                 <p className="font-display text-base font-semibold text-navy">
                   {new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}
                 </p>
@@ -667,9 +775,16 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
                     {mainSlotStatus === 'full' ? 'Full' : mainSlotStatus === 'few' ? 'Last spot' : 'Available'}
                   </span>
                 </div>
+                {selectedStaff && (
+                  <div className="flex items-center gap-2 mt-2">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={selectedStaff.avatar} alt="" className="w-5 h-5 rounded-full object-cover" />
+                    <span className="font-sans text-xs text-charcoal/60">With <strong className="text-navy">{selectedStaff.name}</strong></span>
+                  </div>
+                )}
               </div>
               <button
-                onClick={() => setStep(2)}
+                onClick={() => setStep(3)}
                 className="text-xs text-gold hover:text-gold-dark underline transition-colors shrink-0 mt-0.5"
               >
                 Change
@@ -723,7 +838,7 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
                 <p className="font-sans text-xs text-red-700">
                   <strong>{conflictingServices.length} service{conflictingServices.length > 1 ? 's are' : ' is'} fully booked</strong> at {selectedTime}.
                   Remove {conflictingServices.length > 1 ? 'them' : 'it'} or{' '}
-                  <button onClick={() => setStep(2)} className="underline font-semibold">pick a different slot</button>.
+                  <button onClick={() => setStep(3)} className="underline font-semibold">pick a different slot</button>.
                 </p>
               </div>
             )}
@@ -734,7 +849,7 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
               className="flex items-center gap-2 w-full px-3 py-2.5 rounded-xl border-2 border-dashed border-gold/30 text-gold hover:border-gold hover:bg-gold/4 transition-all font-sans text-sm font-medium"
             >
               <Plus className="w-4 h-4" />
-              Add another service
+              Add another treatment
               <ChevronDown className={cn('w-4 h-4 ml-auto transition-transform', showServicePicker && 'rotate-180')} />
             </button>
 
@@ -807,25 +922,25 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
           {/* SMS reminder */}
           <div className="flex items-center justify-between">
             <label className="flex items-center gap-2 font-sans text-sm text-navy cursor-pointer">
-              <Bell className="w-4 h-4 text-charcoal/40" /> SMS Reminder
+              <Bell className="w-4 h-4 text-charcoal/40" /> Text me a reminder
             </label>
             <button onClick={() => setSmsReminder(!smsReminder)}
               className={cn('relative w-11 h-6 rounded-full transition-colors duration-200', smsReminder ? 'bg-gold' : 'bg-charcoal/20')}>
               <span className={cn('absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200', smsReminder && 'translate-x-5')} />
             </button>
           </div>
-          {smsReminder && <p className="-mt-2 font-sans text-xs text-charcoal/40">We&apos;ll send you a reminder 24 hours before</p>}
+          {smsReminder && <p className="-mt-2 font-sans text-xs text-charcoal/40">We&apos;ll nudge you the day before so nothing slips.</p>}
 
           {/* Special request */}
           <div>
             <button onClick={() => setShowRequest(!showRequest)}
               className="flex items-center gap-2 font-sans text-sm text-gold hover:text-gold-dark transition-colors">
               <ChevronDown className={cn('w-4 h-4 transition-transform', showRequest && 'rotate-180')} />
-              Add special request
+              Add a note for the team
             </button>
             {showRequest && (
               <textarea value={specialRequest} onChange={e => setSpecialRequest(e.target.value)}
-                placeholder="Any special requirements..."
+                placeholder="Allergies, parking, a favourite room — anything that helps us host you well."
                 className="mt-3 w-full px-4 py-3 border border-charcoal/20 rounded-xl font-sans text-sm focus:border-gold focus:ring-1 focus:ring-gold outline-none transition resize-none h-24" />
             )}
           </div>
@@ -842,17 +957,17 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
             )}
           >
             {conflictingServices.length > 0
-              ? 'Resolve conflicts to continue'
+              ? 'Adjust time or services to continue'
               : addedServices.length > 0
-              ? <><Zap className="w-4 h-4" /> Confirm {addedServices.length + 1} Services</>
-              : <><span>Confirm Booking</span><ArrowRight className="w-4 h-4" /></>
+              ? <>Confirm {addedServices.length + 1} services<ArrowRight className="w-4 h-4" /></>
+              : <><span>Confirm booking</span><ArrowRight className="w-4 h-4" /></>
             }
           </button>
 
           {/* Trust */}
           <div className="flex flex-wrap gap-x-4 gap-y-1.5">
             <p className="flex items-center gap-1.5 font-sans text-xs text-charcoal/45"><Lock className="w-3.5 h-3.5" /> Secure M-Pesa</p>
-            <p className="flex items-center gap-1.5 font-sans text-xs text-charcoal/45"><Phone className="w-3.5 h-3.5" /> Instant SMS</p>
+            <p className="flex items-center gap-1.5 font-sans text-xs text-charcoal/45"><Phone className="w-3.5 h-3.5" /> Quick SMS updates</p>
           </div>
         </div>
       )}

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Service } from '@/lib/services'
 import { Badge } from '@/components/ui/Badge'
+import { formatServicePrice } from '@/lib/utils'
 
 interface ServiceCardProps {
   service: Service
@@ -41,7 +42,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
         </p>
         <div className="flex items-center justify-between mt-4">
           <span className="font-sans text-gold font-medium">
-            Starting from KShs 0
+            {formatServicePrice(service.basePrice)}
           </span>
           <span className="font-sans text-sm text-charcoal/50">
             {service.duration}
@@ -52,7 +53,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
       {/* Footer */}
       <div className="px-6 pb-6">
         <span className="block w-full text-center py-3 bg-navy text-white font-sans font-medium rounded-lg group-hover:bg-gold group-hover:text-navy-dark transition-all duration-300">
-          View &amp; Book
+          View &amp; reserve
         </span>
       </div>
     </Link>

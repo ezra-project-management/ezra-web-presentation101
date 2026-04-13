@@ -5,9 +5,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
-import { Menu, X, ChevronDown, Home, Briefcase, Info, Phone, LogIn, CalendarCheck } from 'lucide-react'
+import { Menu, X, ChevronDown, Home, Briefcase, Info, Phone, LogIn, CalendarCheck, Crown, LayoutDashboard } from 'lucide-react'
 import { SERVICES } from '@/lib/services'
 import { cn } from '@/lib/utils'
+import { membershipEntryHref } from '@/lib/web-session'
+import { useWebLoggedIn } from '@/lib/use-web-logged-in'
 
 const navLinks = [
   { name: 'Home', href: '/', icon: Home },
@@ -23,6 +25,8 @@ export function Navbar() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false)
   const pathname = usePathname()
   const { scrollY } = useScroll()
+  const loggedIn = useWebLoggedIn()
+  const membershipHref = membershipEntryHref(loggedIn)
 
   // Hide on auth and dashboard pages
   const isAuthPage = pathname.startsWith('/auth')
@@ -141,12 +145,19 @@ export function Navbar() {
               {/* Divider */}
               <div className="w-px h-5 bg-white/15" />
 
-              {/* Auth */}
               <Link
-                href="/auth/login"
+                href={membershipHref}
+                className="px-3 py-2 font-sans text-sm font-medium text-white/80 hover:text-white rounded-full hover:bg-white/10 transition-all duration-300 flex items-center gap-1.5"
+              >
+                <Crown className="w-3.5 h-3.5 text-gold" />
+                Membership
+              </Link>
+
+              <Link
+                href={loggedIn ? '/dashboard' : '/auth/login'}
                 className="px-4 py-2 font-sans text-sm font-medium text-white/70 hover:text-white rounded-full hover:bg-white/10 transition-all duration-300"
               >
-                Login
+                {loggedIn ? 'Account' : 'Login'}
               </Link>
               <Link
                 href="/services"
@@ -265,12 +276,11 @@ export function Navbar() {
 
               <div className="w-full h-px bg-white/10 my-2" />
 
-              {/* Auth Links */}
               <Link
-                href="/auth/login"
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-sans text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all duration-300"
+                href={membershipHref}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-sans text-sm text-white/80 hover:text-white hover:bg-white/5 transition-all duration-300"
               >
-                <LogIn className="w-4.5 h-4.5 shrink-0" />
+                <Crown className="w-4.5 h-4.5 shrink-0 text-gold" />
                 <AnimatePresence>
                   {sidebarExpanded && (
                     <motion.span
@@ -279,7 +289,30 @@ export function Navbar() {
                       exit={{ opacity: 0, width: 0 }}
                       className="overflow-hidden whitespace-nowrap font-medium"
                     >
-                      Login
+                      Membership
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </Link>
+
+              <Link
+                href={loggedIn ? '/dashboard' : '/auth/login'}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-sans text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all duration-300"
+              >
+                {loggedIn ? (
+                  <LayoutDashboard className="w-4.5 h-4.5 shrink-0" />
+                ) : (
+                  <LogIn className="w-4.5 h-4.5 shrink-0" />
+                )}
+                <AnimatePresence>
+                  {sidebarExpanded && (
+                    <motion.span
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: 'auto' }}
+                      exit={{ opacity: 0, width: 0 }}
+                      className="overflow-hidden whitespace-nowrap font-medium"
+                    >
+                      {loggedIn ? 'Account' : 'Login'}
                     </motion.span>
                   )}
                 </AnimatePresence>
@@ -446,14 +479,24 @@ export function Navbar() {
 
               <div className="mx-4 mt-4 pt-4 border-t border-white/10 space-y-2 pb-8">
                 <Link
-                  href="/auth/login"
+                  href={membershipHref}
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl font-sans text-sm text-white/80 active:bg-white/5 transition-all"
+                >
+                  <Crown className="w-5 h-5 text-gold" />
+                  Membership
+                </Link>
+                <Link
+                  href={loggedIn ? '/dashboard' : '/auth/login'}
+                  onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-3 px-4 py-3 rounded-xl font-sans text-sm text-white/70 active:bg-white/5 transition-all"
                 >
-                  <LogIn className="w-5 h-5" />
-                  Login
+                  {loggedIn ? <LayoutDashboard className="w-5 h-5" /> : <LogIn className="w-5 h-5" />}
+                  {loggedIn ? 'Account' : 'Login'}
                 </Link>
                 <Link
                   href="/services"
+                  onClick={() => setMobileOpen(false)}
                   className="block text-center font-sans text-sm font-semibold px-6 py-3.5 bg-gold text-navy-dark rounded-xl shadow-gold"
                 >
                   Book Now

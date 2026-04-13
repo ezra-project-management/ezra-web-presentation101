@@ -12,3 +12,9 @@ export function formatCurrency(amount: number): string {
     minimumFractionDigits: 0,
   }).format(amount)
 }
+
+/** Public-facing price line for service cards and booking (avoids “KES 0”). */
+export function formatServicePrice(amount: number): string {
+  if (!amount || amount <= 0) return 'Pricing when you book'
+  return `From ${formatCurrency(amount)}`
+}

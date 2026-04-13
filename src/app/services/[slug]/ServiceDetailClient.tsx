@@ -6,6 +6,7 @@ import * as Accordion from '@radix-ui/react-accordion'
 import { CheckCircle, ChevronDown, Star, Clock, LogIn } from 'lucide-react'
 import type { Service } from '@/lib/services'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
+import { formatServicePrice } from '@/lib/utils'
 
 interface ServiceDetailClientProps {
   service: Service
@@ -133,7 +134,7 @@ export function ServiceDetailClient({ service }: ServiceDetailClientProps) {
               </h3>
               <div className="mt-1 mb-5">
                 <p className="font-display text-2xl text-gold font-semibold">
-                  Starting from KShs 0
+                  {formatServicePrice(service.basePrice)}
                 </p>
                 <div className="flex items-center gap-1.5 mt-1 text-charcoal/50">
                   <Clock className="w-4 h-4" />

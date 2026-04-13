@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 import * as Tabs from '@radix-ui/react-tabs'
 import * as Switch from '@radix-ui/react-switch'
 import {
@@ -16,6 +17,7 @@ import {
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { cn } from '@/lib/utils'
 import { CURRENT_USER } from '@/lib/dashboard-data'
+import { useMembershipTierLabel } from '@/lib/use-membership-label'
 
 const tabsList = [
   { value: 'personal', label: 'Personal Information' },
@@ -42,6 +44,8 @@ const notificationChannels = [
 ]
 
 export default function ProfilePage() {
+  const pathname = usePathname()
+  const membershipLabel = useMembershipTierLabel(pathname)
   const [activeTab, setActiveTab] = useState('personal')
   const [favouriteServices, setFavouriteServices] = useState(['Salon & Spa', 'Fitness Centre', 'Swimming Pool'])
   const [dietary, setDietary] = useState<string[]>(['None'])
@@ -94,7 +98,7 @@ export default function ProfilePage() {
               <div className="mt-2 flex items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-gold/20 to-gold/10 text-gold-dark border border-gold/30 font-sans">
                   <Crown className="w-3 h-3" />
-                  Gold Member
+                  {membershipLabel} member
                 </span>
                 <span className="font-sans text-xs text-gray-400">
                   Joined {CURRENT_USER.memberSince}
