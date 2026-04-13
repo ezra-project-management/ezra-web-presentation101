@@ -82,7 +82,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </div>
                 <div className="hidden xl:block">
                   <p className="font-sans text-xs font-semibold text-white leading-tight">{CURRENT_USER.firstName}</p>
-                  <p className="font-sans text-[9px] text-gold/80 font-medium">Gold Member</p>
+                  <p className="font-sans text-[9px] text-gold/80 font-medium">Premium Member</p>
                 </div>
               </Link>
 
@@ -168,7 +168,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <p className="font-sans text-sm font-semibold text-white leading-tight">
                         {CURRENT_USER.firstName}
                       </p>
-                      <p className="font-sans text-[10px] text-gold font-medium">Gold Member</p>
+                      <p className="font-sans text-[10px] text-gold font-medium">Premium Member</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -341,7 +341,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-gold/20 text-gold border border-gold/30 font-sans">
                         <Crown className="w-2.5 h-2.5" />
-                        GOLD
+                        PREMIUM
                       </span>
                       <span className="font-sans text-[10px] text-white/40">{CURRENT_USER.loyaltyPoints.toLocaleString()} pts</span>
                     </div>

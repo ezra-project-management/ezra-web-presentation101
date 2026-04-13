@@ -94,7 +94,7 @@ export default function ProfilePage() {
               <div className="mt-2 flex items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-gold/20 to-gold/10 text-gold-dark border border-gold/30 font-sans">
                   <Crown className="w-3 h-3" />
-                  Gold Member
+                  Premium Member
                 </span>
                 <span className="font-sans text-xs text-gray-400">
                   Joined {CURRENT_USER.memberSince}

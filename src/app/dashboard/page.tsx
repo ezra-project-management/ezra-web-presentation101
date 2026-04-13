@@ -869,7 +869,7 @@ export default function DashboardPage() {
               </p>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-gold to-gold-dark text-white font-sans">
                 <Crown className="w-3 h-3" />
-                GOLD MEMBER
+                PREMIUM MEMBER
               </span>
             </div>
             <p className="font-display text-3xl font-bold text-navy">
@@ -880,7 +880,7 @@ export default function DashboardPage() {
           <div className="mt-6">
             <div className="flex items-center justify-between mb-2">
               <span className="font-sans text-sm text-charcoal/60">
-                Progress to {CURRENT_USER.nextTier}
+                Progress toward VIP
               </span>
               <span className="font-sans text-sm font-medium text-navy">
                 {Math.round((CURRENT_USER.loyaltyPoints / 5000) * 100)}%
@@ -890,12 +890,12 @@ export default function DashboardPage() {
               <motion.div
                 className="h-full rounded-full bg-gradient-to-r from-gold-dark to-gold"
                 initial={{ width: 0 }}
-                animate={{ width: `${(CURRENT_USER.loyaltyPoints / 5000) * 100}%` }}
+                animate={{ width: `${Math.min(100, (CURRENT_USER.loyaltyPoints / 5000) * 100)}%` }}
                 transition={{ duration: 1.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
               />
             </div>
             <p className="mt-2 font-sans text-xs text-gray-400">
-              {CURRENT_USER.loyaltyPoints.toLocaleString()} / 5,000 points needed
+              {CURRENT_USER.pointsToNextTier.toLocaleString()} points to reach VIP · {CURRENT_USER.loyaltyPoints.toLocaleString()} total
             </p>
           </div>
 
