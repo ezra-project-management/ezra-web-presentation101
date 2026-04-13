@@ -44,7 +44,7 @@ export function Footer() {
               />
             </Link>
             <p className="font-sans text-sm text-white/60 leading-relaxed mb-6">
-              Where Nairobi comes to reset, celebrate, and get things done — with people who notice the little things.
+              A place to look and feel your best, all under one roof.
             </p>
             <div className="flex gap-3">
               {socials.map((social) => (
@@ -125,7 +125,7 @@ export function Footer() {
               <li className="flex items-start gap-3">
                 <Clock className="w-4 h-4 text-gold mt-0.5 shrink-0" />
                 <span className="font-sans text-sm text-white/60">
-                  Mon – Sun: 6:00 AM – 10:00 PM
+                  Mon to Sun, 6:00 AM to 10:00 PM
                 </span>
               </li>
             </ul>

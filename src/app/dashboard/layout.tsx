@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
@@ -20,8 +20,6 @@ import {
 import { cn } from '@/lib/utils'
 import { CURRENT_USER, UPCOMING_BOOKINGS, NOTIFICATIONS_DATA } from '@/lib/dashboard-data'
 import { BookingProvider } from '@/lib/booking-context'
-import { useMembershipTierLabel } from '@/lib/use-membership-label'
-import { clearWebSession } from '@/lib/web-session'
 
 const navLinks = [
   { name: 'Overview', href: '/dashboard', icon: LayoutDashboard, badge: 0 },
@@ -39,14 +37,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [sidebarHover, setSidebarHover] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
-  const router = useRouter()
-  const membershipLabel = useMembershipTierLabel(pathname)
   const unreadCount = NOTIFICATIONS_DATA.filter(n => !n.read).length
-
-  const signOut = () => {
-    clearWebSession()
-    router.push('/auth/login')
-  }
 
   const isActive = (href: string) => {
     if (href === '/dashboard') return pathname === '/dashboard'
@@ -91,7 +82,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </div>
                 <div className="hidden xl:block">
                   <p className="font-sans text-xs font-semibold text-white leading-tight">{CURRENT_USER.firstName}</p>
-                  <p className="font-sans text-[9px] text-gold/80 font-medium">{membershipLabel} member</p>
+                  <p className="font-sans text-[9px] text-gold/80 font-medium">Gold Member</p>
                 </div>
               </Link>
 
@@ -177,7 +168,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <p className="font-sans text-sm font-semibold text-white leading-tight">
                         {CURRENT_USER.firstName}
                       </p>
-                      <p className="font-sans text-[10px] text-gold font-medium">{membershipLabel} member</p>
+                      <p className="font-sans text-[10px] text-gold font-medium">Gold Member</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -256,11 +247,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </AnimatePresence>
               </Link>
 
-              <button
-                type="button"
-                onClick={signOut}
-                className="w-full flex items-center gap-3 px-1.5 py-2 rounded-full font-sans text-sm text-white/70 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300"
-              >
+              <button className="w-full flex items-center gap-3 px-1.5 py-2 rounded-full font-sans text-sm text-white/70 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300">
                 <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0">
                   <LogOut className="w-4 h-4" />
                 </div>
@@ -352,9 +339,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       {CURRENT_USER.firstName} {CURRENT_USER.lastName}
                     </p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-gold/20 text-gold border border-gold/30 font-sans uppercase tracking-wide">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-gold/20 text-gold border border-gold/30 font-sans">
                         <Crown className="w-2.5 h-2.5" />
-                        {membershipLabel}
+                        GOLD
                       </span>
                       <span className="font-sans text-[10px] text-white/40">{CURRENT_USER.loyaltyPoints.toLocaleString()} pts</span>
                     </div>
@@ -408,14 +395,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <Globe className="w-5 h-5" />
                     Back to Website
                   </Link>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      signOut()
-                      setMobileOpen(false)
-                    }}
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-sans text-sm text-white/75 active:text-red-400 active:bg-red-500/10 transition-all"
-                  >
+                  <button className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-sans text-sm text-white/75 active:text-red-400 active:bg-red-500/10 transition-all">
                     <LogOut className="w-5 h-5" />
                     Sign Out
                   </button>

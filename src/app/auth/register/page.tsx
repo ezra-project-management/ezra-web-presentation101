@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
-import { setWebSessionLoggedIn } from '@/lib/web-session'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -33,7 +32,6 @@ export default function RegisterPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setWebSessionLoggedIn()
     router.push(redirectTo)
   }
 

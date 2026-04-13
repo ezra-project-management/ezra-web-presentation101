@@ -1,6 +1,3 @@
-import type { MembershipTierId } from '@/lib/membership-tiers'
-import { startingPriceForSlug } from '@/lib/service-pricing'
-
 export const CURRENT_USER = {
   id: 'usr-001',
   firstName: 'Amara',
@@ -10,12 +7,10 @@ export const CURRENT_USER = {
   avatar: null,
   initials: 'AK',
   memberSince: 'June 2024',
-  /** Shown across dashboard; membership page can override via localStorage for demos */
-  membershipTierId: 'premium' as MembershipTierId,
   loyaltyTier: 'GOLD' as const,
   loyaltyPoints: 4250,
   pointsToNextTier: 750,
-  nextTier: 'VIP' as const,
+  nextTier: 'PLATINUM' as const,
   totalVisits: 18,
   totalSpent: 87500,
   favouriteService: 'Salon & Spa',
@@ -193,7 +188,7 @@ export const NOTIFICATIONS_DATA = [
     id: 'n-004',
     type: 'loyalty' as const,
     title: 'Points Earned!',
-    message: 'You earned 35 loyalty points from your last visit. You now have 4,250 points — 750 away from our Inner circle milestone.',
+    message: 'You earned 35 loyalty points from your last visit. You now have 4,250 points. Only 750 points to Platinum!',
     time: '2026-03-08T12:00:00Z',
     read: true,
     actionLabel: 'View Loyalty',
@@ -202,8 +197,8 @@ export const NOTIFICATIONS_DATA = [
   {
     id: 'n-005',
     type: 'promo' as const,
-    title: 'A little extra for Premium members',
-    message: '20% off spa treatments this weekend — use code PREMIUM20 when you book. Mar 14–16 only.',
+    title: 'Exclusive Offer for Gold Members',
+    message: '20% off all Spa treatments this weekend. Use code GOLD20 at checkout. Valid Mar 14-16 only.',
     time: '2026-03-09T09:00:00Z',
     read: true,
     actionLabel: 'Book Now',
@@ -246,7 +241,7 @@ export const LOYALTY_HISTORY = [
   { id: 'lp-002', date: '2026-03-01', description: 'Swimming Pool session', points: 25, type: 'earn' as const, balance: 4215 },
   { id: 'lp-003', date: '2026-02-22', description: 'Fitness Centre visit', points: 12, type: 'earn' as const, balance: 4190 },
   { id: 'lp-004', date: '2026-02-15', description: 'Booking cancelled - reversal', points: -8, type: 'deduct' as const, balance: 4178 },
-  { id: 'lp-006', date: '2026-01-28', description: 'Premium member thank-you — January', points: 500, type: 'bonus' as const, balance: 4016 },
+  { id: 'lp-006', date: '2026-01-28', description: 'Gold Member bonus - January', points: 500, type: 'bonus' as const, balance: 4016 },
   { id: 'lp-007', date: '2026-01-20', description: 'Spa treatment', points: 28, type: 'earn' as const, balance: 3516 },
   { id: 'lp-008', date: '2026-01-10', description: 'Redeemed: 500 points (KES 500 off)', points: -500, type: 'redeem' as const, balance: 3488 },
 ]
@@ -273,7 +268,7 @@ export const FAVOURITE_SERVICES = [
     name: 'Salon & Spa',
     image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80',
     rating: 4.9,
-    basePrice: startingPriceForSlug('salon-spa'),
+    basePrice: 1500,
     lastVisited: '2026-03-08',
   },
   {
@@ -281,7 +276,7 @@ export const FAVOURITE_SERVICES = [
     name: 'Fitness Centre',
     image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
     rating: 4.8,
-    basePrice: startingPriceForSlug('gym'),
+    basePrice: 1200,
     lastVisited: '2026-02-22',
   },
   {
@@ -289,7 +284,7 @@ export const FAVOURITE_SERVICES = [
     name: 'Swimming Pool',
     image: '/images/image-resizing-8.avif',
     rating: 4.7,
-    basePrice: startingPriceForSlug('swimming-pool'),
+    basePrice: 2500,
     lastVisited: '2026-03-01',
   },
 ]

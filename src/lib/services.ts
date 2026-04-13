@@ -1,5 +1,3 @@
-import { startingPriceForSlug } from '@/lib/service-pricing'
-
 export interface StaffMember {
   id: string
   name: string
@@ -9,8 +7,6 @@ export interface StaffMember {
   rating: number
   reviewCount: number
   specialties: string[]
-  /** Years in role — shown in booking flow */
-  yearsExperience: number
 }
 
 export interface Service {
@@ -50,7 +46,7 @@ export const SERVICES: Service[] = [
     category: 'WELLNESS',
     description:
       'Our friendly stylists and therapists are here to help you relax. Whether you need a fresh haircut or a calming massage, we make sure you leave feeling refreshed and happy.',
-    basePrice: startingPriceForSlug('salon-spa'),
+    basePrice: 0,
     duration: '60 min',
     image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80',
     icon: '✦',
@@ -70,17 +66,9 @@ export const SERVICES: Service[] = [
     ],
     available: true,
     staff: [
-      {
-        id: 's1',
-        name: 'Grace Mwangi',
-        role: 'Lead stylist & spa host',
-        bio: 'Same face you will see on the operations floor — she shapes colour and calm the way she runs her column: on time, warm, exact.',
-        avatar: 'https://i.pravatar.cc/150?img=47',
-        rating: 4.9,
-        reviewCount: 214,
-        specialties: ['Hair Styling', 'Skin Care', 'Facial Treatments'],
-        yearsExperience: 8,
-      },
+      { id: 's1', name: 'Amina Wanjiru', role: 'Senior Stylist', bio: '8 years of experience in hair and skin care. Known for her gentle touch and creative cuts.', avatar: 'https://i.pravatar.cc/150?img=47', rating: 4.9, reviewCount: 214, specialties: ['Hair Styling', 'Skin Care'] },
+      { id: 's2', name: 'Grace Otieno', role: 'Spa Therapist', bio: 'Certified massage therapist specialising in deep tissue and relaxation treatments.', avatar: 'https://i.pravatar.cc/150?img=48', rating: 4.8, reviewCount: 178, specialties: ['Massage Therapy', 'Facial Treatments'] },
+      { id: 's3', name: 'Fatuma Hassan', role: 'Nail Technician', bio: 'Passionate about nail art and precision nail care. Every detail matters to her.', avatar: 'https://i.pravatar.cc/150?img=49', rating: 4.7, reviewCount: 132, specialties: ['Nail Care', 'Waxing'] },
     ],
   },
   {
@@ -91,7 +79,7 @@ export const SERVICES: Service[] = [
     category: 'WELLNESS',
     description:
       "Our barbers know how to get your look just right. Whether you're coming in for a quick trim or a traditional shave, we'll make sure you leave looking sharp.",
-    basePrice: startingPriceForSlug('barbershop'),
+    basePrice: 0,
     duration: '45 min',
     image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80',
     icon: '✂',
@@ -110,17 +98,8 @@ export const SERVICES: Service[] = [
     ],
     available: true,
     staff: [
-      {
-        id: 'b1',
-        name: 'Tony Baraka',
-        role: 'Master barber',
-        bio: 'The name on our walk-in board — fades, tapers, and hot towels with zero drama. If the queue is long, he still does not rush the neckline.',
-        avatar: 'https://i.pravatar.cc/150?img=12',
-        rating: 5.0,
-        reviewCount: 301,
-        specialties: ['Haircut', 'Hot Towel Shave', 'Beard Trim'],
-        yearsExperience: 10,
-      },
+      { id: 'b1', name: 'James Kamau', role: 'Master Barber', bio: '10 years behind the chair. Specialises in fades, tapers, and classic gentleman cuts.', avatar: 'https://i.pravatar.cc/150?img=12', rating: 5.0, reviewCount: 301, specialties: ['Haircut', 'Hot Towel Shave'] },
+      { id: 'b2', name: 'Brian Mwangi', role: 'Barber', bio: 'Loves working with all hair types. Great with kids and first-timers.', avatar: 'https://i.pravatar.cc/150?img=15', rating: 4.8, reviewCount: 189, specialties: ['Beard Trim', 'Grooming Packages'] },
     ],
   },
   {
@@ -131,7 +110,7 @@ export const SERVICES: Service[] = [
     category: 'FITNESS',
     description:
       'Everything you need for a great workout. We have a fully equipped gym, professional trainers, and group classes to help you reach your goals in a friendly environment.',
-    basePrice: startingPriceForSlug('gym'),
+    basePrice: 0,
     duration: 'Per session',
     image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80',
     icon: '⊕',
@@ -150,17 +129,8 @@ export const SERVICES: Service[] = [
     ],
     available: true,
     staff: [
-      {
-        id: 'g1',
-        name: 'Mike Tanui',
-        role: 'Fitness floor lead',
-        bio: 'Trains like he is keeping score on form, not flash. Day passes and members get the same honest programming.',
-        avatar: 'https://i.pravatar.cc/150?img=11',
-        rating: 4.9,
-        reviewCount: 256,
-        specialties: ['Personal Training', 'Group Fitness Classes', 'Day Pass'],
-        yearsExperience: 8,
-      },
+      { id: 'g1', name: 'Kevin Odhiambo', role: 'Head Trainer', bio: 'Certified personal trainer with a background in sports science. Pushes you just the right amount.', avatar: 'https://i.pravatar.cc/150?img=11', rating: 4.9, reviewCount: 256, specialties: ['Personal Training', 'Group Fitness Classes'] },
+      { id: 'g2', name: 'Mercy Njeri', role: 'Fitness Coach', bio: 'Specialises in weight loss and body toning. Warm, encouraging, and results-driven.', avatar: 'https://i.pravatar.cc/150?img=44', rating: 4.8, reviewCount: 198, specialties: ['Personal Training', '5-Session Pack'] },
     ],
   },
   {
@@ -171,7 +141,7 @@ export const SERVICES: Service[] = [
     category: 'BUSINESS',
     description:
       "Get some work done in our private meeting rooms. We have fast internet, ready-to-use screens, and coffee/catering so you can focus on what's important.",
-    basePrice: startingPriceForSlug('boardroom'),
+    basePrice: 0,
     duration: 'Per hour',
     image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/5ca5a320-c813-45c1-97df-16afea14bc00/public',
     icon: '◈',
@@ -190,17 +160,7 @@ export const SERVICES: Service[] = [
     ],
     available: true,
     staff: [
-      {
-        id: 'br1',
-        name: 'James Kariuki',
-        role: 'Meetings & venue host',
-        bio: 'The person who unlocks the boardroom — HDMI checked, coffee staged, catering on the clock. Your slot starts composed.',
-        avatar: 'https://i.pravatar.cc/150?img=45',
-        rating: 4.9,
-        reviewCount: 87,
-        specialties: ['Video Conferencing Setup', 'Catering Add-on', 'Half-Day Package'],
-        yearsExperience: 7,
-      },
+      { id: 'br1', name: 'Sandra Achieng', role: 'Events Coordinator', bio: 'Handles all room setups and ensures your meeting runs without a hitch.', avatar: 'https://i.pravatar.cc/150?img=45', rating: 4.9, reviewCount: 87, specialties: ['Video Conferencing Setup', 'Catering Add-on'] },
     ],
   },
   {
@@ -210,8 +170,8 @@ export const SERVICES: Service[] = [
     tagline: 'A beautiful space for your big celebrations',
     category: 'EVENTS',
     description:
-      'Host up to 500 guests in our large ballroom. It is the perfect spot for weddings and big parties, with plenty of space for dancing and support to help you plan it all.',
-    basePrice: startingPriceForSlug('ballroom'),
+      'Host up to 500 guests in our large ballroom. It is a beautiful setting for weddings and major celebrations, with room to dine and dance, and a team to help you plan the day.',
+    basePrice: 0,
     duration: 'Full day',
     image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/4e93453c-c18f-40f7-1d44-47348a51c600/public',
     icon: '❋',
@@ -230,39 +190,19 @@ export const SERVICES: Service[] = [
     ],
     available: true,
     staff: [
-      {
-        id: 'bl1',
-        name: 'Sarah Wanjiru',
-        role: 'Ballroom & events lead',
-        bio: 'Runs the big room the way a stage manager runs a show — vendors, lighting, and your timeline land without guests seeing the seams.',
-        avatar: 'https://i.pravatar.cc/150?img=46',
-        rating: 5.0,
-        reviewCount: 143,
-        specialties: ['Wedding Package', 'Corporate Gala'],
-        yearsExperience: 12,
-      },
-      {
-        id: 'bl2',
-        name: 'Rose Adhiambo',
-        role: 'Ballroom coordinator',
-        bio: 'Load-in to last dance — she keeps security, catering, and the DJ in the same thread so you are not the project manager on your own night.',
-        avatar: 'https://i.pravatar.cc/150?img=50',
-        rating: 4.9,
-        reviewCount: 112,
-        specialties: ['Decor Package', 'Birthday Celebration'],
-        yearsExperience: 9,
-      },
+      { id: 'bl1', name: 'Patricia Wambua', role: 'Event Planner', bio: 'Has planned over 200 weddings and corporate galas. She makes the big day feel effortless.', avatar: 'https://i.pravatar.cc/150?img=46', rating: 5.0, reviewCount: 143, specialties: ['Wedding Package', 'Corporate Gala'] },
+      { id: 'bl2', name: 'Daniel Kipchoge', role: 'Decor Specialist', bio: 'Transforms spaces into stunning experiences. Every setup is tailored to your vision.', avatar: 'https://i.pravatar.cc/150?img=13', rating: 4.9, reviewCount: 112, specialties: ['Decor Package', 'Birthday Celebration'] },
     ],
   },
   {
     id: '6',
     slug: 'banquet-hall',
     name: 'Banquet Hall',
-    tagline: 'The perfect spot for dinners and small parties',
+    tagline: 'The perfect spot for dinners and private gatherings',
     category: 'EVENTS',
     description:
-      'Great for family gatherings or office dinners. Our banquet hall fits up to 150 people and comes with a friendly team and a menu that your guests will really enjoy.',
-    basePrice: startingPriceForSlug('banquet-hall'),
+      'Ideal for family gatherings, office dinners, and receptions. Our banquet hall fits up to 150 people, with a thoughtful team and menus your guests will remember.',
+    basePrice: 0,
     duration: 'Full day',
     image: 'https://imagedelivery.net/K1DCBIh16uT0nsikD2vMaA/ba91ccad-a7a1-463e-25be-00131cc7d300/public',
     icon: '◎',
@@ -282,28 +222,8 @@ export const SERVICES: Service[] = [
     ],
     available: true,
     staff: [
-      {
-        id: 'bq1',
-        name: 'Rose Adhiambo',
-        role: 'Banquet lead',
-        bio: 'Smaller rooms than the ballroom, same standard — speeches, service pacing, and a kitchen that hits the window while food still steams.',
-        avatar: 'https://i.pravatar.cc/150?img=50',
-        rating: 4.9,
-        reviewCount: 167,
-        specialties: ['Custom Menu Design', 'Full Catering'],
-        yearsExperience: 14,
-      },
-      {
-        id: 'bq2',
-        name: 'Sarah Wanjiru',
-        role: 'Hospitality partner',
-        bio: 'When events spill across spaces, she is the handoff — bar, floor, and family tables stay aligned without you running interference.',
-        avatar: 'https://i.pravatar.cc/150?img=46',
-        rating: 4.8,
-        reviewCount: 98,
-        specialties: ['Dinner Package', 'Cocktail Reception'],
-        yearsExperience: 12,
-      },
+      { id: 'bq1', name: 'Chef Moses Kariuki', role: 'Head Chef', bio: 'Trained in Nairobi and Johannesburg. Crafts menus that leave guests asking for seconds.', avatar: 'https://i.pravatar.cc/150?img=14', rating: 4.9, reviewCount: 167, specialties: ['Custom Menu Design', 'Full Catering'] },
+      { id: 'bq2', name: 'Lydia Muthoni', role: 'Banquet Coordinator', bio: 'Ensures every dinner and reception runs smoothly from start to finish.', avatar: 'https://i.pravatar.cc/150?img=50', rating: 4.8, reviewCount: 98, specialties: ['Dinner Package', 'Cocktail Reception'] },
     ],
   },
   {
@@ -314,7 +234,7 @@ export const SERVICES: Service[] = [
     category: 'FITNESS',
     description:
       'Join us for swimming lessons in our clean, safe pool. We have classes for all ages and skill levels, so everyone can feel comfortable in the water.',
-    basePrice: startingPriceForSlug('swimming-pool'),
+    basePrice: 0,
     duration: 'Per session',
     image: '/images/image-resizing-10.avif',
     icon: '◇',
@@ -333,17 +253,8 @@ export const SERVICES: Service[] = [
     ],
     available: true,
     staff: [
-      {
-        id: 'sw1',
-        name: 'Coach Ali Hassan',
-        role: 'Pool lead & swim coach',
-        bio: 'Lanes, lessons, and nervous first kicks — he keeps standards high and the water friendly. Same coach the desk schedules for training blocks.',
-        avatar: 'https://i.pravatar.cc/150?img=51',
-        rating: 4.9,
-        reviewCount: 221,
-        specialties: ['Beginner Lessons', 'Advanced Coaching', 'Group Classes'],
-        yearsExperience: 12,
-      },
+      { id: 'sw1', name: 'Coach Peter Ndung\'u', role: 'Head Swimming Coach', bio: 'Former national swimmer. Patient, encouraging, and great with children and beginners.', avatar: 'https://i.pravatar.cc/150?img=16', rating: 4.9, reviewCount: 221, specialties: ['Beginner Lessons', 'Group Classes'] },
+      { id: 'sw2', name: 'Coach Stella Auma', role: 'Swimming Instructor', bio: 'Specialises in competitive training and advanced technique refinement.', avatar: 'https://i.pravatar.cc/150?img=51', rating: 4.8, reviewCount: 145, specialties: ['Advanced Coaching', 'Competitive Training'] },
     ],
   },
 ]
@@ -377,8 +288,8 @@ export const TESTIMONIALS: Testimonial[] = [
 ]
 
 export const STATS: Stat[] = [
-  { value: '5,000+', label: 'Returning guests' },
-  { value: '7', label: 'Experiences' },
-  { value: '15+', label: 'Specialists' },
-  { value: '100%', label: 'We show up' },
+  { value: '5,000+', label: 'Members' },
+  { value: '7', label: 'Services' },
+  { value: '15+', label: 'Friendly Staff' },
+  { value: '100%', label: 'Satisfaction' },
 ]

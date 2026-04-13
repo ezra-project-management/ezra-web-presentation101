@@ -68,7 +68,7 @@ export function CTASection() {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="inline-flex items-center px-5 py-2 rounded-full bg-gold/20 border border-gold/30 text-gold text-sm font-sans font-medium mb-8 backdrop-blur-sm"
         >
-          Start with a date
+          Book a Visit Today
         </motion.div>
 
         <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-white font-semibold leading-tight">
@@ -87,7 +87,7 @@ export function CTASection() {
           transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="mt-6 text-lg md:text-xl text-white/85 font-sans leading-relaxed"
         >
-          Choose what you’re in the mood for, lock a time, and we’ll handle the rest — usually under two minutes.
+          Pick a service, choose your time, and we&apos;ll take care of everything else. It takes less than two minutes.
         </motion.p>
 
         {/* Gold accent line */}
@@ -127,7 +127,7 @@ export function CTASection() {
           className="mt-10 flex items-center justify-center gap-2 text-white/50 font-sans text-sm"
         >
           <MessageCircle className="w-4 h-4" />
-          Or just send us a message — we&apos;re always here
+          Or send us a message. We are always here.
         </motion.p>
       </div>
 

@@ -4,7 +4,6 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { SERVICES } from '@/lib/services'
 import { AnimatedSection, TextReveal, LineReveal } from '@/components/ui/AnimatedSection'
-import { formatServicePrice } from '@/lib/utils'
 
 export function ServicesGrid() {
   const router = useRouter()
@@ -16,11 +15,11 @@ export function ServicesGrid() {
         <div className="text-center mb-20">
           <AnimatedSection variant="blurIn">
             <span className="text-gold font-sans text-sm font-medium uppercase tracking-[0.25em]">
-              One address, many moods
+              Everything under one roof
             </span>
           </AnimatedSection>
           <h2 className="mt-4 font-display text-4xl md:text-5xl text-navy font-semibold">
-            <TextReveal text="Pick what you need today" delay={0.2} />
+            <TextReveal text="Something for everyone" delay={0.2} />
           </h2>
           <LineReveal className="mx-auto mt-6 w-20" delay={0.6} />
         </div>
@@ -62,7 +61,7 @@ export function ServicesGrid() {
                     {service.tagline}
                   </p>
                   <p className="font-sans text-[10px] text-gold font-bold mt-2 uppercase tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-                    {formatServicePrice(service.basePrice)}
+                    Starting from KShs 0
                   </p>
 
                   {/* Hover CTA */}
@@ -70,7 +69,7 @@ export function ServicesGrid() {
                     <div className="translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
                       <div className="w-8 h-px bg-gold mt-3 mb-2 transition-all duration-700 group-hover:w-full" />
                       <p className="font-sans text-sm text-gold-light font-medium">
-                        Step inside &rarr;
+                        Book Now &rarr;
                       </p>
                     </div>
                   </div>

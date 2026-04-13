@@ -79,7 +79,7 @@ export function isClosedDay(dateStr: string): string | null {
   const date = new Date(dateStr)
   if (date.getDay() === 0) return 'We are closed on Sundays'
   const holiday = PUBLIC_HOLIDAYS.find(h => h.date === dateStr)
-  if (holiday) return `Closed — ${holiday.name}`
+  if (holiday) return `Closed for ${holiday.name}`
   return null
 }
 

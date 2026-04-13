@@ -27,9 +27,9 @@ import { toast } from 'sonner'
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { cn } from '@/lib/utils'
-import { formatCurrency, formatServicePrice } from '@/lib/utils'
+import { formatCurrency } from '@/lib/utils'
 import { SERVICES } from '@/lib/services'
-import type { Service } from '@/lib/services'
+import type { Service, StaffMember } from '@/lib/services'
 import {
   CURRENT_USER,
   SPENDING_CHART_DATA,
@@ -104,6 +104,9 @@ export default function DashboardPage() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const [selectedService, setSelectedService] = useState<Service | null>(null)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
+  const [selectedStaff, setSelectedStaff] = useState<StaffMember | null>(null)
+  /** When the chosen service has staff, true until the guest picks someone or no preference. */
+  const [awaitingStaffChoice, setAwaitingStaffChoice] = useState(false)
 
   const calendarDays = useMemo(() => {
     const year = calendarMonth.getFullYear()
@@ -166,6 +169,8 @@ export default function DashboardPage() {
     setSelectedDate(dateStr)
     setSelectedService(null)
     setSelectedTime(null)
+    setSelectedStaff(null)
+    setAwaitingStaffChoice(false)
   }
 
   const handleQuickBook = () => {
@@ -179,7 +184,7 @@ export default function DashboardPage() {
       serviceSlug: selectedService.slug,
       serviceCategory: selectedService.category,
       resource: '',
-      staff: '',
+      staff: selectedStaff?.name ?? '',
       date: selectedDate,
       time: selectedTime,
       endTime: '',
@@ -205,6 +210,8 @@ export default function DashboardPage() {
     setSelectedDate(null)
     setSelectedService(null)
     setSelectedTime(null)
+    setSelectedStaff(null)
+    setAwaitingStaffChoice(false)
   }
 
   return (
@@ -280,7 +287,13 @@ export default function DashboardPage() {
             </h2>
             {selectedDate && (
               <button
-                onClick={() => { setSelectedDate(null); setSelectedService(null); setSelectedTime(null) }}
+                onClick={() => {
+                  setSelectedDate(null)
+                  setSelectedService(null)
+                  setSelectedTime(null)
+                  setSelectedStaff(null)
+                  setAwaitingStaffChoice(false)
+                }}
                 className="flex items-center gap-1.5 font-sans text-sm text-charcoal/50 hover:text-navy transition-colors"
               >
                 <X className="w-4 h-4" />
@@ -401,7 +414,12 @@ export default function DashboardPage() {
                       {SERVICES.map(service => (
                         <button
                           key={service.id}
-                          onClick={() => { setSelectedService(service); setSelectedTime(null) }}
+                          onClick={() => {
+                            setSelectedService(service)
+                            setSelectedTime(null)
+                            setSelectedStaff(null)
+                            setAwaitingStaffChoice(service.staff.length > 0)
+                          }}
                           className="w-full flex items-center gap-3 p-3 rounded-xl bg-white border border-gray-100 hover:border-gold/40 hover:shadow-sm transition-all duration-200 text-left group"
                         >
                           <div className="relative w-11 h-11 rounded-lg overflow-hidden shrink-0">
@@ -418,6 +436,75 @@ export default function DashboardPage() {
                       ))}
                     </div>
                   </motion.div>
+                ) : selectedService && selectedService.staff.length > 0 && awaitingStaffChoice ? (
+                  <motion.div
+                    key="staff-pick"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <button
+                      onClick={() => {
+                        setSelectedService(null)
+                        setSelectedTime(null)
+                        setSelectedStaff(null)
+                        setAwaitingStaffChoice(false)
+                      }}
+                      className="flex items-center gap-1 font-sans text-xs text-charcoal/50 hover:text-navy transition-colors mb-3"
+                    >
+                      <ChevronLeft className="w-3.5 h-3.5" /> Back to services
+                    </button>
+
+                    <p className="font-sans text-xs uppercase tracking-widest text-charcoal/40 mb-1">
+                      {new Date(selectedDate! + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}
+                    </p>
+                    <p className="font-display text-lg text-navy font-semibold mb-1">Who would you like?</p>
+                    <p className="font-sans text-xs text-charcoal/50 mb-4">
+                      Choose who you want for {selectedService.name}, or ask us to assign the next available team member.
+                    </p>
+
+                    <div className="space-y-2 max-h-[280px] overflow-y-auto pr-1">
+                      {selectedService.staff.map((member) => (
+                        <button
+                          key={member.id}
+                          type="button"
+                          onClick={() => {
+                            setSelectedStaff(member)
+                            setAwaitingStaffChoice(false)
+                          }}
+                          className="w-full flex items-center gap-3 p-3 rounded-xl bg-white border border-gray-100 hover:border-gold/40 hover:shadow-sm transition-all text-left"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={member.avatar} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-sans text-sm font-medium text-navy">{member.name}</p>
+                            <p className="font-sans text-[10px] text-charcoal/45">{member.role}</p>
+                          </div>
+                          <div className="flex items-center gap-0.5 shrink-0">
+                            <Star className="w-3 h-3 text-gold fill-gold" />
+                            <span className="font-sans text-xs font-semibold text-navy">{member.rating}</span>
+                          </div>
+                        </button>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedStaff(null)
+                          setAwaitingStaffChoice(false)
+                        }}
+                        className="w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-charcoal/15 text-left hover:border-gold/40 hover:bg-gold/5 transition-all"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-charcoal/8 flex items-center justify-center shrink-0">
+                          <Users className="w-5 h-5 text-charcoal/40" />
+                        </div>
+                        <div>
+                          <p className="font-sans text-sm font-medium text-navy">No preference</p>
+                          <p className="font-sans text-[10px] text-charcoal/45">We will assign someone for you</p>
+                        </div>
+                      </button>
+                    </div>
+                  </motion.div>
                 ) : (
                   <motion.div
                     key="time-pick"
@@ -427,7 +514,12 @@ export default function DashboardPage() {
                     transition={{ duration: 0.3 }}
                   >
                     <button
-                      onClick={() => { setSelectedService(null); setSelectedTime(null) }}
+                      onClick={() => {
+                        setSelectedService(null)
+                        setSelectedTime(null)
+                        setSelectedStaff(null)
+                        setAwaitingStaffChoice(false)
+                      }}
                       className="flex items-center gap-1 font-sans text-xs text-charcoal/50 hover:text-navy transition-colors mb-3"
                     >
                       <ChevronLeft className="w-3.5 h-3.5" /> Back to services
@@ -444,6 +536,28 @@ export default function DashboardPage() {
                         </p>
                       </div>
                     </div>
+
+                    {selectedService.staff.length > 0 && (
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <p className="font-sans text-xs text-charcoal/60">
+                          {selectedStaff ? (
+                            <>With <strong className="text-navy">{selectedStaff.name}</strong></>
+                          ) : (
+                            <>Next available team member</>
+                          )}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAwaitingStaffChoice(true)
+                            setSelectedTime(null)
+                          }}
+                          className="font-sans text-xs font-medium text-gold hover:text-gold-dark shrink-0"
+                        >
+                          Change person
+                        </button>
+                      </div>
+                    )}
 
                     <p className="font-sans text-xs uppercase tracking-widest text-charcoal/40 mb-3">Pick a time</p>
                     <div className="grid grid-cols-3 gap-2">
@@ -570,10 +684,12 @@ export default function DashboardPage() {
                       <MapPin className="w-4 h-4" />
                       {nextBooking.resource}
                     </span>
-                    <span className="flex items-center gap-1.5">
-                      <Users className="w-4 h-4" />
-                      with {nextBooking.staff}
-                    </span>
+                    {nextBooking.staff ? (
+                      <span className="flex items-center gap-1.5">
+                        <Users className="w-4 h-4" />
+                        with {nextBooking.staff}
+                      </span>
+                    ) : null}
                   </div>
 
                   <div className="mt-4 flex items-center gap-4 flex-wrap">
@@ -731,7 +847,7 @@ export default function DashboardPage() {
                 <CalendarDays className="w-8 h-8 text-gold" />
               </div>
               <p className="font-display text-xl text-navy font-semibold">No upcoming appointments</p>
-              <p className="font-sans text-sm text-gray-400 mt-1">Your schedule is clear — time to treat yourself</p>
+              <p className="font-sans text-sm text-gray-400 mt-1">Your schedule is clear. Time to treat yourself.</p>
               <Link
                 href="/services"
                 className="inline-flex items-center gap-2 mt-6 bg-gold text-navy font-sans font-semibold text-sm rounded-full px-6 py-3 hover:bg-gold-light transition-all"
@@ -875,7 +991,7 @@ export default function DashboardPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/30 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-3">
                 <p className="font-display text-sm font-semibold text-white">{service.name}</p>
-                <p className="font-sans text-[10px] text-white/60">{formatServicePrice(service.basePrice)}</p>
+                <p className="font-sans text-[10px] text-white/60">Starting from KShs 0</p>
               </div>
             </Link>
           ))}

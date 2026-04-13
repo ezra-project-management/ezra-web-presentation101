@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 
 const categories = [
   { value: 'All', label: 'All' },
-  { value: 'WELLNESS', label: 'Wellness' },
+  { value: 'WELLNESS', label: 'Personal care' },
   { value: 'FITNESS', label: 'Fitness' },
   { value: 'EVENTS', label: 'Events' },
   { value: 'BUSINESS', label: 'Business' },

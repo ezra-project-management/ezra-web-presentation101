@@ -79,16 +79,15 @@ export default function AboutPage() {
                 Ezra Center
               </h2>
               <p className="mt-6 font-sans text-charcoal/80 leading-relaxed">
-                Founded with a vision to create an all-in-one lifestyle destination, Ezra
-                Center brings together world-class wellness, fitness, events, and
-                business services under one roof. We combine warmth with international
-                standards to deliver something truly special.
+                We built Ezra Center as a calm, all-in-one place where beauty and personal
+                care, fitness, meetings, and celebrations come together under one roof in
+                Nairobi. Our guests include neighbours and visitors from around the world,
+                and we aim to make every visit feel effortless and sincere.
               </p>
               <p className="mt-4 font-sans text-charcoal/80 leading-relaxed">
-                Our team of dedicated professionals is committed to delivering exceptional
-                experiences that leave lasting impressions. From a relaxing spa day to a
-                grand wedding celebration, every moment at Ezra Center is designed with care
-                and attention to detail.
+                Our team focuses on the details that matter, from a quiet hour in the salon
+                to an evening you have been planning for months. Every moment here is
+                arranged with care.
               </p>
             </AnimatedSection>
             <AnimatedSection delay={0.2}>

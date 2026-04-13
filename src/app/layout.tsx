@@ -24,9 +24,9 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ezracenter.com'),
-  title: 'Ezra Center | Premium Hospitality & Wellness',
+  title: 'Ezra Center | Premium Hospitality in Nairobi',
   description:
-    'Book world-class salon, gym, spa, events, and boardrooms at Ezra Center — your premier lifestyle destination.',
+    'Book salon and spa, fitness, meeting rooms, and celebrations at Ezra Center in Nairobi. International standards, warm Kenyan welcome.',
   openGraph: {
     images: [
       '/images/image-resizing-2.jpeg',
