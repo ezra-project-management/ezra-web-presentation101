@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ChevronDown } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 
 const heroImages = [
   '/images/image-resizing-2.jpeg',
@@ -13,11 +13,7 @@ const heroImages = [
   '/images/image-resizing-2.avif',
 ]
 
-const floatingPills = [
-  '5,000+ visits and counting',
-  'Seven services in one place',
-  'Est. 2020 in Nairobi',
-]
+const stats = '5k+ visits · 7 services · Est. 2020'
 
 export function HeroSection() {
   const sectionRef = useRef(null)
@@ -27,167 +23,191 @@ export function HeroSection() {
   })
   const [currentImage, setCurrentImage] = useState(0)
 
-  // Auto-rotate background images
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % heroImages.length)
-    }, 6000)
+    }, 7000)
     return () => clearInterval(interval)
   }, [])
 
-  // Parallax
-  const contentY = useTransform(scrollYProgress, [0, 0.5], ['0%', '10%'])
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0])
+  const contentY = useTransform(scrollYProgress, [0, 0.45], ['0%', '6%'])
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.35], [1, 0])
 
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-navy-dark"
+      className="relative isolate min-h-[100dvh] flex flex-col justify-end overflow-hidden bg-[#060d14]"
     >
-      {/* Background Carousel */}
-      <div className="absolute inset-0 overflow-hidden">
-        <AnimatePresence initial={false}>
+      {/* Background */}
+      <div className="absolute inset-0">
+        <AnimatePresence initial={false} mode="sync">
           <motion.div
             key={currentImage}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.5 }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0"
           >
             <motion.div
-              animate={{ scale: [1, 1.1] }}
-              transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-              className="relative w-full h-full"
+              animate={{ scale: [1, 1.05] }}
+              transition={{ duration: 28, repeat: Infinity, repeatType: 'reverse', ease: 'linear' }}
+              className="relative h-full w-full"
             >
               <Image
                 src={heroImages[currentImage]}
                 alt=""
                 fill
                 priority
-                className="object-cover"
+                sizes="100vw"
+                className="object-cover object-center"
               />
             </motion.div>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Cinematic Overlays */}
-      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
+      {/* Cinematic grade: legibility without flattening the photograph */}
+      <div
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_120%_at_15%_55%,rgba(5,12,20,0.88)_0%,rgba(5,12,20,0.35)_45%,transparent_72%)]"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#04080c] via-[#04080c]/50 to-[#0a1520]/40"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.35)_100%)]"
+        aria-hidden
+      />
 
       {/* Content */}
-      <div className="relative z-10 w-full h-full flex items-end pb-12 md:pb-20">
-        <motion.div
-          style={{ y: contentY, opacity: contentOpacity }}
-          className="max-w-7xl mx-auto px-6 md:px-12 w-full grid grid-cols-1 md:grid-cols-2 items-end gap-12 mb-12"
-        >
-          {/* Main Text Content */}
-          <div className="max-w-2xl">
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="mb-8"
-            >
-              <span className="bg-gold/90 text-navy-dark px-4 py-1 text-[10px] font-bold uppercase tracking-[0.3em] rounded-sm shadow-xl">
-                Nairobi · Serene · International · Welcoming
-              </span>
-            </motion.div>
-
-            {/* Heading */}
-            <div className="overflow-hidden">
-              <motion.h1
-                className="font-display text-5xl md:text-7xl lg:text-8xl leading-[1.1] text-white"
-                initial={{ y: "100%" }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-1 flex-col justify-end px-5 pb-14 pt-32 sm:px-8 md:px-12 md:pb-20 lg:pb-24">
+        <motion.div style={{ y: contentY, opacity: contentOpacity }} className="w-full">
+          <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12 lg:gap-8">
+            {/* Copy column */}
+            <div className="lg:col-span-7 xl:col-span-6">
+              {/* Eyebrow */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-2"
               >
-                <span className="block font-bold italic"><span className="text-gold">Ezra</span> <span className="text-white">Center</span></span>
-              </motion.h1>
-            </div>
-
-            {/* Subheading */}
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.35 }}
-              className="mt-6 font-sans text-white/80 text-lg md:text-xl leading-relaxed max-w-lg"
-            >
-              Room to breathe. Set in a gracious church building, Ezra brings together salon and spa care, fitness, meeting rooms, and spaces for celebrations. One calm address for guests from Nairobi and abroad. We still answer the phone.
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="mt-12 flex flex-wrap items-center gap-6"
-            >
-              <Link
-                href="/services"
-                className="px-12 py-5 bg-white text-navy-dark font-sans font-bold rounded-sm text-xs uppercase tracking-widest transition-all duration-500 hover:bg-gold hover:text-navy-dark shadow-2xl"
-              >
-                See What We Offer
-              </Link>
-              <Link
-                href="/services"
-                className="group flex items-center gap-4 text-white font-sans font-bold text-xs uppercase tracking-widest"
-              >
-                <span className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-gold group-hover:border-gold transition-all duration-500">
-                  <ChevronDown className="w-5 h-5 -rotate-90" />
+                <span className="h-px w-8 bg-gold/80 sm:w-12" aria-hidden />
+                <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.28em] text-gold/95">
+                  Nairobi · Est. 2020
                 </span>
-                Book a Visit
-              </Link>
-            </motion.div>
-          </div>
+              </motion.div>
 
-          {/* Side Info */}
-          <div className="hidden md:flex flex-col items-end gap-12 pb-6">
-            <div className="flex gap-1">
-              {heroImages.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentImage(i)}
-                  className={`h-0.5 transition-all duration-700 ${
-                    i === currentImage ? 'w-12 bg-gold' : 'w-4 bg-white/20 hover:bg-white/40'
-                  }`}
-                  aria-label={`View slide ${i + 1}`}
-                />
-              ))}
+              {/* Title */}
+              <div className="overflow-hidden">
+                <motion.h1
+                  className="font-display text-[clamp(2.75rem,8vw,6.25rem)] font-semibold leading-[0.95] tracking-tight text-white"
+                  initial={{ y: '108%' }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
+                >
+                  <span className="block">
+                    <span className="bg-gradient-to-br from-[#e8c76b] via-gold to-[#b8923a] bg-clip-text text-transparent">
+                      Ezra
+                    </span>{' '}
+                    <span className="font-light text-white/95">Center</span>
+                  </span>
+                </motion.h1>
+              </div>
+
+              {/* Tight subcopy */}
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                className="mt-6 max-w-[34rem] space-y-3"
+              >
+                <p className="text-pretty font-sans text-lg font-normal leading-snug text-white/90 md:text-xl md:leading-snug">
+                  A restored church, reimagined — salon, spa, fitness, and rooms to meet and celebrate.
+                </p>
+                <p className="font-sans text-sm font-medium leading-relaxed tracking-wide text-white/45 md:text-[15px]">
+                  International polish · Local warmth · Someone always answers
+                </p>
+              </motion.div>
+
+              {/* CTAs */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="mt-10 flex flex-col gap-3 sm:mt-11 sm:flex-row sm:items-center sm:gap-4"
+              >
+                <Link
+                  href="/services"
+                  className="group inline-flex items-center justify-center gap-2 rounded-sm bg-white px-8 py-4 font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-navy shadow-[0_20px_50px_-12px_rgba(0,0,0,0.45)] transition-all duration-300 hover:bg-gold hover:text-navy hover:shadow-[0_24px_60px_-10px_rgba(201,168,76,0.35)]"
+                >
+                  View services
+                  <ArrowUpRight className="h-4 w-4 opacity-70 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </Link>
+                <Link
+                  href="/services"
+                  className="inline-flex items-center justify-center rounded-sm border border-white/20 bg-white/[0.04] px-8 py-4 font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-sm transition-all duration-300 hover:border-gold/50 hover:bg-white/[0.08]"
+                >
+                  Book a visit
+                </Link>
+              </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.55, duration: 0.6 }}
+                className="mt-8 font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-white/35"
+              >
+                {stats}
+              </motion.p>
             </div>
 
-            <div className="flex flex-col items-end gap-4">
-              {floatingPills.map((pill, i) => (
-                <motion.span
-                  key={pill}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.7 + i * 0.1 }}
-                  className="text-white/60 font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-right"
-                >
-                  {pill}
-                </motion.span>
-              ))}
+            {/* Slide control + stat — desktop */}
+            <div className="flex flex-col items-stretch gap-8 pb-1 lg:col-span-5 lg:items-end xl:col-span-6">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.45, duration: 0.6 }}
+                className="hidden w-full max-w-xs flex-col gap-3 lg:ml-auto lg:flex"
+              >
+                <div className="flex justify-end gap-1.5">
+                  {heroImages.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setCurrentImage(i)}
+                      className={`h-[3px] rounded-full transition-all duration-500 ease-out ${
+                        i === currentImage ? 'w-10 bg-gold shadow-[0_0_12px_rgba(201,168,76,0.5)]' : 'w-2 bg-white/20 hover:bg-white/40'
+                      }`}
+                      aria-label={`Slide ${i + 1}`}
+                    />
+                  ))}
+                </div>
+                <p className="text-right font-sans text-[10px] font-medium uppercase tracking-[0.35em] text-white/30">
+                  {String(currentImage + 1).padStart(2, '0')} / {String(heroImages.length).padStart(2, '0')}
+                </p>
+              </motion.div>
             </div>
           </div>
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll hint */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-10 right-12 z-10 hidden md:flex flex-col items-center gap-6"
+        transition={{ delay: 1.4, duration: 0.8 }}
+        className="absolute bottom-8 right-6 z-10 hidden md:flex md:flex-col md:items-center md:gap-5 lg:right-10"
       >
-        <motion.div
-          className="w-px h-20 bg-gradient-to-b from-transparent via-gold/50 to-transparent"
-          animate={{ scaleY: [0, 1, 0], opacity: [0, 1, 0] }}
-          transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+        <motion.span
+          className="block h-16 w-px bg-gradient-to-b from-transparent via-gold/40 to-transparent"
+          animate={{ scaleY: [0.85, 1, 0.85], opacity: [0.5, 1, 0.5] }}
+          transition={{ repeat: Infinity, duration: 2.8, ease: 'easeInOut' }}
         />
-        <span className="font-sans text-[10px] text-white/40 uppercase tracking-[0.5em] [writing-mode:vertical-lr]">
-          Explore
+        <span className="font-sans text-[9px] uppercase tracking-[0.45em] text-white/25 [writing-mode:vertical-lr]">
+          Scroll
         </span>
       </motion.div>
     </section>
