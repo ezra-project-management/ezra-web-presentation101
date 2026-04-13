@@ -3,7 +3,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Service } from '@/lib/services'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, cn } from '@/lib/utils'
+import { btnGlassOnLight } from '@/lib/button-styles'
 import { Badge } from '@/components/ui/Badge'
 
 interface ServiceCardProps {
@@ -50,9 +51,14 @@ export function ServiceCard({ service }: ServiceCardProps) {
         </div>
       </div>
 
-      {/* Footer */}
+      {/* Footer — glass CTA to match hero secondary */}
       <div className="px-6 pb-6">
-        <span className="block w-full text-center py-3 bg-navy text-white font-sans font-medium rounded-lg group-hover:bg-gold group-hover:text-navy-dark transition-all duration-300">
+        <span
+          className={cn(
+            btnGlassOnLight,
+            'py-3.5 text-[13px] tracking-wide group-hover:border-gold/40 group-hover:text-navy'
+          )}
+        >
           View &amp; Book
         </span>
       </div>

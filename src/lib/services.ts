@@ -34,11 +34,6 @@ export interface Testimonial {
   role: string
 }
 
-export interface Stat {
-  value: string
-  label: string
-}
-
 export const SERVICES: Service[] = [
   {
     id: '1',
@@ -287,11 +282,4 @@ export const TESTIMONIALS: Testimonial[] = [
     text: 'Loved the experience. The people were friendly, and the spa was a nice extra treat. Will definitely be coming back.',
     rating: 5,
   },
-]
-
-export const STATS: Stat[] = [
-  { value: '4,200+', label: 'Visits (since 2020)' },
-  { value: '7', label: 'Service lines' },
-  { value: '18', label: 'Specialists' },
-  { value: '97%', label: 'Would recommend' },
 ]

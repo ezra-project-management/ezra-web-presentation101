@@ -939,7 +939,7 @@ export default function DashboardPage() {
                 <YAxis hide />
                 <Tooltip
                   contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', fontFamily: 'var(--font-dm-sans)' }}
-                  formatter={(value) => [`KES ${Number(value).toLocaleString()}`, 'Spent']}
+                  formatter={(value) => [`KSh ${Number(value).toLocaleString()}`, 'Spent']}
                 />
                 <Area type="monotone" dataKey="amount" stroke="#C9A84C" strokeWidth={2} fill="url(#goldGradient)" />
               </AreaChart>

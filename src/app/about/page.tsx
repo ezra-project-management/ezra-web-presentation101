@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Star, Heart, Lightbulb, Users } from 'lucide-react'
-import { StatsSection } from '@/components/home/StatsSection'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 
 const values = [
@@ -135,9 +134,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      {/* Stats */}
-      <StatsSection />
 
       {/* CTA */}
       <section className="py-20 bg-navy">

@@ -1,6 +1,6 @@
 /**
- * Starting-from prices (KES) — aligned with admin POS / demo menus.
- * Update here and mirror in ezra-admin `src/lib/service-pricing.ts` for demos.
+ * Starting-from prices (KSh) — single source for web + admin demos.
+ * Display via `formatCurrency()` everywhere. Mirror in `ezra-admin/service-pricing.ts`.
  */
 export const STARTING_PRICE_KES: Record<string, number> = {
   'salon-spa': 1800,

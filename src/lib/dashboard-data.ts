@@ -172,7 +172,7 @@ export const NOTIFICATIONS_DATA = [
     id: 'n-002',
     type: 'payment' as const,
     title: 'Payment Received',
-    message: 'KES 3,500 received for your Salon & Spa booking EZR-A1B2C3. M-Pesa ref: QJK123ABC.',
+    message: 'KSh 3,500 received for your Salon & Spa booking EZR-A1B2C3. M-Pesa ref: QJK123ABC.',
     time: '2026-03-10T14:28:00Z',
     read: false,
     actionLabel: 'View Receipt',
@@ -247,7 +247,7 @@ export const LOYALTY_HISTORY = [
   { id: 'lp-004', date: '2026-02-15', description: 'Booking cancelled - reversal', points: -8, type: 'deduct' as const, balance: 4178 },
   { id: 'lp-006', date: '2026-01-28', description: 'Premium member bonus - January', points: 500, type: 'bonus' as const, balance: 4016 },
   { id: 'lp-007', date: '2026-01-20', description: 'Spa treatment', points: 28, type: 'earn' as const, balance: 3516 },
-  { id: 'lp-008', date: '2026-01-10', description: 'Redeemed: 500 points (KES 500 off)', points: -500, type: 'redeem' as const, balance: 3488 },
+  { id: 'lp-008', date: '2026-01-10', description: 'Redeemed: 500 points (KSh 500 off)', points: -500, type: 'redeem' as const, balance: 3488 },
 ]
 
 export const SPENDING_CHART_DATA = [

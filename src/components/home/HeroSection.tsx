@@ -5,6 +5,7 @@ import { useRef, useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
+import { btnGlassOnDark } from '@/lib/button-styles'
 
 const heroImages = [
   '/images/image-resizing-2.jpeg',
@@ -13,7 +14,7 @@ const heroImages = [
   '/images/image-resizing-2.avif',
 ]
 
-const stats = '4,200+ visits · 7 service lines · Est. 2020'
+const stats = 'Nairobi · Est. 2020 · Seven guest experiences under one roof'
 
 export function HeroSection() {
   const sectionRef = useRef(null)
@@ -69,15 +70,15 @@ export function HeroSection() {
 
       {/* Cinematic grade: legibility without flattening the photograph */}
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_95%_130%_at_18%_52%,rgba(4,10,18,0.52)_0%,rgba(4,10,18,0.18)_48%,transparent_70%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_95%_130%_at_18%_52%,rgba(4,10,18,0.38)_0%,rgba(4,10,18,0.1)_52%,transparent_72%)]"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/48 via-transparent to-black/15"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(0,0,0,0.18)_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.1)_100%)]"
         aria-hidden
       />
 
@@ -125,7 +126,7 @@ export function HeroSection() {
                 className="mt-6 max-w-[34rem] space-y-3"
               >
                 <p className="text-pretty font-sans text-lg font-normal leading-snug text-white/90 md:text-xl md:leading-snug">
-                  A restored church, reimagined — salon, spa, fitness, and rooms to meet and celebrate.
+                  One refined address — salon, spa, fitness, and spaces to meet and celebrate.
                 </p>
                 <p className="font-sans text-sm font-medium leading-relaxed tracking-wide text-white/45 md:text-[15px]">
                   International polish · Local warmth · Someone always answers
@@ -146,10 +147,7 @@ export function HeroSection() {
                   View services
                   <ArrowUpRight className="h-4 w-4 opacity-70 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </Link>
-                <Link
-                  href="/services"
-                  className="inline-flex items-center justify-center rounded-sm border border-white/20 bg-white/[0.04] px-8 py-4 font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-sm transition-all duration-300 hover:border-gold/50 hover:bg-white/[0.08]"
-                >
+                <Link href="/services" className={btnGlassOnDark}>
                   Book a visit
                 </Link>
               </motion.div>

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { MessageCircle, ArrowRight } from 'lucide-react'
 import { TextReveal } from '@/components/ui/AnimatedSection'
+import { btnGlassOnDarkLg } from '@/lib/button-styles'
 
 export function CTASection() {
   const sectionRef = useRef(null)
@@ -66,7 +67,7 @@ export function CTASection() {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="inline-flex items-center px-5 py-2 rounded-full bg-gold/20 border border-gold/30 text-gold text-sm font-sans font-medium mb-8 backdrop-blur-sm"
+          className="inline-flex items-center px-5 py-2 rounded-full border border-white/25 bg-white/[0.08] text-gold text-sm font-sans font-medium mb-8 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
         >
           Book a Visit Today
         </motion.div>
@@ -112,10 +113,7 @@ export function CTASection() {
             <ArrowRight className="relative z-10 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             <span className="absolute inset-0 bg-gold-light translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
           </Link>
-          <Link
-            href="/about"
-            className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white/40 text-white font-sans font-medium text-lg rounded-lg hover:bg-white/10 hover:border-white/60 transition-all duration-500 backdrop-blur-sm"
-          >
+          <Link href="/about" className={btnGlassOnDarkLg}>
             Learn More
           </Link>
         </motion.div>

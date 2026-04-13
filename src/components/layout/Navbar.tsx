@@ -8,6 +8,7 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-
 import { Menu, X, ChevronDown, Home, Briefcase, Info, Phone, LogIn, CalendarCheck } from 'lucide-react'
 import { SERVICES } from '@/lib/services'
 import { cn } from '@/lib/utils'
+import { btnGlassOnDarkSm } from '@/lib/button-styles'
 
 const navLinks = [
   { name: 'Home', href: '/', icon: Home },
@@ -142,10 +143,7 @@ export function Navbar() {
               <div className="w-px h-5 bg-white/15" />
 
               {/* Auth */}
-              <Link
-                href="/auth/login"
-                className="px-4 py-2 font-sans text-sm font-medium text-white/70 hover:text-white rounded-full hover:bg-white/10 transition-all duration-300"
-              >
+              <Link href="/auth/login" className={cn(btnGlassOnDarkSm, 'text-white/85 hover:text-white')}>
                 Login
               </Link>
               <Link
@@ -447,9 +445,12 @@ export function Navbar() {
               <div className="mx-4 mt-4 pt-4 border-t border-white/10 space-y-2 pb-8">
                 <Link
                   href="/auth/login"
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl font-sans text-sm text-white/70 active:bg-white/5 transition-all"
+                  className={cn(
+                    btnGlassOnDarkSm,
+                    'w-full justify-start gap-3 rounded-xl px-4 py-3 text-left text-white/90'
+                  )}
                 >
-                  <LogIn className="w-5 h-5" />
+                  <LogIn className="w-5 h-5 shrink-0" />
                   Login
                 </Link>
                 <Link

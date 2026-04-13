@@ -95,7 +95,7 @@ export default function PaymentsPage() {
                     {card.label}
                   </p>
                   <p className="font-display text-3xl font-bold text-navy mt-2">
-                    KES <CountUp end={card.value} duration={1.5} separator="," />
+                    KSh <CountUp end={card.value} duration={1.5} separator="," />
                   </p>
                   <p className="font-sans text-xs text-gray-400 mt-1">{card.sublabel}</p>
                 </div>
@@ -125,7 +125,7 @@ export default function PaymentsPage() {
               <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#9CA3AF' }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
               <Tooltip
                 contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 16px rgba(0,0,0,0.08)', fontFamily: 'var(--font-dm-sans)' }}
-                formatter={(value) => [`KES ${Number(value).toLocaleString()}`, 'Spent']}
+                formatter={(value) => [`KSh ${Number(value).toLocaleString()}`, 'Spent']}
               />
               <Area type="monotone" dataKey="amount" stroke="#C9A84C" strokeWidth={2.5} fill="url(#payGoldGradient)" />
             </AreaChart>

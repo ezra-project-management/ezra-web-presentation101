@@ -28,7 +28,7 @@ const premiumBenefits = [
 ]
 
 const earnMethods = [
-  { action: 'Every KES 100 you spend', points: '1 point' },
+  { action: 'Every KSh 100 you spend', points: '1 point' },
   { action: 'Leave a review after a visit', points: '50 bonus points' },
   { action: 'Bring a friend along', points: '200 points' },
   { action: 'Your birthday month', points: 'Double points on everything' },
@@ -72,7 +72,7 @@ const plans: {
     id: 'PREMIUM',
     name: 'Premium',
     subtitle: 'Where most of our regulars land',
-    priceLine: `KES 3,500 / year, or reach ${LOYALTY_TIER_PREMIUM_POINTS.toLocaleString()}+ points`,
+    priceLine: `KSh 3,500 / year, or reach ${LOYALTY_TIER_PREMIUM_POINTS.toLocaleString()}+ points`,
     bullets: [
       'Everything in Basic',
       '10% off qualifying bookings',
@@ -85,7 +85,7 @@ const plans: {
     id: 'VIP',
     name: 'VIP',
     subtitle: 'Our warmest welcome',
-    priceLine: `KES 9,500 / year, or reach ${LOYALTY_TIER_VIP_POINTS.toLocaleString()}+ points`,
+    priceLine: `KSh 9,500 / year, or reach ${LOYALTY_TIER_VIP_POINTS.toLocaleString()}+ points`,
     bullets: [
       'Everything in Premium',
       'Priority holds for same-day requests when possible',
@@ -334,7 +334,7 @@ export default function MembershipPage() {
             <div className="p-4 rounded-xl bg-navy/5 mb-4">
               <div className="flex items-center gap-2 mb-2">
                 <Zap className="w-4 h-4 text-gold" />
-                <span className="font-sans text-sm font-medium text-navy">500 points = KES 500 off</span>
+                <span className="font-sans text-sm font-medium text-navy">500 points = KSh 500 off</span>
               </div>
               <p className="font-sans text-xs text-gray-400">Any booking, any service</p>
             </div>
