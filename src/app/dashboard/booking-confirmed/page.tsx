@@ -8,6 +8,7 @@ import confetti from 'canvas-confetti'
 import { ArrowRight, Bell } from 'lucide-react'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { useBooking } from '@/lib/booking-context'
+import { BookingCancellationNote } from '@/components/booking/BookingCancellationNote'
 
 export default function BookingConfirmedPage() {
   const confettiFired = useRef(false)
@@ -135,6 +136,15 @@ export default function BookingConfirmedPage() {
             </div>
           </AnimatedSection>
         )}
+
+        <AnimatedSection delay={0.44}>
+          <BookingCancellationNote
+            status={latestBooking?.status ?? 'CONFIRMED'}
+            cancellationDeadline={latestBooking?.cancellationDeadline ?? null}
+            variant="inline"
+            className="mt-5 text-left max-w-md mx-auto"
+          />
+        </AnimatedSection>
 
         {/* Points earned */}
         <AnimatedSection delay={0.45}>

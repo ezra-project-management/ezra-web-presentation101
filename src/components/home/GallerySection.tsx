@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import Image from 'next/image'
 import * as Dialog from '@radix-ui/react-dialog'
-import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { motion, useInView, useScroll, useTransform, useReducedMotion, AnimatePresence } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const galleryImages = [
@@ -60,22 +60,30 @@ function GalleryCard({
 }) {
   const cardRef = useRef(null)
   const isInView = useInView(cardRef, { once: true, margin: '-60px' })
+  const reduceMotion = useReducedMotion()
 
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 36 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{
-        duration: 0.8,
-        delay: index * 0.1,
-        ease: [0.16, 1, 0.3, 1],
-      }}
+      transition={
+        reduceMotion
+          ? { duration: 0.25, delay: index * 0.06, ease: 'easeOut' }
+          : {
+              type: 'spring',
+              stiffness: 260,
+              damping: 28,
+              mass: 0.7,
+              delay: index * 0.09,
+            }
+      }
       className="relative group aspect-square md:aspect-[4/3]"
     >
       <motion.button
         onClick={onClick}
-        whileHover={{ scale: 1.02 }}
+        whileHover={reduceMotion ? undefined : { scale: 1.03, y: -4 }}
+        transition={{ type: 'spring', stiffness: 380, damping: 22 }}
         className="relative w-full h-full rounded-2xl overflow-hidden cursor-pointer"
       >
         <Image

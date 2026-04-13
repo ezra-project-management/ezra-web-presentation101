@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, ChevronRight } from 'lucide-react'
 import { SERVICES } from '@/lib/services'
 import type { Service } from '@/lib/services'
@@ -37,6 +38,7 @@ const CHIP_BY_CATEGORY: Record<Service['category'], string> = {
 
 export function ServicesGrid() {
   const router = useRouter()
+  const reduceMotion = useReducedMotion()
 
   return (
     <section className="py-24 md:py-28 bg-gradient-to-b from-cream/30 to-white">
@@ -71,13 +73,16 @@ export function ServicesGrid() {
           )}
         >
           {SERVICES.map((service) => (
-            <a
+            <motion.a
               key={service.id}
               href={`/services/${service.slug}`}
               onClick={(e) => {
                 e.preventDefault()
                 router.push(`/services/${service.slug}`)
               }}
+              whileHover={reduceMotion ? undefined : { y: -10 }}
+              whileTap={reduceMotion ? undefined : { scale: 0.985 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 26, mass: 0.65 }}
               className={cn(
                 'group relative flex w-[min(88vw,360px)] shrink-0 snap-center snap-always cursor-pointer',
                 'md:w-[340px] lg:w-[360px]'
@@ -87,7 +92,7 @@ export function ServicesGrid() {
                 className={cn(
                   'relative flex h-full min-h-[420px] w-full flex-col overflow-hidden rounded-2xl',
                   'shadow-[0_20px_50px_-12px_rgba(15,44,74,0.2)] ring-1 ring-white/20',
-                  'transition-all duration-500 ease-out hover:-translate-y-0.5 hover:shadow-[0_28px_60px_-12px_rgba(15,44,74,0.28)] hover:ring-gold/30'
+                  'transition-shadow duration-500 ease-out group-hover:shadow-[0_28px_60px_-12px_rgba(15,44,74,0.28)] group-hover:ring-gold/30'
                 )}
               >
                 <Image
@@ -149,7 +154,7 @@ export function ServicesGrid() {
                   </div>
                 </div>
               </div>
-            </a>
+            </motion.a>
           ))}
         </div>
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { TESTIMONIALS } from '@/lib/services'
 import { TextReveal, LineReveal } from '@/components/ui/AnimatedSection'
 
@@ -8,6 +8,8 @@ import { TextReveal, LineReveal } from '@/components/ui/AnimatedSection'
 const ALL_TESTIMONIALS = [...TESTIMONIALS, ...TESTIMONIALS]
 
 export function TestimonialsSection() {
+  const reduceMotion = useReducedMotion()
+
   return (
     <section className="py-28 bg-cream overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,12 +44,22 @@ export function TestimonialsSection() {
             whileHover={{ transition: { duration: 60 } }} // Slow down on hover
           >
             {ALL_TESTIMONIALS.map((testimonial, index) => (
-              <div
+              <motion.div
                 key={`testimonial-${index}`}
                 className="w-[320px] md:w-[400px] shrink-0"
                 style={{ perspective: '1000px' }}
+                whileHover={
+                  reduceMotion
+                    ? undefined
+                    : {
+                        y: -8,
+                        scale: 1.02,
+                        boxShadow: '0 22px 44px -14px rgba(15,44,74,0.2)',
+                      }
+                }
+                transition={{ type: 'spring', stiffness: 360, damping: 24 }}
               >
-                <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-gold h-full flex flex-col hover:shadow-lg transition-shadow duration-500 group/card">
+                <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-gold h-full flex flex-col transition-shadow duration-500 group/card">
                   {/* Stars */}
                   <div className="flex gap-1 mb-4">
                     {Array.from({ length: testimonial.rating }).map((_, i) => (
@@ -69,7 +81,7 @@ export function TestimonialsSection() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </motion.div>
 

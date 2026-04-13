@@ -1,6 +1,14 @@
 'use client'
 
-import { motion, useInView, useScroll, useTransform, type TargetAndTransition } from 'framer-motion'
+import {
+  motion,
+  useInView,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+  type TargetAndTransition,
+  type Transition,
+} from 'framer-motion'
 import { useRef, ReactNode } from 'react'
 
 type AnimationVariant =
@@ -18,32 +26,33 @@ interface AnimatedSectionProps {
   delay?: number
   className?: string
   variant?: AnimationVariant
+  /** Ignored when spring is used — kept for reduced-motion fallback */
   duration?: number
 }
 
 const animations: Record<AnimationVariant, { initial: TargetAndTransition; animate: TargetAndTransition }> = {
   fadeUp: {
-    initial: { opacity: 0, y: 60 },
+    initial: { opacity: 0, y: 52 },
     animate: { opacity: 1, y: 0 },
   },
   fadeDown: {
-    initial: { opacity: 0, y: -40 },
+    initial: { opacity: 0, y: -44 },
     animate: { opacity: 1, y: 0 },
   },
   fadeLeft: {
-    initial: { opacity: 0, x: -60 },
+    initial: { opacity: 0, x: -52 },
     animate: { opacity: 1, x: 0 },
   },
   fadeRight: {
-    initial: { opacity: 0, x: 60 },
+    initial: { opacity: 0, x: 52 },
     animate: { opacity: 1, x: 0 },
   },
   scaleUp: {
-    initial: { opacity: 0, scale: 0.85 },
+    initial: { opacity: 0, scale: 0.9 },
     animate: { opacity: 1, scale: 1 },
   },
   blurIn: {
-    initial: { opacity: 0, filter: 'blur(12px)', y: 20 },
+    initial: { opacity: 0, filter: 'blur(14px)', y: 24 },
     animate: { opacity: 1, filter: 'blur(0px)', y: 0 },
   },
   slideReveal: {
@@ -56,6 +65,28 @@ const animations: Record<AnimationVariant, { initial: TargetAndTransition; anima
   },
 }
 
+function buildTransition(
+  reduceMotion: boolean | null,
+  delay: number,
+  duration: number,
+  variant: AnimationVariant
+): Transition {
+  if (reduceMotion) {
+    return { duration: 0.2, delay, ease: 'easeOut' }
+  }
+  /* Clip / slide-reveal paths feel better with a smooth curve than overshoot */
+  if (variant === 'slideReveal' || variant === 'clipUp') {
+    return { duration: 0.85, delay, ease: [0.16, 1, 0.3, 1] }
+  }
+  return {
+    type: 'spring',
+    stiffness: variant === 'scaleUp' ? 320 : 280,
+    damping: variant === 'blurIn' ? 34 : 30,
+    mass: 0.72,
+    delay,
+  }
+}
+
 export function AnimatedSection({
   children,
   delay = 0,
@@ -64,7 +95,8 @@ export function AnimatedSection({
   duration = 0.9,
 }: AnimatedSectionProps) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: '-80px' })
+  const isInView = useInView(ref, { once: true, margin: '-72px' })
+  const reduceMotion = useReducedMotion()
   const anim = animations[variant]
 
   return (
@@ -72,11 +104,7 @@ export function AnimatedSection({
       ref={ref}
       initial={anim.initial}
       animate={isInView ? anim.animate : anim.initial}
-      transition={{
-        duration,
-        delay,
-        ease: [0.16, 1, 0.3, 1],
-      }}
+      transition={buildTransition(reduceMotion, delay, duration, variant)}
       className={className}
     >
       {children}
@@ -95,6 +123,7 @@ export function ParallaxSection({
   speed?: number
 }) {
   const ref = useRef(null)
+  const reduceMotion = useReducedMotion()
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start end', 'end start'],
@@ -103,14 +132,14 @@ export function ParallaxSection({
 
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`}>
-      <motion.div style={{ y }} className="absolute inset-0">
+      <motion.div style={reduceMotion ? undefined : { y }} className="absolute inset-0">
         {children}
       </motion.div>
     </div>
   )
 }
 
-/* Text reveal animation — word by word */
+/* Text reveal animation — word by word (springy when allowed) */
 export function TextReveal({
   text,
   className = '',
@@ -122,21 +151,28 @@ export function TextReveal({
 }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-80px' })
+  const reduceMotion = useReducedMotion()
   const words = text.split(' ')
 
   return (
     <span ref={ref} className={`inline-block ${className}`}>
       {words.map((word, i) => (
-        <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
+        <span key={i} className="mr-[0.3em] inline-block overflow-hidden">
           <motion.span
             className="inline-block"
-            initial={{ y: '110%', opacity: 0 }}
-            animate={isInView ? { y: '0%', opacity: 1 } : { y: '110%', opacity: 0 }}
-            transition={{
-              duration: 0.7,
-              delay: delay + i * 0.05,
-              ease: [0.16, 1, 0.3, 1],
-            }}
+            initial={{ y: '118%', opacity: 0 }}
+            animate={isInView ? { y: '0%', opacity: 1 } : { y: '118%', opacity: 0 }}
+            transition={
+              reduceMotion
+                ? { duration: 0.18, delay: delay + i * 0.02, ease: 'easeOut' }
+                : {
+                    type: 'spring',
+                    stiffness: 380,
+                    damping: 28,
+                    mass: 0.55,
+                    delay: delay + i * 0.045,
+                  }
+            }
           >
             {word}
           </motion.span>
@@ -156,6 +192,7 @@ export function LineReveal({
 }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-80px' })
+  const reduceMotion = useReducedMotion()
 
   return (
     <motion.div
@@ -163,7 +200,11 @@ export function LineReveal({
       className={`h-px bg-gold/40 ${className}`}
       initial={{ scaleX: 0, transformOrigin: 'left' }}
       animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
-      transition={{ duration: 1.2, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={
+        reduceMotion
+          ? { duration: 0.35, delay, ease: 'easeOut' }
+          : { type: 'spring', stiffness: 260, damping: 26, mass: 0.6, delay }
+      }
     />
   )
 }

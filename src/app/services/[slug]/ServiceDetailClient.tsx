@@ -7,6 +7,7 @@ import { CheckCircle, ChevronDown, Star, Clock, LogIn } from 'lucide-react'
 import type { Service } from '@/lib/services'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { formatCurrency } from '@/lib/utils'
+import { POLICY_TRUST_BADGE } from '@/lib/booking-copy'
 
 interface ServiceDetailClientProps {
   service: Service
@@ -174,7 +175,7 @@ export function ServiceDetailClient({ service }: ServiceDetailClientProps) {
               {/* Trust badges */}
               <div className="mt-5 pt-5 border-t border-charcoal/10 flex flex-wrap gap-x-4 gap-y-1.5">
                 <p className="flex items-center gap-1.5 font-sans text-xs text-charcoal/45">
-                  <CheckCircle className="w-3.5 h-3.5" /> Free cancellation
+                  <CheckCircle className="w-3.5 h-3.5" /> {POLICY_TRUST_BADGE}
                 </p>
                 <p className="flex items-center gap-1.5 font-sans text-xs text-charcoal/45">
                   <CheckCircle className="w-3.5 h-3.5" /> Instant confirmation

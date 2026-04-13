@@ -36,6 +36,8 @@ import {
   SERVICE_HISTORY_CHART,
 } from '@/lib/dashboard-data'
 import { useBooking, isClosedDay, getServiceCapacity } from '@/lib/booking-context'
+import { computeCancellationDeadline } from '@/lib/booking-copy'
+import { BookingCancellationNote } from '@/components/booking/BookingCancellationNote'
 
 const TIME_SLOTS = [
   '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
@@ -198,7 +200,7 @@ export default function DashboardPage() {
       notes: null,
       canReschedule: true,
       canCancel: true,
-      cancellationDeadline: selectedDate,
+      cancellationDeadline: computeCancellationDeadline(selectedDate, selectedTime),
       rating: null,
       review: null,
       bookedFor: null,
@@ -709,6 +711,13 @@ export default function DashboardPage() {
                     )}
                   </div>
 
+                  <BookingCancellationNote
+                    status={nextBooking.status}
+                    cancellationDeadline={nextBooking.cancellationDeadline}
+                    variant="inline"
+                    className="mt-4"
+                  />
+
                   <div className="mt-5 flex items-center gap-3 flex-wrap">
                     <button
                       onClick={() => setQrOpen(!qrOpen)}
@@ -771,6 +780,11 @@ export default function DashboardPage() {
                           <p className="font-sans text-xs text-gray-400">
                             {formatDate(booking.date)} · {booking.time}
                           </p>
+                          <BookingCancellationNote
+                            status={booking.status}
+                            cancellationDeadline={booking.cancellationDeadline}
+                            variant="micro"
+                          />
                         </div>
                         <span className="flex items-center gap-1">
                           <span className={cn('w-1.5 h-1.5 rounded-full', statusDot[booking.status])} />
@@ -813,6 +827,11 @@ export default function DashboardPage() {
                               <p className="font-sans text-xs text-gray-400">
                                 {formatDate(booking.date)} · {booking.time}
                               </p>
+                              <BookingCancellationNote
+                                status={booking.status}
+                                cancellationDeadline={booking.cancellationDeadline}
+                                variant="micro"
+                              />
                             </div>
                             <span className="flex items-center gap-1">
                               <span className={cn('w-1.5 h-1.5 rounded-full', statusDot[booking.status])} />

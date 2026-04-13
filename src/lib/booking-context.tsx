@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
+import { computeCancellationDeadline } from '@/lib/booking-copy'
 import { UPCOMING_BOOKINGS, PAST_BOOKINGS } from './dashboard-data'
 
 // ── Per-service slot capacity (chairs / concurrent bookings allowed) ───
@@ -302,7 +303,18 @@ export function BookingProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const rescheduleBooking = useCallback((id: string, newDate: string, newTime: string) => {
-    setBookings(prev => prev.map(b => b.id === id ? { ...b, date: newDate, time: newTime } : b))
+    setBookings(prev =>
+      prev.map(b =>
+        b.id === id
+          ? {
+              ...b,
+              date: newDate,
+              time: newTime,
+              cancellationDeadline: computeCancellationDeadline(newDate, newTime),
+            }
+          : b
+      )
+    )
   }, [])
 
   const createBooking = useCallback((booking: Omit<BookingRecord, 'id' | 'reference'>) => {

@@ -5,6 +5,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { ConditionalFooter } from '@/components/layout/ConditionalFooter'
 import { AIChatBubble } from '@/components/ai/AIChatBubble'
 import { ScrollProgress } from '@/components/ui/ScrollProgress'
+import { TextScaleControl } from '@/components/ui/TextScaleControl'
 import { Toaster } from 'sonner'
 import { BookingProvider } from '@/lib/booking-context'
 
@@ -48,7 +49,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`} suppressHydrationWarning>
-      <body className="font-sans antialiased bg-white text-charcoal" suppressHydrationWarning>
+      <body className="font-sans antialiased bg-white text-charcoal pb-[5rem] sm:pb-[5.5rem]" suppressHydrationWarning>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              '!function(){try{var s=localStorage.getItem("ezra-text-scale");if(s)document.documentElement.style.setProperty("--ezra-text-scale",s)}catch(e){}}();',
+          }}
+        />
         <ScrollProgress />
         <Navbar />
         <BookingProvider>
@@ -56,6 +63,7 @@ export default function RootLayout({
         </BookingProvider>
         <ConditionalFooter />
         <AIChatBubble />
+        <TextScaleControl />
         <Toaster
           position="top-right"
           toastOptions={{

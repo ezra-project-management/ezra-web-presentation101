@@ -10,6 +10,7 @@ import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { cn } from '@/lib/utils'
 import { formatCurrency } from '@/lib/utils'
 import { useBooking, type BookingStatus, type BookingRecord } from '@/lib/booking-context'
+import { BookingCancellationNote } from '@/components/booking/BookingCancellationNote'
 
 const tabs = [
   { key: 'All', filter: () => true },
@@ -240,6 +241,12 @@ export default function BookingsPage() {
                       </p>
                     )}
 
+                    <BookingCancellationNote
+                      status={booking.status}
+                      cancellationDeadline={booking.cancellationDeadline}
+                      variant="card"
+                    />
+
                     <div className="mt-3 flex items-center gap-3 flex-wrap">
                       {booking.status === 'PENDING_PAYMENT' && (
                         <button className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 text-white font-sans text-sm font-medium rounded-lg hover:bg-amber-600 transition-colors">
@@ -360,6 +367,11 @@ export default function BookingsPage() {
                             {booking.bookedFor && (
                               <p className="font-sans text-[10px] text-gold">For: {booking.bookedFor.name}</p>
                             )}
+                            <BookingCancellationNote
+                              status={booking.status}
+                              cancellationDeadline={booking.cancellationDeadline}
+                              variant="compact"
+                            />
                           </div>
                         </div>
                       </td>

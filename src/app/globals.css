@@ -18,12 +18,20 @@
 }
 
 :root {
+  --ezra-text-scale: 1;
   --gradient-hero: linear-gradient(135deg, rgba(15,44,74,0.85) 0%, rgba(15,44,74,0.4) 100%);
   --gradient-gold: linear-gradient(135deg, #C9A84C 0%, #E2C87A 50%, #C9A84C 100%);
 }
 
 html {
   scroll-behavior: smooth;
+  font-size: calc(100% * var(--ezra-text-scale, 1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 h1, h2, h3, h4 {

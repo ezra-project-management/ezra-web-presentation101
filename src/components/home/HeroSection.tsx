@@ -101,19 +101,23 @@ export function HeroSection() {
                 </span>
               </motion.div>
 
-              {/* Title */}
-              <div className="overflow-hidden">
+              {/* Title — solid fills + shadow so “Ezra Center” reads on bright/gold photography */}
+              <div className="relative overflow-hidden">
+                <div
+                  className="pointer-events-none absolute -left-6 -right-4 -top-3 -bottom-3 z-0 rounded-2xl bg-gradient-to-r from-black/55 via-black/35 to-transparent sm:-left-8 sm:rounded-3xl"
+                  aria-hidden
+                />
                 <motion.h1
-                  className="font-display text-[clamp(2.75rem,8vw,6.25rem)] font-semibold leading-[0.95] tracking-tight text-white"
+                  className="relative z-[1] font-display text-[clamp(2.75rem,8vw,6.25rem)] font-semibold leading-[0.95] tracking-tight [text-shadow:0_2px_24px_rgba(0,0,0,0.85),0_4px_48px_rgba(0,0,0,0.45),0_0_1px_rgba(0,0,0,1)]"
                   initial={{ y: '108%' }}
                   animate={{ y: 0 }}
                   transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
                 >
                   <span className="block">
-                    <span className="bg-gradient-to-br from-[#e8c76b] via-gold to-[#b8923a] bg-clip-text text-transparent">
+                    <span className="text-[#f5e6bc]">
                       Ezra
                     </span>{' '}
-                    <span className="font-light text-white/95">Center</span>
+                    <span className="font-light text-white">Center</span>
                   </span>
                 </motion.h1>
               </div>

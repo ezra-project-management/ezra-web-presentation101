@@ -16,6 +16,8 @@ import {
   useBooking, isClosedDay,
   getServiceCapacity
 } from '@/lib/booking-context'
+import { computeCancellationDeadline } from '@/lib/booking-copy'
+import { BookingCancellationNote } from '@/components/booking/BookingCancellationNote'
 
 interface BookingWidgetProps {
   serviceName: string
@@ -549,7 +551,7 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
       paymentMethod: 'MPESA', mpesaRef: `QJK${Date.now().toString(36).toUpperCase()}`,
       image: currentService?.image || '', notes: specialRequest || null,
       canReschedule: true, canCancel: true,
-      cancellationDeadline: new Date(new Date(selectedDate).getTime() - 86400000).toISOString(),
+      cancellationDeadline: computeCancellationDeadline(selectedDate, selectedTime),
       rating: null, review: null,
       bookedFor: bookingForOther ? { name: otherName, phone: otherPhone } : null,
       services: allServices, smsReminder,
@@ -925,6 +927,12 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
               : <><span>Confirm Booking</span><ArrowRight className="w-4 h-4" /></>
             }
           </button>
+
+          <BookingCancellationNote
+            status="CONFIRMED"
+            cancellationDeadline={computeCancellationDeadline(selectedDate, selectedTime)}
+            variant="inline"
+          />
 
           {/* Trust */}
           <div className="flex flex-wrap gap-x-4 gap-y-1.5">

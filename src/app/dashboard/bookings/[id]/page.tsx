@@ -26,6 +26,7 @@ import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { cn } from '@/lib/utils'
 import { formatCurrency } from '@/lib/utils'
 import { useBooking } from '@/lib/booking-context'
+import { BookingCancellationNote } from '@/components/booking/BookingCancellationNote'
 
 const timelineSteps = ['Booked', 'Confirmed', 'Checked In', 'Completed']
 
@@ -434,19 +435,13 @@ export default function BookingDetailPage() {
           </AnimatedSection>
 
           {/* Cancellation policy */}
-          {booking.cancellationDeadline && booking.status !== 'CANCELLED' && (
-            <AnimatedSection delay={0.28}>
-              <div className="bg-amber-50/50 border border-amber-200/50 rounded-xl p-4">
-                <p className="font-sans text-xs uppercase tracking-widest text-amber-700 mb-2">
-                  Cancellation Policy
-                </p>
-                <p className="font-sans text-xs text-amber-700/70">
-                  Free cancellation before {new Date(booking.cancellationDeadline).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}.
-                  50% fee applies after that date.
-                </p>
-              </div>
-            </AnimatedSection>
-          )}
+          <AnimatedSection delay={0.28}>
+            <BookingCancellationNote
+              status={booking.status}
+              cancellationDeadline={booking.cancellationDeadline}
+              variant="detail"
+            />
+          </AnimatedSection>
         </div>
       </div>
 
