@@ -1,108 +1,125 @@
 'use client'
 
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { toast } from 'sonner'
+import { MembershipCard } from '@/components/membership/MembershipCard'
+import { MembershipForm } from '@/components/membership/MembershipForm'
+import { AnimatedSection, TextReveal } from '@/components/ui/AnimatedSection'
 
-const options = [
-  'Gym / Fitness Centre Membership - Monthly',
-  'Swimming Pool Membership - Monthly',
+const plans = [
+  {
+    id: 'fitness',
+    emoji: '🏋🏽',
+    title: 'Fitness Centre Membership',
+    description: 'Full access to gym equipment, group classes, and professional trainers.',
+    price: 'KSh 6,500',
+    period: 'month',
+    features: [
+      'Unlimited gym access',
+      'Group fitness classes',
+      'Locker & shower access',
+      'Member-only discounts',
+    ],
+  },
+  {
+    id: 'swimming',
+    emoji: '🏊',
+    title: 'Swimming Pool Membership',
+    description: 'Unlimited pool sessions with access to our coaching team and lane reservations.',
+    price: 'KSh 4,800',
+    period: 'month',
+    features: [
+      'Unlimited pool access',
+      'Lane reservation priority',
+      'Access to swim coaches',
+      'Locker & shower access',
+    ],
+  },
 ]
 
-export default function PublicMembershipPage() {
-  const [fullName, setFullName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [email, setEmail] = useState('')
-  const [membershipType, setMembershipType] = useState(options[0])
+export default function MembershipPage() {
+  const [selectedPlan, setSelectedPlan] = useState<string>('fitness')
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    toast.success('Membership request received. We will contact you shortly.')
-    setFullName('')
-    setPhone('')
-    setEmail('')
-    setMembershipType(options[0])
+  const handleFormSubmit = (data: any) => {
+    console.log('Form Submitted:', data)
+    toast.success('Your application has been received! Our team will contact you within 24 hours.')
+    // In a real app, you'd send this to your backend
   }
 
   return (
-    <section className="mx-auto max-w-4xl px-4 pb-16 pt-28 sm:px-6 lg:px-8">
-      <div className="rounded-2xl border border-gold/20 bg-gradient-to-br from-white to-cream/40 p-6 shadow-card sm:p-8">
-        <h1 className="font-display text-3xl font-semibold text-navy">Membership</h1>
-        <p className="mt-2 font-sans text-sm text-charcoal/60">
-          Choose a monthly membership and share your details. Our team will confirm pricing and activation.
-        </p>
-
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          {options.map((option) => (
-            <div key={option} className="rounded-xl border border-charcoal/10 bg-white p-4">
-              <p className="font-sans text-sm font-semibold text-navy">{option}</p>
+    <main className="min-h-screen bg-white pb-24 pt-32 overflow-x-hidden" suppressHydrationWarning>
+      {/* ═══════════════ HERO SECTION ═══════════════ */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+        <div className="text-center">
+          <AnimatedSection variant="blurIn" delay={0.1}>
+            <span className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-charcoal/40 mb-4 block">
+              EZRA CENTER • NAIROBI • EST. 2020
+            </span>
+          </AnimatedSection>
+          
+          <h1 className="font-display text-5xl md:text-7xl text-navy font-semibold leading-tight">
+            Become a <span className="italic font-normal text-gold-dark">Member</span> <br />
+            of Ezra Center
+          </h1>
+          
+          <AnimatedSection variant="blurIn" delay={0.4}>
+            <p className="mt-8 max-w-2xl mx-auto font-sans text-base md:text-lg text-charcoal/60 leading-relaxed">
+              Enjoy unlimited access to our world-class fitness and aquatic facilities. 
+              Choose the plan that fits your lifestyle.
+            </p>
+          </AnimatedSection>
+          
+          <AnimatedSection variant="blurIn" delay={0.6}>
+            <div className="mt-12 flex justify-center">
+              <div className="w-48 h-px bg-gold/30" />
             </div>
-          ))}
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* ═══════════════ STEP 1: PLAN SELECTION ═══════════════ */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-32">
+        <div className="text-center mb-16">
+          <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-charcoal/40">
+            Step 1 — Choose your membership plan
+          </span>
         </div>
 
-        <form onSubmit={onSubmit} className="mt-8 space-y-4">
-          <div>
-            <label className="mb-1 block font-sans text-xs font-semibold uppercase tracking-wide text-charcoal/55">
-              Full name
-            </label>
-            <input
-              required
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="w-full rounded-xl border border-charcoal/20 px-4 py-3 font-sans text-sm outline-none focus:border-gold focus:ring-1 focus:ring-gold"
-            />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="mb-1 block font-sans text-xs font-semibold uppercase tracking-wide text-charcoal/55">
-                Phone
-              </label>
-              <input
-                required
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full rounded-xl border border-charcoal/20 px-4 py-3 font-sans text-sm outline-none focus:border-gold focus:ring-1 focus:ring-gold"
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {plans.map((plan, idx) => (
+            <AnimatedSection key={plan.id} variant="fadeUp" delay={0.2 + idx * 0.1}>
+              <MembershipCard
+                {...plan}
+                isSelected={selectedPlan === plan.id}
+                onClick={() => setSelectedPlan(plan.id)}
               />
-            </div>
-            <div>
-              <label className="mb-1 block font-sans text-xs font-semibold uppercase tracking-wide text-charcoal/55">
-                Email
-              </label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-charcoal/20 px-4 py-3 font-sans text-sm outline-none focus:border-gold focus:ring-1 focus:ring-gold"
-              />
-            </div>
+            </AnimatedSection>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══════════════ STEP 2: APPLICATION FORM ═══════════════ */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-charcoal/40">
+            Step 2 — Complete your application
+          </span>
+        </div>
+
+        <div className="max-w-3xl mx-auto bg-white rounded-[2rem] border border-charcoal/5 shadow-premium p-8 md:p-16">
+          <div className="mb-12 border-b border-charcoal/5 pb-12">
+            <h2 className="font-display text-4xl md:text-5xl text-navy font-semibold mb-6">
+              Membership Application
+            </h2>
+            <p className="font-sans text-base text-charcoal/60 leading-relaxed">
+              Fill in your details below and our team will reach out within 24 hours to confirm your membership and arrange payment.
+            </p>
           </div>
 
-          <div>
-            <label className="mb-1 block font-sans text-xs font-semibold uppercase tracking-wide text-charcoal/55">
-              Membership option
-            </label>
-            <select
-              value={membershipType}
-              onChange={(e) => setMembershipType(e.target.value)}
-              className="w-full rounded-xl border border-charcoal/20 px-4 py-3 font-sans text-sm outline-none focus:border-gold focus:ring-1 focus:ring-gold"
-            >
-              {options.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full rounded-xl bg-gold px-4 py-3 font-sans text-sm font-semibold text-navy transition hover:bg-gold-light"
-          >
-            Submit membership request
-          </button>
-        </form>
-      </div>
-    </section>
+          <MembershipForm selectedPlan={selectedPlan} onSubmit={handleFormSubmit} />
+        </div>
+      </section>
+    </main>
   )
 }

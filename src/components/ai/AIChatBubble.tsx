@@ -78,7 +78,7 @@ export function AIChatBubble() {
   }
 
   return (
-    <div className="fixed bottom-24 lg:bottom-6 right-4 lg:right-6 z-50">
+    <div className="fixed bottom-24 lg:bottom-6 right-4 lg:right-6 z-50" suppressHydrationWarning>
       <AnimatePresence>
         {isOpen && (
           <motion.div

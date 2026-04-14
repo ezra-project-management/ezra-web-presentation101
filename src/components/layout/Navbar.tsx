@@ -56,6 +56,7 @@ export function Navbar() {
             exit={{ y: -80, opacity: 0 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="fixed top-5 left-1/2 -translate-x-1/2 z-50 hidden lg:block"
+            suppressHydrationWarning
           >
             <div className="flex items-center gap-1 px-2 py-1.5 bg-navy/80 backdrop-blur-xl rounded-full border border-white/15 shadow-[0_8px_40px_rgba(0,0,0,0.2)]">
               {/* Logo */}
@@ -172,6 +173,7 @@ export function Navbar() {
               setSidebarExpanded(false)
               setServicesOpen(false)
             }}
+            suppressHydrationWarning
           >
             <motion.div
               animate={{ width: sidebarExpanded ? 180 : 56 }}
@@ -308,7 +310,7 @@ export function Navbar() {
       </AnimatePresence>
 
       {/* ═══════════════ MOBILE NAV ═══════════════ */}
-      <div className="lg:hidden fixed top-4 right-4 z-[60]">
+      <div className="lg:hidden fixed top-4 right-4 z-[60]" suppressHydrationWarning>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="w-11 h-11 rounded-full bg-navy/80 backdrop-blur-xl border border-white/10 flex items-center justify-center text-white shadow-lg"
@@ -329,7 +331,7 @@ export function Navbar() {
       </div>
 
       {/* Mobile Logo */}
-      <div className="lg:hidden fixed top-4 left-4 z-[60]">
+      <div className="lg:hidden fixed top-4 left-4 z-[60]" suppressHydrationWarning>
         <Link href="/" className="flex items-center gap-2 px-2 py-1.5 bg-cream/90 backdrop-blur-xl border border-white/20 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] active:scale-95 transition-transform duration-200">
           <Image
             src="/ezralogo.jpeg"

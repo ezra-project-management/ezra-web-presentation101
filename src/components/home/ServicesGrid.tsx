@@ -41,7 +41,7 @@ export function ServicesGrid() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <section className="py-24 md:py-28 bg-gradient-to-b from-cream/30 to-white">
+    <section className="pt-24 md:pt-28 pb-8 md:pb-10 bg-gradient-to-b from-cream/30 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10 md:mb-12">
           <AnimatedSection variant="blurIn">
