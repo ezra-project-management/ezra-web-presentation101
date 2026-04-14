@@ -32,9 +32,9 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ezracenter.com'),
-  title: 'Ezra Center | Premium Hospitality in Nairobi',
+  title: 'Ezra Center | A premium destination for wellness, hospitality, and refined experiences.',
   description:
-    'Book salon and spa, fitness, meeting rooms, and celebrations at Ezra Center in Nairobi. International standards, warm Kenyan welcome.',
+    'Designed for comfort, balance, and modern living.',
   openGraph: {
     images: [
       '/images/image-resizing-2.jpeg',
