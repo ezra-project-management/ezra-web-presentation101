@@ -33,12 +33,14 @@ export const viewport: Viewport = {
 const siteDescription =
   'Premier conferencing, wellness, and hospitality in Nairobi. Salon, spa, fitness, pools, and refined spaces — international standards, warm Kenyan welcome.'
 
+const linkPreviewTitle = 'Premier Conferencing and Wellness Hub'
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ezracenter.org'),
-  title: 'Premier Conferencing and Wellness hub in Nairobi | Ezra Center',
+  title: `${linkPreviewTitle} | Ezra Center`,
   description: siteDescription,
   openGraph: {
-    title: 'Premier Conferencing and Wellness hub in Nairobi',
+    title: linkPreviewTitle,
     description: siteDescription,
     siteName: 'Ezra Center',
     locale: 'en_KE',
@@ -54,7 +56,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Premier Conferencing and Wellness hub in Nairobi',
+    title: linkPreviewTitle,
     description: siteDescription,
     images: ['/images/image-resizing-2.jpeg'],
   },
