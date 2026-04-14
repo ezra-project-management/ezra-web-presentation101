@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { setEzraSessionLoggedIn } from '@/lib/auth-client'
 import { Eye, EyeOff } from 'lucide-react'
 
 export default function LoginPage() {
@@ -20,6 +21,7 @@ export default function LoginPage() {
     setLoading(true)
     // Simulate login
     setTimeout(() => {
+      setEzraSessionLoggedIn()
       router.push(redirectTo)
     }, 800)
   }
@@ -27,6 +29,7 @@ export default function LoginPage() {
   const handleSocialLogin = () => {
     setLoading(true)
     setTimeout(() => {
+      setEzraSessionLoggedIn()
       router.push(redirectTo)
     }, 800)
   }

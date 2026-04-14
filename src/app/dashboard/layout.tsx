@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { clearEzraSession } from '@/lib/auth-client'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
@@ -32,11 +33,17 @@ const navLinks = [
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [sidebarHover, setSidebarHover] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
+
+  const handleSignOut = () => {
+    clearEzraSession()
+    router.push('/')
+  }
   const unreadCount = NOTIFICATIONS_DATA.filter(n => !n.read).length
 
   const isActive = (href: string) => {
@@ -247,7 +254,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </AnimatePresence>
               </Link>
 
-              <button className="w-full flex items-center gap-3 px-1.5 py-2 rounded-full font-sans text-sm text-white/70 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300">
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="w-full flex items-center gap-3 px-1.5 py-2 rounded-full font-sans text-sm text-white/70 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300"
+              >
                 <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0">
                   <LogOut className="w-4 h-4" />
                 </div>
@@ -395,7 +406,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <Globe className="w-5 h-5" />
                     Back to Website
                   </Link>
-                  <button className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-sans text-sm text-white/75 active:text-red-400 active:bg-red-500/10 transition-all">
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-sans text-sm text-white/75 active:text-red-400 active:bg-red-500/10 transition-all"
+                  >
                     <LogOut className="w-5 h-5" />
                     Sign Out
                   </button>

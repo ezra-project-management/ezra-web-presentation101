@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
 import { Menu, X, ChevronDown, Home, Briefcase, Info, Phone, LogIn, CalendarCheck, Crown } from 'lucide-react'
 import { SERVICES } from '@/lib/services'
+import { isEzraSessionLoggedIn } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 import { btnGlassOnDarkSm } from '@/lib/button-styles'
 
@@ -23,6 +24,7 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [servicesOpen, setServicesOpen] = useState(false)
   const [sidebarExpanded, setSidebarExpanded] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
   const pathname = usePathname()
   const { scrollY } = useScroll()
 
@@ -42,6 +44,17 @@ export function Navbar() {
     }, 0)
     return () => clearTimeout(id)
   }, [pathname])
+
+  useEffect(() => {
+    const sync = () => setLoggedIn(isEzraSessionLoggedIn())
+    sync()
+    window.addEventListener('storage', sync)
+    window.addEventListener('ezra-auth-change', sync)
+    return () => {
+      window.removeEventListener('storage', sync)
+      window.removeEventListener('ezra-auth-change', sync)
+    }
+  }, [])
 
   if (isAuthPage || isDashboard) return null
 
@@ -148,12 +161,14 @@ export function Navbar() {
               <Link href="/auth/login" className={cn(btnGlassOnDarkSm, 'text-white/85 hover:text-white')}>
                 Login
               </Link>
-              <Link
-                href="/services"
-                className="px-5 py-2 bg-gold text-navy-dark font-sans text-sm font-medium rounded-full hover:bg-gold-light transition-all duration-300 shadow-md"
-              >
-                Book Now
-              </Link>
+              {loggedIn && (
+                <Link
+                  href="/services"
+                  className="px-5 py-2 bg-gold text-navy-dark font-sans text-sm font-medium rounded-full hover:bg-gold-light transition-all duration-300 shadow-md"
+                >
+                  Book Now
+                </Link>
+              )}
             </div>
           </motion.nav>
         )}
@@ -286,24 +301,26 @@ export function Navbar() {
                 </AnimatePresence>
               </Link>
 
-              <Link
-                href="/services"
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-sans text-sm bg-gold/20 text-gold hover:bg-gold/30 transition-all duration-300 mt-1"
-              >
-                <CalendarCheck className="w-4.5 h-4.5 shrink-0" />
-                <AnimatePresence>
-                  {sidebarExpanded && (
-                    <motion.span
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: 'auto' }}
-                      exit={{ opacity: 0, width: 0 }}
-                      className="overflow-hidden whitespace-nowrap font-medium"
-                    >
-                      Book Now
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </Link>
+              {loggedIn && (
+                <Link
+                  href="/services"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-sans text-sm bg-gold/20 text-gold hover:bg-gold/30 transition-all duration-300 mt-1"
+                >
+                  <CalendarCheck className="w-4.5 h-4.5 shrink-0" />
+                  <AnimatePresence>
+                    {sidebarExpanded && (
+                      <motion.span
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: 'auto' }}
+                        exit={{ opacity: 0, width: 0 }}
+                        className="overflow-hidden whitespace-nowrap font-medium"
+                      >
+                        Book Now
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </Link>
+              )}
             </motion.div>
           </motion.nav>
         )}
@@ -456,12 +473,14 @@ export function Navbar() {
                   <LogIn className="w-5 h-5 shrink-0" />
                   Login
                 </Link>
-                <Link
-                  href="/services"
-                  className="block text-center font-sans text-sm font-semibold px-6 py-3.5 bg-gold text-navy-dark rounded-xl shadow-gold"
-                >
-                  Book Now
-                </Link>
+                {loggedIn && (
+                  <Link
+                    href="/services"
+                    className="block text-center font-sans text-sm font-semibold px-6 py-3.5 bg-gold text-navy-dark rounded-xl shadow-gold"
+                  >
+                    Book Now
+                  </Link>
+                )}
               </div>
             </motion.div>
           </>

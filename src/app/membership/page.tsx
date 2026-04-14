@@ -1,123 +1,46 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
-import { MembershipCard } from '@/components/membership/MembershipCard'
-import { MembershipForm } from '@/components/membership/MembershipForm'
-import { AnimatedSection, TextReveal } from '@/components/ui/AnimatedSection'
-
-const plans = [
-  {
-    id: 'fitness',
-    emoji: '🏋🏽',
-    title: 'Fitness Centre Membership',
-    description: 'Full access to gym equipment, group classes, and professional trainers.',
-    price: 'KSh 6,500',
-    period: 'month',
-    features: [
-      'Unlimited gym access',
-      'Group fitness classes',
-      'Locker & shower access',
-      'Member-only discounts',
-    ],
-  },
-  {
-    id: 'swimming',
-    emoji: '🏊',
-    title: 'Swimming Pool Membership',
-    description: 'Unlimited pool sessions with access to our coaching team and lane reservations.',
-    price: 'KSh 4,800',
-    period: 'month',
-    features: [
-      'Unlimited pool access',
-      'Lane reservation priority',
-      'Access to swim coaches',
-      'Locker & shower access',
-    ],
-  },
-]
+import { MembershipWizard } from '@/components/membership/MembershipWizard'
+import { AnimatedSection } from '@/components/ui/AnimatedSection'
 
 export default function MembershipPage() {
-  const [selectedPlan, setSelectedPlan] = useState<string>('fitness')
-
-  const handleFormSubmit = (data: any) => {
-    console.log('Form Submitted:', data)
+  const handleFormSubmit = () => {
     toast.success('Your application has been received! Our team will contact you within 24 hours.')
-    // In a real app, you'd send this to your backend
   }
 
   return (
-    <main className="min-h-screen bg-white pb-24 pt-32 overflow-x-hidden" suppressHydrationWarning>
-      {/* ═══════════════ HERO SECTION ═══════════════ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-        <div className="text-center">
-          <AnimatedSection variant="blurIn" delay={0.1}>
-            <span className="font-sans text-[10px] font-bold uppercase tracking-[0.4em] text-charcoal/40 mb-4 block">
-              EZRA CENTER • NAIROBI • EST. 2020
-            </span>
-          </AnimatedSection>
-          
-          <h1 className="font-display text-5xl md:text-7xl text-navy font-semibold leading-tight">
-            Become a <span className="italic font-normal text-gold-dark">Member</span> <br />
-            of Ezra Center
-          </h1>
-          
-          <AnimatedSection variant="blurIn" delay={0.4}>
-            <p className="mt-8 max-w-2xl mx-auto font-sans text-base md:text-lg text-charcoal/60 leading-relaxed">
-              Enjoy unlimited access to our world-class fitness and aquatic facilities. 
-              Choose the plan that fits your lifestyle.
-            </p>
-          </AnimatedSection>
-          
-          <AnimatedSection variant="blurIn" delay={0.6}>
-            <div className="mt-12 flex justify-center">
-              <div className="w-48 h-px bg-gold/30" />
-            </div>
-          </AnimatedSection>
-        </div>
+    <main className="min-h-[100dvh] bg-gradient-to-b from-cream/50 via-white to-cream/30 pb-28 pt-24 sm:pt-28 overflow-x-hidden">
+      {/* Compact hero — single fold */}
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 text-center mb-8 sm:mb-10">
+        <AnimatedSection variant="fadeUp" delay={0.05}>
+          <span className="font-sans text-[10px] font-bold uppercase tracking-[0.35em] text-charcoal/40">
+            Ezra Center · Nairobi
+          </span>
+        </AnimatedSection>
+        <motion.h1
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.1 }}
+          className="mt-4 font-display text-3xl sm:text-5xl text-navy font-semibold leading-[1.1]"
+        >
+          Become a <span className="italic font-normal text-gold-dark">Member</span>
+          <span className="hidden sm:inline">
+            <br />
+          </span>
+          <span className="sm:hidden"> </span>
+          of Ezra Center
+        </motion.h1>
+        <p className="mt-4 max-w-lg mx-auto font-sans text-sm sm:text-base text-charcoal/55 leading-relaxed">
+          A short guided flow — pick your plan, tell us about you, and submit. Save time on mobile and desktop.
+        </p>
       </section>
 
-      {/* ═══════════════ STEP 1: PLAN SELECTION ═══════════════ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-32">
-        <div className="text-center mb-16">
-          <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-charcoal/40">
-            Step 1 — Choose your membership plan
-          </span>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {plans.map((plan, idx) => (
-            <AnimatedSection key={plan.id} variant="fadeUp" delay={0.2 + idx * 0.1}>
-              <MembershipCard
-                {...plan}
-                isSelected={selectedPlan === plan.id}
-                onClick={() => setSelectedPlan(plan.id)}
-              />
-            </AnimatedSection>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══════════════ STEP 2: APPLICATION FORM ═══════════════ */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <span className="font-sans text-[10px] font-bold uppercase tracking-[0.2em] text-charcoal/40">
-            Step 2 — Complete your application
-          </span>
-        </div>
-
-        <div className="max-w-3xl mx-auto bg-white rounded-[2rem] border border-charcoal/5 shadow-premium p-8 md:p-16">
-          <div className="mb-12 border-b border-charcoal/5 pb-12">
-            <h2 className="font-display text-4xl md:text-5xl text-navy font-semibold mb-6">
-              Membership Application
-            </h2>
-            <p className="font-sans text-base text-charcoal/60 leading-relaxed">
-              Fill in your details below and our team will reach out within 24 hours to confirm your membership and arrange payment.
-            </p>
-          </div>
-
-          <MembershipForm selectedPlan={selectedPlan} onSubmit={handleFormSubmit} />
+      {/* Wizard card */}
+      <section className="max-w-3xl mx-auto px-3 sm:px-6">
+        <div className="rounded-[1.75rem] border border-charcoal/5 bg-white/90 shadow-[0_20px_60px_-15px_rgba(15,44,74,0.12)] backdrop-blur-sm sm:rounded-[2rem]">
+          <MembershipWizard onSubmit={handleFormSubmit} />
         </div>
       </section>
     </main>
