@@ -10,6 +10,7 @@ import {
   POLICY_LEAD_UPCOMING_PAST,
   POLICY_MICRO,
   formatPolicyDeadline,
+  isBallroomOrBanquet,
   isFreeCancellationWindow,
 } from '@/lib/booking-copy'
 
@@ -18,11 +19,13 @@ type Variant = 'detail' | 'card' | 'compact' | 'inline' | 'micro'
 export function BookingCancellationNote({
   status,
   cancellationDeadline,
+  serviceSlug,
   variant,
   className,
 }: {
   status: BookingStatus
   cancellationDeadline: string | null
+  serviceSlug?: string
   variant: Variant
   className?: string
 }) {
@@ -30,6 +33,35 @@ export function BookingCancellationNote({
   const upcoming = status === 'CONFIRMED' || status === 'PENDING_PAYMENT'
   const deadlineLine = formatPolicyDeadline(cancellationDeadline)
   const withinWindow = isFreeCancellationWindow(cancellationDeadline)
+  const ballroomOrBanquet = isBallroomOrBanquet(serviceSlug ?? '')
+
+  if (ballroomOrBanquet && variant !== 'micro') {
+    return (
+      <div
+        className={cn(
+          'rounded-xl border border-amber-200/60 bg-gradient-to-br from-amber-50/80 to-amber-50/30 p-4 text-left',
+          className
+        )}
+      >
+        <p className="font-sans text-xs uppercase tracking-widest text-amber-800/80 mb-2 flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-gold shrink-0" />
+          Ballroom & Banquet Cancellation Policy
+        </p>
+        <p className="font-sans text-sm text-amber-900/85 leading-relaxed">
+          We understand that plans change. To protect both parties, the following refund schedule applies:
+        </p>
+        <ul className="font-sans text-sm text-amber-900/90 mt-3 space-y-1.5 list-disc pl-4">
+          <li>30 or more days&apos; notice: 70% of your deposit is returned.</li>
+          <li>14 to 29 days&apos; notice: 50% of your deposit is returned.</li>
+          <li>7 to 13 days&apos; notice: 30% of your deposit is returned.</li>
+          <li>Less than 24 hours&apos; notice: deposit is non-refundable.</li>
+        </ul>
+        <p className="font-sans text-xs text-amber-800/85 mt-3">
+          Cancellations must be submitted in writing. Refunds are processed within 7-10 business days.
+        </p>
+      </div>
+    )
+  }
 
   if (variant === 'micro') {
     return (

@@ -66,8 +66,8 @@ export default function TermsPage() {
       <h2>Contact</h2>
       <p>
         Questions about these terms:{' '}
-        <a href="mailto:legal@ezracenter.com" className="text-gold-dark hover:underline">
-          legal@ezracenter.com
+        <a href="mailto:legal@ezracenter.org" className="text-gold-dark hover:underline">
+          legal@ezracenter.org
         </a>
       </p>
     </LegalPageShell>

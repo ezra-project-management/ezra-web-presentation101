@@ -31,7 +31,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ezracenter.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ezracenter.org'),
   title: 'Ezra Center | A premium destination for wellness, hospitality, and refined experiences.',
   description:
     'Designed for comfort, balance, and modern living.',

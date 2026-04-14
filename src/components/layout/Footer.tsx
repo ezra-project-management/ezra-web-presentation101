@@ -112,7 +112,7 @@ export function Footer() {
               <li className="flex items-start gap-3">
                 <Mail className="w-4 h-4 text-gold mt-0.5 shrink-0" />
                 <span className="font-sans text-sm text-white/65">
-                  hello@ezracenter.com
+                  hello@ezracenter.org
                 </span>
               </li>
               <li className="flex items-start gap-3">

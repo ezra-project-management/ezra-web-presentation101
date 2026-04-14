@@ -141,6 +141,7 @@ export default function BookingConfirmedPage() {
           <BookingCancellationNote
             status={latestBooking?.status ?? 'CONFIRMED'}
             cancellationDeadline={latestBooking?.cancellationDeadline ?? null}
+            serviceSlug={latestBooking?.serviceSlug}
             variant="inline"
             className="mt-5 text-left max-w-md mx-auto"
           />
@@ -156,6 +157,12 @@ export default function BookingConfirmedPage() {
         {/* Actions */}
         <AnimatedSection delay={0.5}>
           <div className="mt-8 flex items-center gap-4 justify-center">
+            <Link
+              href="/"
+              className="px-6 py-3 border border-gold/40 text-navy font-sans font-medium text-sm rounded-xl hover:bg-gold/10 transition-all duration-300"
+            >
+              &larr; Back to Homepage
+            </Link>
             <Link
               href="/dashboard/bookings"
               className="px-6 py-3 border border-charcoal/20 text-navy font-sans font-medium text-sm rounded-xl hover:border-gold hover:shadow-sm transition-all duration-300"

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
-import { Menu, X, ChevronDown, Home, Briefcase, Info, Phone, LogIn, CalendarCheck } from 'lucide-react'
+import { Menu, X, ChevronDown, Home, Briefcase, Info, Phone, LogIn, CalendarCheck, Crown } from 'lucide-react'
 import { SERVICES } from '@/lib/services'
 import { cn } from '@/lib/utils'
 import { btnGlassOnDarkSm } from '@/lib/button-styles'
@@ -15,6 +15,7 @@ const navLinks = [
   { name: 'Services', href: '/services', hasDropdown: true, icon: Briefcase },
   { name: 'About', href: '/about', icon: Info },
   { name: 'Contact', href: '/contact', icon: Phone },
+  { name: 'Membership', href: '/membership', icon: Crown },
 ]
 
 export function Navbar() {

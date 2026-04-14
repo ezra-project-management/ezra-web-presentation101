@@ -16,7 +16,7 @@ import {
   useBooking, isClosedDay,
   getServiceCapacity
 } from '@/lib/booking-context'
-import { computeCancellationDeadline } from '@/lib/booking-copy'
+import { computeCancellationDeadline, requiresDeposit } from '@/lib/booking-copy'
 import { BookingCancellationNote } from '@/components/booking/BookingCancellationNote'
 import {
   isVenueSlug,
@@ -458,6 +458,7 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
   const closedReason = selectedDate ? isClosedDay(selectedDate) : null
   const mainCapacity = getServiceCapacity(serviceSlug)
   const isVenue = isVenueSlug(serviceSlug)
+  const needsDeposit = requiresDeposit(serviceSlug)
 
   useEffect(() => {
     setVenueAttendees(defaultVenueAttendees(serviceSlug))
@@ -576,12 +577,14 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
       combinedNotes = combinedNotes ? `${combinedNotes}\n\nEvent details: ${ev}` : `Event details: ${ev}`
     }
 
+    const bookingStatus = needsDeposit ? 'PENDING_PAYMENT' as const : 'CONFIRMED' as const
+
     createBooking({
       service: allServices.length > 1 ? allServices.join(' + ') : serviceName,
       serviceSlug, serviceCategory: currentService?.category || '',
       resource: '', staff: selectedStaff?.name || '', date: selectedDate, time: selectedTime, endTime: '',
-      duration: totalDuration, guests: headcount, status: 'CONFIRMED', amount: totalPrice,
-      paymentMethod: 'MPESA', mpesaRef: `QJK${Date.now().toString(36).toUpperCase()}`,
+      duration: totalDuration, guests: headcount, status: bookingStatus, amount: totalPrice,
+      paymentMethod: needsDeposit ? null : 'Pay at service', mpesaRef: needsDeposit ? null : null,
       image: currentService?.image || '', notes: combinedNotes,
       canReschedule: true, canCancel: true,
       cancellationDeadline: computeCancellationDeadline(selectedDate, selectedTime),
@@ -591,7 +594,7 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
       eventNotes: isVenue ? (venueEventNotes.trim() || null) : null,
     })
 
-    toast.success('Booking confirmed! Redirecting...')
+    toast.success(needsDeposit ? 'Booking created. Please complete your 50% deposit.' : 'Booking confirmed! Redirecting...')
     setTimeout(() => router.push('/dashboard/booking-confirmed'), 500)
   }
 
@@ -1002,9 +1005,18 @@ export function BookingWidget({ serviceName, basePrice, duration, serviceSlug }:
             }
           </button>
 
+          <div className="rounded-xl border border-gold/25 bg-navy/[0.02] p-3">
+            <p className="font-sans text-xs uppercase tracking-wide text-gold-dark font-semibold">Deposit policy</p>
+            <p className="font-sans text-xs text-charcoal/70 mt-1 leading-relaxed">
+              50% upfront deposit applies to Meeting Rooms, Ballroom, Banquet Hall, and Gym Membership bookings.
+              Salon &amp; Spa, Barbershop, and Swimming Pool walk-ins pay at point of service.
+            </p>
+          </div>
+
           <BookingCancellationNote
             status="CONFIRMED"
             cancellationDeadline={computeCancellationDeadline(selectedDate, selectedTime)}
+            serviceSlug={serviceSlug}
             variant="inline"
           />
 

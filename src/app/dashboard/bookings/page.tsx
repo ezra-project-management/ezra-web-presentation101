@@ -244,6 +244,7 @@ export default function BookingsPage() {
                     <BookingCancellationNote
                       status={booking.status}
                       cancellationDeadline={booking.cancellationDeadline}
+                      serviceSlug={booking.serviceSlug}
                       variant="card"
                     />
 
@@ -370,6 +371,7 @@ export default function BookingsPage() {
                             <BookingCancellationNote
                               status={booking.status}
                               cancellationDeadline={booking.cancellationDeadline}
+                              serviceSlug={booking.serviceSlug}
                               variant="compact"
                             />
                           </div>
@@ -463,7 +465,9 @@ export default function BookingsPage() {
                     <p className="font-sans text-xs text-amber-700">
                       {new Date(cancelModal.cancellationDeadline) > new Date()
                         ? 'Free cancellation — no fees apply.'
-                        : '50% cancellation fee applies as the deadline has passed.'}
+                        : cancelModal.serviceSlug === 'ballroom' || cancelModal.serviceSlug === 'banquet-hall'
+                          ? 'Venue refund is calculated using the Ballroom and Banquet policy.'
+                          : '50% cancellation fee applies as the deadline has passed.'}
                     </p>
                   </div>
                 )}

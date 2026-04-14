@@ -715,6 +715,7 @@ export default function DashboardPage() {
                   <BookingCancellationNote
                     status={nextBooking.status}
                     cancellationDeadline={nextBooking.cancellationDeadline}
+                    serviceSlug={nextBooking.serviceSlug}
                     variant="inline"
                     className="mt-4"
                   />
@@ -784,6 +785,7 @@ export default function DashboardPage() {
                           <BookingCancellationNote
                             status={booking.status}
                             cancellationDeadline={booking.cancellationDeadline}
+                            serviceSlug={booking.serviceSlug}
                             variant="micro"
                           />
                         </div>
@@ -831,6 +833,7 @@ export default function DashboardPage() {
                               <BookingCancellationNote
                                 status={booking.status}
                                 cancellationDeadline={booking.cancellationDeadline}
+                                serviceSlug={booking.serviceSlug}
                                 variant="micro"
                               />
                             </div>

@@ -130,7 +130,7 @@ export function HeroSection() {
                 className="mt-6 max-w-[34rem] space-y-3"
               >
                 <p className="text-pretty font-sans text-lg font-normal leading-snug text-white/90 md:text-xl md:leading-snug">
-                  One refined address — salon, spa, fitness, and spaces to meet and celebrate.
+                  Premier Conferencing and Wellness hub
                 </p>
                 <p className="font-sans text-sm font-medium leading-relaxed tracking-wide text-white/45 md:text-[15px]">
                   International polish · Local warmth · Someone always answers

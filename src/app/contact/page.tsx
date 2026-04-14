@@ -9,7 +9,7 @@ import { AnimatedSection } from '@/components/ui/AnimatedSection'
 const contactInfo = [
   { icon: MapPin, label: 'Location', value: 'Ezra Center' },
   { icon: Phone, label: 'Phone', value: '+254 700 000 000' },
-  { icon: Mail, label: 'Email', value: 'hello@ezracenter.com' },
+  { icon: Mail, label: 'Email', value: 'hello@ezracenter.org' },
   { icon: Clock, label: 'Hours', value: 'Mon – Sun: 6:00 AM – 10:00 PM' },
 ]
 

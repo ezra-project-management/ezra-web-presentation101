@@ -50,3 +50,13 @@ export const POLICY_LEAD_ARCHIVED =
 export const POLICY_TRUST_BADGE = '24-hour flexible cancellation'
 
 export const POLICY_MICRO = 'Free cancel or reschedule up to 24h before your visit.'
+
+export const DEPOSIT_REQUIRED_SERVICE_SLUGS = ['boardroom', 'ballroom', 'banquet-hall', 'gym'] as const
+
+export function requiresDeposit(serviceSlug: string): boolean {
+  return DEPOSIT_REQUIRED_SERVICE_SLUGS.includes(serviceSlug as (typeof DEPOSIT_REQUIRED_SERVICE_SLUGS)[number])
+}
+
+export function isBallroomOrBanquet(serviceSlug: string): boolean {
+  return serviceSlug === 'ballroom' || serviceSlug === 'banquet-hall'
+}

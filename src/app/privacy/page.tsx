@@ -69,8 +69,8 @@ export default function PrivacyPage() {
       </ul>
       <p>
         Contact us at{' '}
-        <a href="mailto:privacy@ezracenter.com" className="text-gold-dark hover:underline">
-          privacy@ezracenter.com
+        <a href="mailto:privacy@ezracenter.org" className="text-gold-dark hover:underline">
+          privacy@ezracenter.org
         </a>{' '}
         or through the details on our Contact page.
       </p>

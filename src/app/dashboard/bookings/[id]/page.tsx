@@ -486,6 +486,7 @@ export default function BookingDetailPage() {
             <BookingCancellationNote
               status={booking.status}
               cancellationDeadline={booking.cancellationDeadline}
+              serviceSlug={booking.serviceSlug}
               variant="detail"
             />
           </AnimatedSection>
@@ -529,7 +530,9 @@ export default function BookingDetailPage() {
                     <p className="font-sans text-xs text-amber-700">
                       {new Date(booking.cancellationDeadline) > new Date()
                         ? 'Free cancellation — no fees apply.'
-                        : '50% cancellation fee applies as the deadline has passed.'}
+                        : booking.serviceSlug === 'ballroom' || booking.serviceSlug === 'banquet-hall'
+                          ? 'Venue refund is calculated using the Ballroom and Banquet policy below.'
+                          : '50% cancellation fee applies as the deadline has passed.'}
                     </p>
                   </div>
                 )}

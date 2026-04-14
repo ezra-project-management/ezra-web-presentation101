@@ -73,9 +73,9 @@ export function CTASection() {
         </motion.div>
 
         <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-white font-semibold leading-tight">
-          <TextReveal text="We're ready" delay={0} />
+          <TextReveal text="Your Experience" delay={0} />
           <br />
-          <TextReveal text="when you are." delay={0.3} className="text-gold" />
+          <TextReveal text="Starts Here" delay={0.3} className="text-gold" />
         </h2>
 
         <motion.p
