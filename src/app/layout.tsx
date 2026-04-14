@@ -30,15 +30,33 @@ export const viewport: Viewport = {
   themeColor: '#0F2C4A',
 }
 
+const siteDescription =
+  'Premier conferencing, wellness, and hospitality in Nairobi. Salon, spa, fitness, pools, and refined spaces — international standards, warm Kenyan welcome.'
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ezracenter.org'),
-  title: 'Ezra Center | A premium destination for wellness, hospitality, and refined experiences.',
-  description:
-    'Designed for comfort, balance, and modern living.',
+  title: 'Premier Conferencing and Wellness hub in Nairobi | Ezra Center',
+  description: siteDescription,
   openGraph: {
+    title: 'Premier Conferencing and Wellness hub in Nairobi',
+    description: siteDescription,
+    siteName: 'Ezra Center',
+    locale: 'en_KE',
+    type: 'website',
     images: [
-      '/images/image-resizing-2.jpeg',
+      {
+        url: '/images/image-resizing-2.jpeg',
+        width: 1200,
+        height: 630,
+        alt: 'Ezra Center',
+      },
     ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Premier Conferencing and Wellness hub in Nairobi',
+    description: siteDescription,
+    images: ['/images/image-resizing-2.jpeg'],
   },
 }
 

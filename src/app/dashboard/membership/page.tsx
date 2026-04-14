@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { Crown, Gift, Star, Phone, Cake, Zap, Check } from 'lucide-react'
+import { Crown, Gift, Star, Phone, Cake, Zap } from 'lucide-react'
 import CountUp from 'react-countup'
 import { toast } from 'sonner'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
@@ -14,38 +14,64 @@ import {
   LOYALTY_TIER_VIP_POINTS,
 } from '@/lib/dashboard-data'
 
+/** Executive-facing labels; tier ids stay BASIC / PREMIUM / VIP in data. */
+const tierLabel = (id: 'BASIC' | 'PREMIUM' | 'VIP') =>
+  (
+    {
+      BASIC: 'Foundation',
+      PREMIUM: 'Executive',
+      VIP: 'Signature',
+    } as const
+  )[id]
+
 const tiers = [
-  { id: 'BASIC' as const, name: 'Basic', threshold: 0, color: 'bg-stone-400' },
-  { id: 'PREMIUM' as const, name: 'Premium', threshold: LOYALTY_TIER_PREMIUM_POINTS, color: 'bg-gold' },
-  { id: 'VIP' as const, name: 'VIP', threshold: LOYALTY_TIER_VIP_POINTS, color: 'bg-navy' },
+  { id: 'BASIC' as const, threshold: 0, color: 'bg-[#8a8679]' },
+  { id: 'PREMIUM' as const, threshold: LOYALTY_TIER_PREMIUM_POINTS, color: 'bg-[#b89c6a]' },
+  { id: 'VIP' as const, threshold: LOYALTY_TIER_VIP_POINTS, color: 'bg-[#d4b98a]' },
 ]
 
 const premiumBenefits = [
-  { icon: Gift, title: '10% off every booking', description: 'Your discount applies on its own. No codes to remember.' },
-  { icon: Star, title: 'First pick on new slots', description: 'Get 48-hour early access before slots open to everyone.' },
-  { icon: Cake, title: 'Birthday treat', description: 'We add 500 bonus points to your account in your birthday month.' },
-  { icon: Phone, title: 'Your own WhatsApp line', description: 'Message us directly. A real person will respond.' },
+  {
+    icon: Gift,
+    title: 'Preferred pricing',
+    description: 'A standing allowance on qualifying bookings — applied quietly, without codes.',
+  },
+  {
+    icon: Star,
+    title: 'First access to new availability',
+    description: 'Reserve before slots open to the general list.',
+  },
+  {
+    icon: Cake,
+    title: 'Anniversary recognition',
+    description: 'Bonus points in your birthday month, with our compliments.',
+  },
+  {
+    icon: Phone,
+    title: 'Direct concierge line',
+    description: 'WhatsApp to our team — discreet, human, and prompt.',
+  },
 ]
 
 const earnMethods = [
-  { action: 'Every KSh 100 you spend', points: '1 point' },
-  { action: 'Leave a review after a visit', points: '50 bonus points' },
-  { action: 'Bring a friend along', points: '200 points' },
-  { action: 'Your birthday month', points: 'Double points on everything' },
+  { action: 'Every KSh 100 on property', points: '1 point' },
+  { action: 'Thoughtful review after your visit', points: '+50' },
+  { action: 'Introduce a guest', points: '+200' },
+  { action: 'Birthday month', points: 'Double accrual' },
 ]
 
 const pointTypeColors: Record<string, string> = {
-  earn: 'text-emerald-600',
-  deduct: 'text-red-500',
-  bonus: 'text-gold-dark',
-  redeem: 'text-purple-600',
+  earn: 'text-emerald-300',
+  deduct: 'text-red-300',
+  bonus: 'text-[#d4b98a]',
+  redeem: 'text-purple-300',
 }
 
 const pointTypeBg: Record<string, string> = {
-  earn: 'bg-emerald-50',
-  deduct: 'bg-red-50',
-  bonus: 'bg-gold/10',
-  redeem: 'bg-purple-50',
+  earn: 'bg-emerald-500/15',
+  deduct: 'bg-red-500/15',
+  bonus: 'bg-[#b89c6a]/15',
+  redeem: 'bg-purple-500/15',
 }
 
 type TierId = 'BASIC' | 'PREMIUM' | 'VIP'
@@ -59,56 +85,67 @@ const plans: {
 }[] = [
   {
     id: 'BASIC',
-    name: 'Basic',
-    subtitle: 'Included with your account',
+    name: 'Foundation',
+    subtitle: 'Where every membership begins',
     priceLine: 'No annual fee',
     bullets: [
-      'Earn points on every visit',
-      'Member updates and reminders',
-      'Standard booking and cancellation rules',
+      'Earn points on each visit',
+      'Timely reminders and member updates',
+      'Standard booking and cancellation terms',
     ],
   },
   {
     id: 'PREMIUM',
-    name: 'Premium',
-    subtitle: 'Where most of our regulars land',
-    priceLine: `KSh 3,500 / year, or reach ${LOYALTY_TIER_PREMIUM_POINTS.toLocaleString()}+ points`,
+    name: 'Executive',
+    subtitle: 'Refined access for regular guests',
+    priceLine: `KSh 3,500 / year, or ${LOYALTY_TIER_PREMIUM_POINTS.toLocaleString()}+ points`,
     bullets: [
-      'Everything in Basic',
+      'Everything in Foundation',
       '10% off qualifying bookings',
-      '48-hour early access to new slots',
+      'Early access to new slots',
       'Birthday bonus points',
-      'WhatsApp concierge line',
+      'Concierge WhatsApp line',
     ],
   },
   {
     id: 'VIP',
-    name: 'VIP',
-    subtitle: 'Our warmest welcome',
-    priceLine: `KSh 9,500 / year, or reach ${LOYALTY_TIER_VIP_POINTS.toLocaleString()}+ points`,
+    name: 'Signature',
+    subtitle: 'Our most considered experience',
+    priceLine: `KSh 9,500 / year, or ${LOYALTY_TIER_VIP_POINTS.toLocaleString()}+ points`,
     bullets: [
-      'Everything in Premium',
-      'Priority holds for same-day requests when possible',
+      'Everything in Executive',
+      'Priority consideration for same-day requests',
       'First notice on events and new services',
-      'Dedicated line for changes and special requests',
+      'Dedicated channel for changes and requests',
     ],
   },
 ]
 
 function tierDisplayName(id: TierId): string {
-  return plans.find((p) => p.id === id)?.name ?? id
+  return tierLabel(id)
+}
+
+function SectionDivider({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-4 my-8">
+      <div className="h-px flex-1 bg-[rgba(184,156,106,0.2)]" />
+      <span className="text-[0.68rem] tracking-[0.2em] uppercase text-[#8a8679] whitespace-nowrap">{label}</span>
+      <div className="h-px flex-1 bg-[rgba(184,156,106,0.2)]" />
+    </div>
+  )
 }
 
 export default function MembershipPage() {
   const current = CURRENT_USER.loyaltyTier as TierId
   const progressPercent = Math.min(100, (CURRENT_USER.loyaltyPoints / LOYALTY_TIER_VIP_POINTS) * 100)
+  const nextTierName = tierLabel(CURRENT_USER.nextTier)
 
   const benefitsHeading =
     current === 'VIP'
-      ? 'What you enjoy as a VIP member'
+      ? 'Signature member privileges'
       : current === 'PREMIUM'
-        ? 'What you enjoy as a Premium member'
-        : 'What you enjoy as a Basic member'
+        ? 'Executive member privileges'
+        : 'Foundation member privileges'
 
   const handleUpgrade = (target: TierId) => {
     if (target === current) {
@@ -123,274 +160,307 @@ export default function MembershipPage() {
     toast.success('Request received. We will confirm your upgrade by SMS or WhatsApp shortly.')
   }
 
+  const shell = 'rounded-2xl border border-[rgba(184,156,106,0.2)] bg-[#1a1916]'
+
   return (
-    <div className="space-y-8">
-      <AnimatedSection>
-        <h1 className="font-display text-2xl lg:text-3xl text-navy font-semibold">
-          Membership
-        </h1>
-        <p className="font-sans text-sm text-charcoal/50 mt-1 max-w-xl">
-          Three clear levels. Real perks. Earn your way up with visits, or choose an annual plan whenever you are ready.
+    <div className="rounded-3xl overflow-hidden border border-[rgba(184,156,106,0.15)] bg-[#0e0d0b] shadow-[0_12px_48px_rgba(0,0,0,0.4)]">
+      {/* Hero */}
+      <AnimatedSection className="relative text-center px-6 lg:px-12 pt-10 pb-12 border-b border-[rgba(184,156,106,0.15)]">
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(184,156,106,0.08),transparent_70%)]"
+          aria-hidden
+        />
+        <p className="relative text-[0.7rem] tracking-[0.25em] uppercase text-[#b89c6a] mb-4 font-sans">
+          Ezra Center · Membership
         </p>
-        <p className="font-sans text-sm text-charcoal/45 mt-3 max-w-xl leading-relaxed">
-          Whether you are a student balancing classes, a young professional building your routine, or visiting Nairobi for a short stay, the programme stays approachable: small spends add up, and you never pay for fluff you will not use.
+        <h1 className="relative font-display text-[clamp(2rem,5vw,3.25rem)] font-light leading-[1.1] text-[#f5f2eb]">
+          Become a{' '}
+          <span className="italic text-[#d4b98a]">Member</span>
+          <br />
+          of Ezra Center
+        </h1>
+        <p className="relative mt-5 font-sans text-sm text-[#8a8679] max-w-md mx-auto leading-relaxed font-light">
+          Three considered levels. Earn as you visit, or step up when you wish — always with quiet, consistent care.
         </p>
       </AnimatedSection>
 
-      {/* Membership Card */}
-      <AnimatedSection delay={0.08}>
-        <div className="flex justify-center">
-          <div className="relative w-full max-w-md aspect-[1.6/1] rounded-2xl overflow-hidden bg-gradient-to-br from-[#1A3C5E] via-navy to-[#0A1F33] p-6 flex flex-col justify-between shadow-xl">
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold/10 to-transparent animate-shimmer" />
-            </div>
-
-            <div className="absolute top-6 right-20 w-10 h-7 rounded-md bg-gradient-to-br from-gold/40 to-gold/20 border border-gold/30" />
-
-            <div className="relative z-10 flex items-start justify-between">
-              <Image
-                src="/ezralogo.jpeg"
-                alt="Ezra Center"
-                width={48}
-                height={48}
-                className="rounded-full object-cover"
-              />
-              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gold/20 border border-gold/30">
-                <Crown className="w-3.5 h-3.5 text-gold" />
-                <span className="font-sans text-xs font-bold text-gold tracking-wide">
-                  {tierDisplayName(current).toUpperCase()}
+      <div className="px-5 lg:px-10 py-8 lg:py-10 space-y-10">
+        {/* Membership Card */}
+        <AnimatedSection delay={0.06}>
+          <div className="flex justify-center">
+            <div
+              className={cn(
+                'relative w-full max-w-md aspect-[1.6/1] rounded-sm overflow-hidden p-6 flex flex-col justify-between',
+                'bg-gradient-to-br from-[#1a1916] via-[#141311] to-[#0e0d0b] border border-[rgba(184,156,106,0.25)]',
+                'shadow-[0_8px_32px_rgba(0,0,0,0.45)]'
+              )}
+            >
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#b89c6a]/[0.07] to-transparent animate-shimmer" />
+              </div>
+              <div className="absolute top-6 right-16 w-10 h-7 rounded-sm bg-gradient-to-br from-[#b89c6a]/50 to-[#b89c6a]/15 border border-[#b89c6a]/35" />
+              <div className="relative z-10 flex items-start justify-between">
+                <Image
+                  src="/ezralogo.jpeg"
+                  alt="Ezra Center"
+                  width={48}
+                  height={48}
+                  className="rounded-full object-cover ring-1 ring-[rgba(184,156,106,0.3)]"
+                />
+                <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#b89c6a]/15 border border-[#b89c6a]/35">
+                  <Crown className="w-3.5 h-3.5 text-[#d4b98a]" />
+                  <span className="font-sans text-[0.65rem] font-semibold text-[#d4b98a] tracking-[0.12em] uppercase">
+                    {tierDisplayName(current)}
+                  </span>
                 </span>
-              </span>
-            </div>
-
-            <div className="relative z-10 flex items-end justify-between">
-              <div>
-                <p className="font-display text-white text-xl font-semibold">
-                  {CURRENT_USER.firstName} {CURRENT_USER.lastName}
-                </p>
-                <p className="font-sans text-white/50 text-xs mt-0.5">
-                  Member since {CURRENT_USER.memberSince}
+              </div>
+              <div className="relative z-10 flex items-end justify-between">
+                <div>
+                  <p className="font-display text-[#f5f2eb] text-xl font-medium tracking-tight">
+                    {CURRENT_USER.firstName} {CURRENT_USER.lastName}
+                  </p>
+                  <p className="font-sans text-[#8a8679] text-xs mt-1 tracking-wide">Member since {CURRENT_USER.memberSince}</p>
+                </div>
+                <p className="font-display text-[#b89c6a] text-2xl font-light tabular-nums">
+                  <CountUp end={CURRENT_USER.loyaltyPoints} duration={1.5} separator="," />
                 </p>
               </div>
-              <p className="font-display text-gold text-2xl font-bold">
-                <CountUp end={CURRENT_USER.loyaltyPoints} duration={1.5} separator="," />
-              </p>
             </div>
           </div>
-        </div>
-      </AnimatedSection>
+        </AnimatedSection>
 
-      {/* Choose your level */}
-      <AnimatedSection delay={0.1}>
-        <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6 lg:p-8 border border-gold/10">
-          <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-2">Choose your level</h3>
-          <p className="font-sans text-sm text-charcoal/60 mb-6 max-w-2xl">
-            Pick an annual plan for instant access, or keep visiting and let points move you up. Either way, you are always welcome.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {plans.map((plan) => {
-              const isCurrent = plan.id === current
-              const isHigher =
-                ['BASIC', 'PREMIUM', 'VIP'].indexOf(plan.id) > ['BASIC', 'PREMIUM', 'VIP'].indexOf(current)
-              return (
-                <div
-                  key={plan.id}
-                  className={cn(
-                    'rounded-2xl border p-5 flex flex-col h-full transition-shadow',
-                    isCurrent ? 'border-gold bg-gold/5 shadow-md ring-1 ring-gold/20' : 'border-charcoal/10 bg-white hover:border-gold/30'
-                  )}
-                >
-                  <p className="font-display text-lg font-semibold text-navy">{plan.name}</p>
-                  <p className="font-sans text-xs text-charcoal/50 mt-0.5">{plan.subtitle}</p>
-                  <p className="font-sans text-sm font-medium text-gold-dark mt-3">{plan.priceLine}</p>
-                  <ul className="mt-4 space-y-2 flex-1">
-                    {plan.bullets.map((b) => (
-                      <li key={b} className="flex gap-2 font-sans text-xs text-charcoal/75">
-                        <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span>{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <button
-                    type="button"
-                    disabled={isCurrent || !isHigher}
-                    onClick={() => handleUpgrade(plan.id)}
+        <SectionDivider label="Membership levels" />
+
+        {/* Choose your level */}
+        <AnimatedSection delay={0.1}>
+          <div className={cn(shell, 'p-6 lg:p-8')}>
+            <p className="font-sans text-[0.7rem] uppercase tracking-[0.25em] text-[#b89c6a] mb-2">Choose your level</p>
+            <p className="font-sans text-sm text-[#8a8679] mb-8 max-w-2xl leading-relaxed font-light">
+              Select an annual plan for immediate tier benefits, or continue visiting — points advance you with grace.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {plans.map((plan) => {
+                const isCurrent = plan.id === current
+                const isHigher =
+                  ['BASIC', 'PREMIUM', 'VIP'].indexOf(plan.id) > ['BASIC', 'PREMIUM', 'VIP'].indexOf(current)
+                return (
+                  <div
+                    key={plan.id}
                     className={cn(
-                      'mt-5 w-full py-2.5 rounded-xl font-sans text-sm font-semibold transition-all',
+                      'rounded-sm border p-5 flex flex-col h-full transition-all duration-300 relative',
                       isCurrent
-                        ? 'bg-charcoal/10 text-charcoal/50 cursor-default'
-                        : !isHigher
-                          ? 'bg-charcoal/5 text-charcoal/35 cursor-not-allowed'
-                          : 'bg-gold text-navy hover:bg-gold-light shadow-sm'
+                        ? 'border-[#b89c6a] bg-[rgba(184,156,106,0.06)] shadow-[0_0_0_1px_rgba(184,156,106,0.15)]'
+                        : 'border-[rgba(184,156,106,0.2)] bg-[#242320] hover:border-[#b89c6a]/60'
                     )}
                   >
-                    {isCurrent ? 'Your current plan' : !isHigher ? 'Included below your tier' : `Upgrade to ${plan.name}`}
-                  </button>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </AnimatedSection>
-
-      {/* Tier Progress */}
-      <AnimatedSection delay={0.16}>
-        <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6 lg:p-8">
-          <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-6">Your journey</h3>
-
-          <div className="relative">
-            <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-              <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-gold-dark to-gold"
-                initial={{ width: 0 }}
-                animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 1.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              />
-            </div>
-
-            <div className="flex justify-between mt-3">
-              {tiers.map((tier) => {
-                const isActive = CURRENT_USER.loyaltyPoints >= tier.threshold
-                const isCurrentTier = tier.id === CURRENT_USER.loyaltyTier
-                return (
-                  <div key={tier.id} className="flex flex-col items-center max-w-[100px]">
-                    <div
+                    {isCurrent && (
+                      <span
+                        className="absolute top-4 right-4 w-6 h-6 rounded-full bg-[#b89c6a] text-[#0e0d0b] text-xs font-bold flex items-center justify-center"
+                        aria-hidden
+                      >
+                        ✓
+                      </span>
+                    )}
+                    <p className="font-display text-lg font-medium text-[#f5f2eb] pr-8">{plan.name}</p>
+                    <p className="font-sans text-xs text-[#8a8679] mt-1 leading-relaxed">{plan.subtitle}</p>
+                    <p className="font-display text-base font-light text-[#b89c6a] mt-4">{plan.priceLine}</p>
+                    <ul className="mt-4 space-y-2 flex-1">
+                      {plan.bullets.map((b) => (
+                        <li key={b} className="flex gap-2 font-sans text-[0.78rem] text-[#8a8679] leading-snug">
+                          <span className="text-[#b89c6a] shrink-0 mt-0.5">—</span>
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      type="button"
+                      disabled={isCurrent || !isHigher}
+                      onClick={() => handleUpgrade(plan.id)}
                       className={cn(
-                        'w-4 h-4 rounded-full border-2 transition-all',
-                        isCurrentTier
-                          ? 'border-gold bg-gold scale-125 shadow-gold'
-                          : isActive
-                            ? `border-gold ${tier.color}`
-                            : 'border-gray-200 bg-white'
-                      )}
-                    />
-                    <p
-                      className={cn(
-                        'font-sans text-xs mt-1 text-center',
-                        isCurrentTier ? 'text-navy font-bold' : isActive ? 'text-navy font-medium' : 'text-gray-400'
+                        'mt-6 w-full py-2.5 rounded-sm font-sans text-[0.78rem] font-medium tracking-[0.1em] uppercase transition-all',
+                        isCurrent
+                          ? 'bg-[#242320] text-[#8a8679]/60 cursor-default border border-[rgba(184,156,106,0.15)]'
+                          : !isHigher
+                            ? 'bg-[#1a1916] text-[#8a8679]/40 cursor-not-allowed border border-[rgba(184,156,106,0.1)]'
+                            : 'bg-[#b89c6a] text-[#0e0d0b] hover:bg-[#d4b98a] shadow-[0_4px_24px_rgba(184,156,106,0.2)]'
                       )}
                     >
-                      {tier.name}
-                    </p>
-                    <p className="font-sans text-[10px] text-gray-400">{tier.threshold.toLocaleString()} pts</p>
+                      {isCurrent ? 'Your current plan' : !isHigher ? 'Included in your tier' : `Request ${plan.name}`}
+                    </button>
                   </div>
                 )
               })}
             </div>
           </div>
+        </AnimatedSection>
 
-          <p className="mt-6 text-center font-sans text-sm text-charcoal/60">
-            <span className="font-semibold text-navy">{CURRENT_USER.pointsToNextTier.toLocaleString()}</span> points to{' '}
-            {CURRENT_USER.nextTier}. You are doing great.
-          </p>
-        </div>
-      </AnimatedSection>
-
-      {/* Benefits */}
-      <AnimatedSection delay={0.24}>
-        <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6 lg:p-8">
-          <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-6">{benefitsHeading}</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {premiumBenefits.map((benefit, i) => (
-              <motion.div
-                key={benefit.title}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 + i * 0.08 }}
-                className="flex items-start gap-3 p-4 rounded-xl bg-gold/5 border border-gold/10"
-              >
-                <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
-                  <benefit.icon className="w-5 h-5 text-gold-dark" />
-                </div>
-                <div>
-                  <p className="font-sans text-sm font-medium text-navy">{benefit.title}</p>
-                  <p className="font-sans text-xs text-gray-400 mt-0.5">{benefit.description}</p>
-                </div>
-              </motion.div>
-            ))}
+        {/* Tier Progress */}
+        <AnimatedSection delay={0.14}>
+          <div className={cn(shell, 'p-6 lg:p-8')}>
+            <p className="font-sans text-[0.7rem] uppercase tracking-[0.25em] text-[#b89c6a] mb-6">Your journey</p>
+            <div className="relative">
+              <div className="h-2 rounded-full overflow-hidden bg-[#242320] border border-[rgba(184,156,106,0.12)]">
+                <motion.div
+                  className="h-full rounded-full bg-gradient-to-r from-[#8a6f3a] to-[#b89c6a]"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progressPercent}%` }}
+                  transition={{ duration: 1.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                />
+              </div>
+              <div className="flex justify-between mt-4 gap-2">
+                {tiers.map((tier) => {
+                  const isActive = CURRENT_USER.loyaltyPoints >= tier.threshold
+                  const isCurrentTier = tier.id === CURRENT_USER.loyaltyTier
+                  return (
+                    <div key={tier.id} className="flex flex-col items-center max-w-[100px]">
+                      <div
+                        className={cn(
+                          'w-3.5 h-3.5 rounded-full border-2 transition-all',
+                          isCurrentTier
+                            ? 'border-[#b89c6a] bg-[#b89c6a] scale-125 shadow-[0_0_12px_rgba(184,156,106,0.35)]'
+                            : isActive
+                              ? `border-[#b89c6a] ${tier.color}`
+                              : 'border-[#4a473f] bg-[#242320]'
+                        )}
+                      />
+                      <p
+                        className={cn(
+                          'font-sans text-[0.7rem] mt-2 text-center leading-tight',
+                          isCurrentTier ? 'text-[#f5f2eb] font-semibold' : isActive ? 'text-[#e8e4da]' : 'text-[#5c5950]'
+                        )}
+                      >
+                        {tierLabel(tier.id)}
+                      </p>
+                      <p className="font-sans text-[10px] text-[#8a8679] mt-0.5">{tier.threshold.toLocaleString()} pts</p>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+            <p className="mt-8 text-center font-sans text-sm text-[#8a8679] font-light">
+              <span className="font-medium text-[#d4b98a]">{CURRENT_USER.pointsToNextTier.toLocaleString()}</span> points to{' '}
+              {nextTierName}
+            </p>
           </div>
-        </div>
-      </AnimatedSection>
+        </AnimatedSection>
 
-      {/* Earn & Redeem */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <AnimatedSection delay={0.32}>
-          <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6 h-full">
-            <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-4">Ways to earn points</h3>
-            <div className="space-y-3">
-              {earnMethods.map((method) => (
-                <div key={method.action} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
-                  <span className="font-sans text-sm text-charcoal/70">{method.action}</span>
-                  <span className="font-sans text-sm font-semibold text-gold-dark">{method.points}</span>
-                </div>
+        {/* Benefits */}
+        <AnimatedSection delay={0.2}>
+          <div className={cn(shell, 'p-6 lg:p-8')}>
+            <p className="font-sans text-[0.7rem] uppercase tracking-[0.25em] text-[#b89c6a] mb-6">{benefitsHeading}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {premiumBenefits.map((benefit, i) => (
+                <motion.div
+                  key={benefit.title}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 + i * 0.06 }}
+                  className="flex items-start gap-3 p-4 rounded-sm bg-[rgba(184,156,106,0.04)] border border-[rgba(184,156,106,0.15)]"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[rgba(184,156,106,0.1)] flex items-center justify-center shrink-0 border border-[rgba(184,156,106,0.15)]">
+                    <benefit.icon className="w-5 h-5 text-[#d4b98a]" />
+                  </div>
+                  <div>
+                    <p className="font-sans text-sm font-medium text-[#f5f2eb]">{benefit.title}</p>
+                    <p className="font-sans text-xs text-[#8a8679] mt-1 leading-relaxed">{benefit.description}</p>
+                  </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </AnimatedSection>
 
-        <AnimatedSection delay={0.36}>
-          <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6 h-full">
-            <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-4">Use your points</h3>
-            <div className="p-4 rounded-xl bg-navy/5 mb-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Zap className="w-4 h-4 text-gold" />
-                <span className="font-sans text-sm font-medium text-navy">500 points = KSh 500 off</span>
+        {/* Earn & Redeem */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <AnimatedSection delay={0.26}>
+            <div className={cn(shell, 'p-6 h-full')}>
+              <p className="font-sans text-[0.7rem] uppercase tracking-[0.25em] text-[#b89c6a] mb-4">Earn points</p>
+              <div className="space-y-0">
+                {earnMethods.map((method) => (
+                  <div
+                    key={method.action}
+                    className="flex items-center justify-between py-3 border-b border-[rgba(184,156,106,0.12)] last:border-0"
+                  >
+                    <span className="font-sans text-sm text-[#8a8679] font-light">{method.action}</span>
+                    <span className="font-sans text-sm font-medium text-[#d4b98a]">{method.points}</span>
+                  </div>
+                ))}
               </div>
-              <p className="font-sans text-xs text-gray-400">Any booking, any service</p>
             </div>
-            <button
-              type="button"
-              className="w-full py-3 bg-gold text-navy font-sans font-semibold text-sm rounded-xl hover:bg-gold-light transition-all duration-300 shadow-md hover:shadow-gold"
-            >
-              Redeem my points
-            </button>
+          </AnimatedSection>
+
+          <AnimatedSection delay={0.3}>
+            <div className={cn(shell, 'p-6 h-full flex flex-col')}>
+              <p className="font-sans text-[0.7rem] uppercase tracking-[0.25em] text-[#b89c6a] mb-4">Redeem</p>
+              <div className="p-4 rounded-sm bg-[rgba(184,156,106,0.05)] border border-[rgba(184,156,106,0.15)] mb-4 flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <Zap className="w-4 h-4 text-[#d4b98a]" />
+                  <span className="font-sans text-sm font-medium text-[#f5f2eb]">500 points = KSh 500</span>
+                </div>
+                <p className="font-sans text-xs text-[#8a8679]">Applicable across bookings and services.</p>
+              </div>
+              <button
+                type="button"
+                className="w-full py-3 bg-[#b89c6a] text-[#0e0d0b] font-sans font-medium text-[0.78rem] tracking-[0.12em] uppercase rounded-sm hover:bg-[#d4b98a] transition-all shadow-[0_4px_20px_rgba(184,156,106,0.15)]"
+              >
+                Redeem points
+              </button>
+            </div>
+          </AnimatedSection>
+        </div>
+
+        {/* Points History */}
+        <AnimatedSection delay={0.34}>
+          <div className={cn(shell, 'p-6 lg:p-8')}>
+            <p className="font-sans text-[0.7rem] uppercase tracking-[0.25em] text-[#b89c6a] mb-6">Points history</p>
+            <div className="overflow-x-auto -mx-2 px-2">
+              <table className="w-full min-w-[520px]">
+                <thead>
+                  <tr className="border-b border-[rgba(184,156,106,0.15)]">
+                    <th className="text-left font-sans text-[0.65rem] uppercase tracking-[0.15em] text-[#8a8679] pb-3 font-medium">
+                      Date
+                    </th>
+                    <th className="text-left font-sans text-[0.65rem] uppercase tracking-[0.15em] text-[#8a8679] pb-3 font-medium">
+                      Description
+                    </th>
+                    <th className="text-right font-sans text-[0.65rem] uppercase tracking-[0.15em] text-[#8a8679] pb-3 font-medium">
+                      Points
+                    </th>
+                    <th className="text-right font-sans text-[0.65rem] uppercase tracking-[0.15em] text-[#8a8679] pb-3 font-medium">
+                      Balance
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {LOYALTY_HISTORY.map((entry) => (
+                    <tr key={entry.id} className="border-b border-[rgba(184,156,106,0.08)] last:border-0">
+                      <td className="py-3 font-sans text-sm text-[#8a8679]">
+                        {new Date(entry.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                      </td>
+                      <td className="py-3 font-sans text-sm text-[#e8e4da]">{entry.description}</td>
+                      <td className="py-3 text-right">
+                        <span
+                          className={cn(
+                            'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
+                            pointTypeBg[entry.type],
+                            pointTypeColors[entry.type]
+                          )}
+                        >
+                          {entry.points > 0 ? '+' : ''}
+                          {entry.points}
+                        </span>
+                      </td>
+                      <td className="py-3 text-right font-sans text-sm font-medium text-[#f5f2eb] tabular-nums">
+                        {entry.balance.toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </AnimatedSection>
       </div>
-
-      {/* Points History */}
-      <AnimatedSection delay={0.4}>
-        <div className="bg-gradient-to-br from-white to-cream/40 rounded-2xl shadow-card p-6 lg:p-8">
-          <h3 className="font-sans text-xs uppercase tracking-widest text-gray-400 mb-6">Your points history</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-100">
-                  <th className="text-left font-sans text-xs uppercase tracking-widest text-gray-400 pb-3">Date</th>
-                  <th className="text-left font-sans text-xs uppercase tracking-widest text-gray-400 pb-3">Description</th>
-                  <th className="text-right font-sans text-xs uppercase tracking-widest text-gray-400 pb-3">Points</th>
-                  <th className="text-right font-sans text-xs uppercase tracking-widest text-gray-400 pb-3">Balance</th>
-                </tr>
-              </thead>
-              <tbody>
-                {LOYALTY_HISTORY.map((entry) => (
-                  <tr key={entry.id} className="border-b border-gray-50 last:border-0">
-                    <td className="py-3 font-sans text-sm text-gray-500">
-                      {new Date(entry.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
-                    </td>
-                    <td className="py-3 font-sans text-sm text-navy">{entry.description}</td>
-                    <td className="py-3 text-right">
-                      <span
-                        className={cn(
-                          'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
-                          pointTypeBg[entry.type],
-                          pointTypeColors[entry.type]
-                        )}
-                      >
-                        {entry.points > 0 ? '+' : ''}
-                        {entry.points}
-                      </span>
-                    </td>
-                    <td className="py-3 text-right font-sans text-sm font-medium text-navy">
-                      {entry.balance.toLocaleString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </AnimatedSection>
     </div>
   )
 }
